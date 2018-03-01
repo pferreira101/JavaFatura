@@ -1,0 +1,28 @@
+#BlueJ class context
+comment0.target=Contribuinte
+comment1.params=
+comment1.target=int\ getNIF()
+comment10.params=
+comment10.target=Contribuinte()
+comment11.params=nif\ email\ nome\ morada\ password
+comment11.target=Contribuinte(int,\ java.lang.String,\ java.lang.String,\ java.lang.String,\ java.lang.String)
+comment12.params=outro
+comment12.target=Contribuinte(Contribuinte)
+comment2.params=nif
+comment2.target=void\ setNIF(int)
+comment3.params=
+comment3.target=java.lang.String\ getEmail()
+comment4.params=email
+comment4.target=void\ setEmail(java.lang.String)
+comment5.params=
+comment5.target=java.lang.String\ getNome()
+comment6.params=
+comment6.target=java.lang.String\ getMorada()
+comment6.text=\ public\ void\ setNome(String\ nome){\n\ \ \ \ /*\ \ \ \ this.nome\ \=\ nome;\n}
+comment7.params=morada
+comment7.target=void\ setMorada(java.lang.String)
+comment8.params=
+comment8.target=java.lang.String\ getPassword()
+comment9.params=password
+comment9.target=void\ setPassword(java.lang.String)
+numComments=13
