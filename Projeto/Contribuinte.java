@@ -7,7 +7,10 @@ public class Contribuinte{
     private String morada;
     private String password;
     
-    
+    private int dep_familia;
+    private int fiscais_familia;
+    private double coe_fiscal;
+    private int[] atividades_eco;
     
     
     
@@ -55,6 +58,44 @@ public class Contribuinte{
         this.password = password;
     }
     
+    public int getDepFamilia(){
+        return this.dep_familia;
+    }
+    
+    public void setDepFamilia(int dep_familia){
+        this.dep_familia = dep_familia;
+    }
+    
+    public int getFiscaisFamilia(){
+        return this.fiscais_familia;
+    }
+    
+    public void setFiscaisFamilia(int fiscais_familia){
+        this.fiscais_familia = fiscais_familia;
+    }
+    
+    // Equals & Clone & toString
+    
+    public boolean equals(Object outro){
+        if(this == outro) return true;
+        if(this.getClass() != outro.getClass()) return false;
+        
+        Contribuinte c = (Contribuinte) outro;
+        
+        if(this.nif == c.getNIF() && this.email.equals(c.getEmail()) && this.nome.equals(c.getNome()) &&
+           this.morada.equals(c.getMorada()) && this.password.equals(c.getPassword())) return true;
+           
+        return false;
+    }
+    
+    public Contribuinte clone(){
+        return new Contribuinte(this);
+    }
+    
+    public String toString(){
+        System.out.println("NIF: " + this.nif + "\nE-mail: " + this.email + "\nNome: " + this.nome + "\nMorada: " + this.morada);
+        return ("NIF: " + this.nif + "\nE-mail: " + this.email + "\nNome: " + this.nome + "\nMorada: " + this.morada);
+    }
     
     // Construtores
     
