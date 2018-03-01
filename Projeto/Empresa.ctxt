@@ -28,7 +28,7 @@ comment5.params=
 comment5.target=java.lang.String\ getNome()
 comment6.params=
 comment6.target=java.lang.String\ getMorada()
-comment6.text=\ public\ void\ setNome(String\ nome){\n\ \ \ \ /*\ \ \ \ this.nome\ \=\ nome;\n}
+comment6.text=\ public\ void\ setNome(String\ nome){\r\n\ \ \ \ /*\ \ \ \ this.nome\ \=\ nome;\r\n}
 comment7.params=morada
 comment7.target=void\ setMorada(java.lang.String)
 comment8.params=

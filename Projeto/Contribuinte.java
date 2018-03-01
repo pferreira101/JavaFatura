@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Contribuinte{
     
@@ -73,6 +74,22 @@ public class Contribuinte{
     public void setFiscaisFamilia(int fiscais_familia){
         this.fiscais_familia = fiscais_familia;
     }
+
+    public double getCoeficienteFiscal(){
+    	return this.coe_fiscal;
+    }
+
+    public void setCoeficienteFiscal(double coe_fiscal){
+    	this.coe_fiscal = coe_fiscal;
+    }
+
+    public int[] getAtividadesEco(){
+    	return this.atividades_eco;
+    }
+
+    public void setAtividades(int[] atividades_eco){
+    	this.atividades_eco = atividades_eco;
+    }
     
     // Equals & Clone & toString
     
@@ -83,7 +100,8 @@ public class Contribuinte{
         Contribuinte c = (Contribuinte) outro;
         
         if(this.nif == c.getNIF() && this.email.equals(c.getEmail()) && this.nome.equals(c.getNome()) &&
-           this.morada.equals(c.getMorada()) && this.password.equals(c.getPassword())) return true;
+           this.morada.equals(c.getMorada()) && this.password.equals(c.getPassword()) && this.dep_familia == c.getDepFamilia() &&
+           this.fiscais_familia == c.getFiscaisFamilia() && this.coe_fiscal == c.getCoeficienteFiscal() && Arrays.equals(this.atividades_eco, c.getAtividadesEco())) return true;
            
         return false;
     }
@@ -92,6 +110,7 @@ public class Contribuinte{
         return new Contribuinte(this);
     }
     
+
     public String toString(){
         System.out.println("NIF: " + this.nif + "\nE-mail: " + this.email + "\nNome: " + this.nome + "\nMorada: " + this.morada);
         return ("NIF: " + this.nif + "\nE-mail: " + this.email + "\nNome: " + this.nome + "\nMorada: " + this.morada);
@@ -107,12 +126,16 @@ public class Contribuinte{
         this.password = "";
     }
     
-    public Contribuinte(int nif, String email, String nome, String morada, String password){
+    public Contribuinte(int nif, String email, String nome, String morada, String password, int dep_familia, int fiscais_familia, double coe_fiscal, int[] atividades_eco){
         this.nif = nif;
         this.email = email;
         this.nome = nome;
         this.morada = morada;
         this.password = password;
+        this.dep_familia = dep_familia;
+        this.fiscais_familia = fiscais_familia;
+        this.coe_fiscal = coe_fiscal;
+        this.atividades_eco = atividades_eco;
     }
     
     public Contribuinte(Contribuinte outro){
@@ -121,5 +144,9 @@ public class Contribuinte{
         this.nome = outro.getNome();
         this.morada = outro.getMorada();
         this.password = outro.getPassword();
+        this.dep_familia = outro.getDepFamilia();
+        this.fiscais_familia = outro.getFiscaisFamilia();
+        this.coe_fiscal = outro.getCoeficienteFiscal();
+        this.atividades_eco = outro.getAtividadesEco();
     }
 }
