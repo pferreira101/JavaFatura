@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.time.LocalDate;
 
 public class Contribuinte{
     
@@ -13,7 +14,21 @@ public class Contribuinte{
     private double coe_fiscal;
     private int[] atividades_eco;
     
+    private Fatura[] faturas = new Fatura[20];
+    private int n_faturas;
     
+    
+    
+    
+    /**
+     * Função que adiciona uma nova fatura ao Contribuinte
+     * @param f Fatura a adicionar
+     */
+    void adicionaFatura(Fatura f){
+        if(n_faturas<this.faturas.length){
+            this.faturas[n_faturas++] = f;
+        }
+    }
     
     
     
@@ -76,19 +91,19 @@ public class Contribuinte{
     }
 
     public double getCoeficienteFiscal(){
-    	return this.coe_fiscal;
+        return this.coe_fiscal;
     }
 
     public void setCoeficienteFiscal(double coe_fiscal){
-    	this.coe_fiscal = coe_fiscal;
+        this.coe_fiscal = coe_fiscal;
     }
 
     public int[] getAtividadesEco(){
-    	return this.atividades_eco;
+        return this.atividades_eco;
     }
 
     public void setAtividades(int[] atividades_eco){
-    	this.atividades_eco = atividades_eco;
+        this.atividades_eco = atividades_eco;
     }
     
     // Equals & Clone & toString
@@ -124,9 +139,15 @@ public class Contribuinte{
         this.nome = "";
         this.morada = "";
         this.password = "";
+        this.dep_familia = 0;
+        this.fiscais_familia = 0;
+        this.coe_fiscal = 0;
+        this.atividades_eco = null;
+        this.faturas = null; // apenas para ver se funciona
+        this.n_faturas = 0;
     }
     
-    public Contribuinte(int nif, String email, String nome, String morada, String password, int dep_familia, int fiscais_familia, double coe_fiscal, int[] atividades_eco){
+    public Contribuinte(int nif, String email, String nome, String morada, String password, int dep_familia, int fiscais_familia, double coe_fiscal, int[] atividades_eco, Fatura[] faturas, int n_faturas){
         this.nif = nif;
         this.email = email;
         this.nome = nome;
@@ -136,6 +157,8 @@ public class Contribuinte{
         this.fiscais_familia = fiscais_familia;
         this.coe_fiscal = coe_fiscal;
         this.atividades_eco = atividades_eco;
+        this.faturas = faturas; // apenas para ver se funciona
+        this.n_faturas = n_faturas;
     }
     
     public Contribuinte(Contribuinte outro){
