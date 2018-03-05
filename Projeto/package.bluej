@@ -1,4 +1,7 @@
 #BlueJ package file
+dependency1.from=Contribuinte
+dependency1.to=Fatura
+dependency1.type=UsesDependency
 editor.fx.0.height=739
 editor.fx.0.width=816
 editor.fx.0.x=883
@@ -13,7 +16,7 @@ package.editor.x=442
 package.editor.y=213
 package.frame.height=600
 package.frame.width=800
-package.numDependencies=0
+package.numDependencies=1
 package.numTargets=3
 package.showExtends=true
 package.showUses=true

@@ -14,7 +14,7 @@ public class Contribuinte{
     private double coe_fiscal;
     private int[] atividades_eco;
     
-    private Fatura[] faturas = new Fatura[20];
+    private Fatura[] faturas;
     private int n_faturas;
     
     
@@ -26,7 +26,7 @@ public class Contribuinte{
      */
     void adicionaFatura(Fatura f){
         if(n_faturas<this.faturas.length){
-            this.faturas[n_faturas++] = f;
+            this.faturas[n_faturas++] = f; // clone??
         }
     }
     
@@ -106,17 +106,35 @@ public class Contribuinte{
         this.atividades_eco = atividades_eco;
     }
     
+    public Fatura[] getFaturas(){
+        return this.faturas;
+    }
+    
+    public void setFaturas(Fatura[] f){
+        this.faturas = f.clone(); // clone ou so f? 
+    }
+    
+    public int getNumFaturas(){
+        return this.n_faturas;
+    }
+    
+    public void setNumFaturas(int n_faturas){
+        this.n_faturas = n_faturas;
+    }
+    
+    
     // Equals & Clone & toString
     
     public boolean equals(Object outro){
         if(this == outro) return true;
-        if(this.getClass() != outro.getClass()) return false;
+        if(outro == null || this.getClass() != outro.getClass()) return false;
         
         Contribuinte c = (Contribuinte) outro;
         
         if(this.nif == c.getNIF() && this.email.equals(c.getEmail()) && this.nome.equals(c.getNome()) &&
            this.morada.equals(c.getMorada()) && this.password.equals(c.getPassword()) && this.dep_familia == c.getDepFamilia() &&
-           this.fiscais_familia == c.getFiscaisFamilia() && this.coe_fiscal == c.getCoeficienteFiscal() && Arrays.equals(this.atividades_eco, c.getAtividadesEco())) return true;
+           this.fiscais_familia == c.getFiscaisFamilia() && this.coe_fiscal == c.getCoeficienteFiscal() && Arrays.equals(this.atividades_eco, c.getAtividadesEco()) &&
+           this.faturas.equals(c.getFaturas()) && this.n_faturas == c.getNumFaturas()) return true;
            
         return false;
     }
@@ -157,7 +175,7 @@ public class Contribuinte{
         this.fiscais_familia = fiscais_familia;
         this.coe_fiscal = coe_fiscal;
         this.atividades_eco = atividades_eco;
-        this.faturas = faturas; // apenas para ver se funciona
+        this.faturas = new Fatura[20]; // apenas para ver se funciona
         this.n_faturas = n_faturas;
     }
     
@@ -171,5 +189,7 @@ public class Contribuinte{
         this.fiscais_familia = outro.getFiscaisFamilia();
         this.coe_fiscal = outro.getCoeficienteFiscal();
         this.atividades_eco = outro.getAtividadesEco();
+        this.faturas = outro.getFaturas();
+        this.n_faturas = outro.getNumFaturas();
     }
 }
