@@ -24,12 +24,11 @@ public class Contribuinte{
      * Função que adiciona uma nova fatura ao Contribuinte
      * @param f Fatura a adicionar
      */
-    void adicionaFatura(Fatura f){
+    void add(Fatura f){
         if(n_faturas<this.faturas.length){
-            this.faturas[n_faturas++] = f; // clone??
+            this.faturas[this.n_faturas++] = f.clone();
         }
     }
-    
     
     
     // Getters && Setters
@@ -54,9 +53,9 @@ public class Contribuinte{
         return this.nome;
     }
     
-    /* public void setNome(String nome){
-    /*    this.nome = nome;
-    } */
+    public void setNome(String nome){
+        this.nome = nome;
+    }
     
     public String getMorada(){
         return this.morada;
@@ -107,11 +106,20 @@ public class Contribuinte{
     }
     
     public Fatura[] getFaturas(){
-        return this.faturas;
+        Fatura[] nova = new Fatura[this.faturas.length];
+
+        for (int i=0; i<this.n_faturas; i++){
+            nova[i] = this.faturas[i].clone();
+        }
+        return nova;
     }
     
     public void setFaturas(Fatura[] f){
-        this.faturas = f.clone(); // clone ou so f? 
+
+        for (int i=0; i<f.length; i++){
+            this.faturas[i] = f[i].clone();
+        }
+        
     }
     
     public int getNumFaturas(){
@@ -131,12 +139,10 @@ public class Contribuinte{
         
         Contribuinte c = (Contribuinte) outro;
         
-        if(this.nif == c.getNIF() && this.email.equals(c.getEmail()) && this.nome.equals(c.getNome()) &&
-           this.morada.equals(c.getMorada()) && this.password.equals(c.getPassword()) && this.dep_familia == c.getDepFamilia() &&
-           this.fiscais_familia == c.getFiscaisFamilia() && this.coe_fiscal == c.getCoeficienteFiscal() && Arrays.equals(this.atividades_eco, c.getAtividadesEco()) &&
-           this.faturas.equals(c.getFaturas()) && this.n_faturas == c.getNumFaturas()) return true;
-           
-        return false;
+        return (this.nif == c.getNIF() && this.email.equals(c.getEmail()) && this.nome.equals(c.getNome()) &&
+                this.morada.equals(c.getMorada()) && this.password.equals(c.getPassword()) && this.dep_familia == c.getDepFamilia() &&
+                this.fiscais_familia == c.getFiscaisFamilia() && this.coe_fiscal == c.getCoeficienteFiscal() && Arrays.equals(this.atividades_eco, c.getAtividadesEco()) &&
+                Arrays.deepEquals(this.faturas, c.getFaturas()) && this.n_faturas == c.getNumFaturas());
     }
     
     public Contribuinte clone(){
@@ -161,7 +167,7 @@ public class Contribuinte{
         this.fiscais_familia = 0;
         this.coe_fiscal = 0;
         this.atividades_eco = null;
-        this.faturas = null; // apenas para ver se funciona
+        this.faturas = new Fatura[10];
         this.n_faturas = 0;
     }
     
@@ -175,8 +181,17 @@ public class Contribuinte{
         this.fiscais_familia = fiscais_familia;
         this.coe_fiscal = coe_fiscal;
         this.atividades_eco = atividades_eco;
-        this.faturas = new Fatura[20]; // apenas para ver se funciona
         this.n_faturas = n_faturas;
+        
+        Fatura[] nova = new Fatura[faturas.length];
+        
+        for (int i=0; i<faturas.length; i++){
+            nova[i] = faturas[i].clone();
+        }
+        
+        this.faturas = nova;
+
+
     }
     
     public Contribuinte(Contribuinte outro){

@@ -7,8 +7,8 @@
 
 import java.time.LocalDate;
 
-public class Fatura
-{
+public class Fatura{
+
     private String tipoC; //"individual" ou "coletivo" - empresas
     private int cliente; // número de contribuinte do cliente
     private int emitente; // contribuinte do emitente da fatura
@@ -20,52 +20,61 @@ public class Fatura
     /**
      * Construtor default para objetos da classe Fatura
      */
-    public Fatura()
-    {
-        // inicializa as variáveis de instância
-        this.cliente=this.emitente=-1;
-        this.valor=0;
-        this.data=null;
-        this.setor=this.descricao=this.tipoC=null;
+    public Fatura(){
+        this.cliente = -1;
+        this.emitente = -1;
+        this.valor = 0;
+        this.data = LocalDate.MIN;
+        this.setor = "";
+        this.descricao = "";
+        this.tipoC = "";
     }
     
     /**
      * Construtor parametrizado para objetos da classe Fatura
      */
-    public Fatura (String tipoC, int cliente, int emitente, double valor, 
-        LocalDate data, String setor, String descricao){
-        this.tipoC=tipoC;
-        this.cliente=cliente;
-        this.emitente=emitente;
-        this.valor=valor;
-        this.data=data;
-        this.setor=setor;
-        this.descricao=descricao;
+    public Fatura (String tipoC, int cliente, int emitente, double valor, LocalDate data, String setor, String descricao){
+        this.tipoC = tipoC;
+        this.cliente = cliente;
+        this.emitente = emitente;
+        this.valor = valor;
+        this.data = data;
+        this.setor = setor;
+        this.descricao = descricao;
     }
 
     /**
      * Construtor por cópia para objetos da classe Fatura
      */
     public Fatura (Fatura f) {
-        this.tipoC=f.getTipo();
-        this.cliente=f.getCliente();
-        this.emitente=f.getEmitente();
-        this.valor=f.getValor();
-        this.data=f.getData();
-        this.setor=f.getSetor();
-        this.descricao=f.getDescricao();
+        this.tipoC = f.getTipo();
+        this.cliente = f.getCliente();
+        this.emitente = f.getEmitente();
+        this.valor = f.getValor();
+        this.data = f.getData();
+        this.setor = f.getSetor();
+        this.descricao = f.getDescricao();
     }
     
     /**
-     * Método que verifica se dois objetos são iguais
+     * Método que verifica se duas faturas são iguais
      */
     public boolean equals (Object o) {
         if (this==o) return true;
         if (o==null || getClass() != o.getClass() ) return false;
+        
         Fatura f = (Fatura) o;
-        return f.getTipo().equals(tipoC) && f.getCliente()==cliente && f.getEmitente()==emitente && f.getValor()==valor && 
-            f.getData().isEqual(data) && f.getSetor().equals(setor) && f.getDescricao().equals(descricao);
+        
+        return (this.tipoC.equals(f.getTipo()) && this.cliente == f.getCliente() && this.emitente == f.getEmitente() && this.valor == f.getValor() &&
+                this.data.isEqual(f.getData()) && this.setor.equals(f.getSetor()) && this.descricao.equals(f.getDescricao()));
     }
+
+    /**
+     * Método que faz o clone de uma fatura
+     */
+    public Fatura clone(){
+        return new Fatura(this);
+    }   
     
     /**
      * Getter do tipo de emitente da fatura
