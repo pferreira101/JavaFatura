@@ -9,6 +9,21 @@ public class Empresa{
     private double fator;
    
     
+     /**
+     * Função que adiciona uma nova fatura ao Contribuinte
+     * @param f Fatura a adicionar
+     */
+    void addFatura(Fatura f, Contribuinte c){
+        Fatura[] faturas = c.getFaturas();
+        int n_faturas = c.getNumFaturas();
+        
+        if(n_faturas < faturas.length){
+            faturas[n_faturas] = f.clone();
+        }
+        
+        c.setFaturas(faturas);
+        c.setNumFaturas(n_faturas+1);
+    }
     
     
     // Getters && Setters
