@@ -12,7 +12,8 @@ public class Fatura{
     private String tipoC; //"individual" ou "coletivo" - empresas
     private int cliente; // número de contribuinte do cliente
     private int emitente; // contribuinte do emitente da fatura
-    private double valor; // valor da fatura
+    private double valor; // valor da fatura antes dos impostos
+    private double taxa; // valor da taxa de imposto (em decimal, i.e. 0.06=6%, 0.23=23%, etc.)
     private LocalDate data; // data da fatura
     private String setor; // saúde, educação, restauração, transportes, etc.
     private String descricao; // descrição breve da despesa
@@ -26,6 +27,7 @@ public class Fatura{
         this.valor = 0;
         this.data = LocalDate.MIN;
         this.setor = "";
+        this.taxa=0;
         this.descricao = "";
         this.tipoC = "";
     }
@@ -133,6 +135,20 @@ public class Fatura{
     }
     
     /**
+     * Getter do valor da taxa
+     */
+    public double getTaxa() {
+        return this.taxa;
+    }
+    
+    /**
+     * Setter do valor da taxa
+     */
+    public void setTaxa(double taxa) {
+        this.taxa=taxa;
+    }
+    
+    /**
      * Getter da data da fatura
      */
     public LocalDate getData() {
@@ -184,5 +200,10 @@ public class Fatura{
         */
         return ("TIPO: "+this.getTipo()+"\nCLIENTE: "+this.getCliente()+"\nEMITENTE: "+this.getEmitente()+"\nVALOR: "
             +this.getValor()+"€\nDATA: "+this.getData()+"\nSETOR: "+this.getSetor()+"\nDESCRICAO: "+this.getDescricao()+"\n");
+    }
+    
+    public double valorAPagar () {
+        double res=this.valor*(1+this.taxa);
+        return res;
     }
 }
