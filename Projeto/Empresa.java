@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Empresa{
     
     private int nif;
@@ -19,10 +21,11 @@ public class Empresa{
         
         if(n_faturas < faturas.length){
             faturas[n_faturas] = f.clone();
+            c.setNumFaturas(n_faturas+1);
         }
         
         c.setFaturas(faturas);
-        c.setNumFaturas(n_faturas+1);
+        
     }
     
     
@@ -68,6 +71,16 @@ public class Empresa{
         this.password = password;
     }
     
+    public boolean[] getSetores(){
+        boolean[] novo = Arrays.copyOf(this.setores, this.setores.length);
+        
+        return novo;
+    }
+    
+    public void setSetores(boolean[] setores){
+        this.setores = Arrays.copyOf(setores, setores.length);
+    }
+    
     public double getFator(){
         return this.fator;
     }
@@ -87,17 +100,17 @@ public class Empresa{
         this.nome = "";
         this.morada = "";
         this.password = "";
-        //this.setores[]...
+        this.setores = null;
         this.fator = 0;
     }
     
-    public Empresa(int nif, String email, String nome, String morada, String password, double fator){
+    public Empresa(int nif, String email, String nome, String morada, String password, boolean[] setores, double fator){
         this.nif = nif;
         this.email = email;
         this.nome = nome;
         this.morada = morada;
         this.password = password;
-        //this.setores[]...
+        this.setores = Arrays.copyOf(setores, setores.length);
         this.fator = fator;
     }
     
@@ -107,7 +120,7 @@ public class Empresa{
         this.nome = outro.getNome();
         this.morada = outro.getMorada();
         this.password = outro.getPassword();
-        //this.setores[]...
+        this.setores = outro.getSetores();
         this.fator = outro.getFator();
     }
     

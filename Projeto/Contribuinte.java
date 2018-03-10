@@ -12,7 +12,7 @@ public class Contribuinte{
     private int dep_familia;
     private int[] nif_familia;
     private double coe_fiscal;
-    private int[] atividades_eco;
+    private boolean[] atividades_eco;
     
     private Fatura[] faturas;
     private int n_faturas;
@@ -88,13 +88,13 @@ public class Contribuinte{
         this.coe_fiscal = coe_fiscal;
     }
 
-    public int[] getAtividadesEco(){
-        int[] novo = Arrays.copyOf(this.atividades_eco, this.atividades_eco.length);
+    public boolean[] getAtividadesEco(){
+        boolean[] novo = Arrays.copyOf(this.atividades_eco, this.atividades_eco.length);
         
         return novo;
     }
 
-    public void setAtividadesEco(int[] atividades_eco){
+    public void setAtividadesEco(boolean[] atividades_eco){
         this.atividades_eco = Arrays.copyOf(atividades_eco, atividades_eco.length);
     }
     
@@ -165,7 +165,7 @@ public class Contribuinte{
         this.n_faturas = 0;
     }
     
-    public Contribuinte(int nif, String email, String nome, String morada, String password, int dep_familia, int[] nif_familia, double coe_fiscal, int[] atividades_eco, Fatura[] faturas, int n_faturas){
+    public Contribuinte(int nif, String email, String nome, String morada, String password, int dep_familia, int[] nif_familia, double coe_fiscal, boolean[] atividades_eco, Fatura[] faturas, int n_faturas){
         this.nif = nif;
         this.email = email;
         this.nome = nome;
