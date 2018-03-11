@@ -6,6 +6,7 @@
  */
 
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class Fatura{
 
@@ -15,9 +16,34 @@ public class Fatura{
     private double valor; // valor da fatura antes dos impostos
     private double taxa; // valor da taxa de imposto (em decimal, i.e. 0.06=6%, 0.23=23%, etc.)
     private LocalDate data; // data da fatura
-    private String setor; // saúde, educação, restauração, transportes, etc.
+    private String[] setores; // saúde, educação, restauração, transportes, etc.
+    private String setor_ativo;
     private String descricao; // descrição breve da despesa
 
+    
+    
+    public double valorAPagar () {
+        double res=this.valor*(1+this.taxa);
+        return res;
+    }
+    
+    public void AtribuiSetor(){
+        String[] setores = this.getSetores();
+        Scanner sc = new Scanner(System.in);
+        int x;
+        
+        System.out.println("Escolha o setor que deseja atribuir à fatura");
+        
+        for(int i = 0; i < setores.length; i++){
+            System.out.println(i + setores[i]);
+        }
+        
+        x = sc.nextInt();
+        this.setSetorAtivo(setores[x]);
+    }
+
+    
+    
     /**
      * Construtor default para objetos da classe Fatura
      */
@@ -26,8 +52,9 @@ public class Fatura{
         this.emitente = -1;
         this.valor = 0;
         this.data = LocalDate.MIN;
-        this.setor = "";
-        this.taxa=0;
+        this.setores = null;
+        this.setor_ativo = "";
+        this.taxa = 0;
         this.descricao = "";
         this.tipoC = "";
     }
@@ -35,13 +62,14 @@ public class Fatura{
     /**
      * Construtor parametrizado para objetos da classe Fatura
      */
-    public Fatura (String tipoC, int cliente, int emitente, double valor, LocalDate data, String setor, String descricao){
+    public Fatura (String tipoC, int cliente, int emitente, double valor, LocalDate data, String[] setores, String setor_ativo, String descricao){
         this.tipoC = tipoC;
         this.cliente = cliente;
         this.emitente = emitente;
         this.valor = valor;
         this.data = data;
-        this.setor = setor;
+        this.setores = setores;
+        this.setor_ativo = setor_ativo;
         this.descricao = descricao;
     }
 
@@ -54,7 +82,8 @@ public class Fatura{
         this.emitente = f.getEmitente();
         this.valor = f.getValor();
         this.data = f.getData();
-        this.setor = f.getSetor();
+        this.setores = f.getSetores();
+        this.setor_ativo = f.getSetorAtivo();
         this.descricao = f.getDescricao();
     }
     
@@ -68,7 +97,7 @@ public class Fatura{
         Fatura f = (Fatura) o;
         
         return (this.tipoC.equals(f.getTipo()) && this.cliente == f.getCliente() && this.emitente == f.getEmitente() && this.valor == f.getValor() &&
-                this.data.isEqual(f.getData()) && this.setor.equals(f.getSetor()) && this.descricao.equals(f.getDescricao()));
+                this.data.isEqual(f.getData()) && this.setores.equals(f.getSetores()) && this.descricao.equals(f.getDescricao()));
     }
 
     /**
@@ -165,15 +194,29 @@ public class Fatura{
     /**
      * Getter do setor da fatura
      */
-    public String getSetor() {
-        return this.setor;
+    public String[] getSetores() {
+        return this.setores;
     }
     
     /**
      * Setter do setor da fatura
      */
-    public void setSetor(String setor) {
-        this.setor=setor;
+    public void setSetores(String[] setores) {
+        this.setores = setores;
+    }
+    
+     /**
+     * Getter do setor ativo da fatura
+     */
+    public String getSetorAtivo() {
+        return this.setor_ativo;
+    }
+    
+    /**
+     * Setter do setor ativo da fatura
+     */
+    public void setSetorAtivo(String setor_ativo) {
+        this.setor_ativo = setor_ativo;
     }
     
     /**
@@ -199,11 +242,7 @@ public class Fatura{
             +this.getValor()+"€\nDATA: "+this.getData()+"\nSETOR: "+this.getSetor()+"\nDESCRICAO: "+this.getDescricao()+"\n");
         */
         return ("TIPO: "+this.getTipo()+"\nCLIENTE: "+this.getCliente()+"\nEMITENTE: "+this.getEmitente()+"\nVALOR: "
-            +this.getValor()+"€\nDATA: "+this.getData()+"\nSETOR: "+this.getSetor()+"\nDESCRICAO: "+this.getDescricao()+"\n");
+            +this.getValor()+"€\nDATA: "+this.getData()+"\nSETOR: "+this.getSetores()+"\nDESCRICAO: "+this.getDescricao()+"\n");
     }
     
-    public double valorAPagar () {
-        double res=this.valor*(1+this.taxa);
-        return res;
-    }
 }

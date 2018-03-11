@@ -18,7 +18,17 @@ public class Contribuinte{
     private int n_faturas;
     
     
-    
+    void VerificaFaturas(){
+        Fatura[] faturas = this.getFaturas();
+        int n_faturas = this.getNumFaturas();
+        
+        for(int i = 0; i < n_faturas; i++){
+            if(faturas[i].getSetorAtivo() == ""){
+                System.out.println("Fatura x");
+                faturas[i].AtribuiSetor();
+            }
+        }
+    }
     
     // Getters && Setters
     
