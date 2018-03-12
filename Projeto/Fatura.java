@@ -192,17 +192,26 @@ public class Fatura{
     }
     
     /**
-     * Getter do setor da fatura
+     * Getter dos setores da fatura
      */
     public String[] getSetores() {
-        return this.setores;
+        String[] nova = new String[this.setores.length];
+        
+        for(int i = 0; i<this.setores.length; i++){
+            nova[i] = setores[i];
+        }
+        
+        return nova;
     }
     
     /**
-     * Setter do setor da fatura
+     * Setter dos setores da fatura
      */
     public void setSetores(String[] setores) {
-        this.setores = setores;
+        
+        for(int i = 0; i<setores.length; i++){
+            this.setores[i] = setores[i];
+        }
     }
     
      /**

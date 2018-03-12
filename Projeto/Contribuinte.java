@@ -28,6 +28,8 @@ public class Contribuinte{
                 faturas[i].AtribuiSetor();
             }
         }
+        
+        this.setFaturas(faturas);
     }
     
     // Getters && Setters
