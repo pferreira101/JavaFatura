@@ -1,11 +1,12 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.stream.Collectors;
 
 public class Empresa extends Entidade{
 
     private ArrayList<Setor> setores;
-    
+    // FIXME: 01/05/2018 Adicionar faturas emitidas
+
+
      /**
      * Função que adiciona uma nova fatura ao Contribuinte
      * @param f Fatura a adicionar
@@ -23,11 +24,13 @@ public class Empresa extends Entidade{
     // Getters & Setters
 
     public ArrayList<Setor> getSetores() {
-        return setores; // FIXME: 01/05/2018 
+        return this.setores.stream().map(Setor::clone).
+                                     collect(Collectors.toCollection(ArrayList::new));
     }
 
     public void setSetores(ArrayList<Setor> setores) {
-        this.setores = setores; // FIXME: 01/05/2018 
+        this.setores = setores.stream().map(Setor::clone).
+                                        collect(Collectors.toCollection(ArrayList::new));
     }
 
 
@@ -36,9 +39,11 @@ public class Empresa extends Entidade{
     public boolean equals(Object o){
         if (this==o) return true;
         if ( o==null || this.getClass() != o.getClass()) return false;
-        Empresa outro = (Empresa)o;
 
-        return super.equals(outro); // FIXME: 01/05/2018 Falta setores
+        Empresa e = (Empresa)o;
+
+        return super.equals(e) &&
+               this.setores.equals(e.getSetores());
 
     }
     
@@ -55,12 +60,13 @@ public class Empresa extends Entidade{
 
     public Empresa(){
         super();
-        this.setores = null;
+        this.setores = new ArrayList<>();
     }
 
     public Empresa(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores){
         super(nif, email, nome, morada, password);
-        this.setores = setores; // FIXME: 01/05/2018 
+        this.setores = setores.stream().map(Setor::clone).
+                                        collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Empresa(Empresa outro){

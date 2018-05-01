@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Setor
+comment1.params=
+comment1.target=java.lang.String\ getNome()
+comment2.params=
+comment2.target=double\ getTaxa()
+comment3.params=o
+comment3.target=boolean\ equals(java.lang.Object)
+comment4.params=
+comment4.target=Setor\ clone()
+comment5.params=
+comment5.target=java.lang.String\ toString()
+comment6.params=
+comment6.target=Setor()
+comment7.params=nome\ taxa
+comment7.target=Setor(java.lang.String,\ double)
+comment8.params=outro
+comment8.target=Setor(Setor)
+numComments=9

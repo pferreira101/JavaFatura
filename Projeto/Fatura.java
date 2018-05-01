@@ -16,7 +16,7 @@ public class Fatura{
     private LocalDate data; // data da fatura
     private int nif_cliente; // número de contribuinte do cliente
     private String descricao; // descrição breve da despesa
-    private String setor; // FIXME: 01/05/2018 Gestor de Fatura
+    private String setor; // FIXME: 01/05/2018 Gestor de setor
     private double valor; // valor da fatura antes dos impostos
     private double taxa;
     
@@ -130,7 +130,7 @@ public class Fatura{
      */
     public String toString () {
 
-        return "MUDAR";
+        return ""; // FIXME: 01/05/2018
     }
 
 
