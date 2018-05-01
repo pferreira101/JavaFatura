@@ -1,143 +1,45 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class Empresa{
-    
-    private int nif;
-    private String email;
-    private String nome;
-    private String morada;
-    private String password;
-    private boolean[] setores; //falta saber quantos setores existem, getters and setters
-    private double fator;
-   
+public class Empresa extends Entidade{
+
+    private ArrayList<Setor> setores;
     
      /**
      * Função que adiciona uma nova fatura ao Contribuinte
      * @param f Fatura a adicionar
+     * @param c Contribuinte
      */
     void addFatura(Fatura f, Contribuinte c){
-        Fatura[] faturas = c.getFaturas();
-        int n_faturas = c.getNumFaturas();
-        
-        if(n_faturas < faturas.length){
-            faturas[n_faturas] = f.clone();
-            c.setNumFaturas(n_faturas+1);
-        }
-        
-        c.setFaturas(faturas);
-        
+        ArrayList<Fatura> nova = c.getFaturas();
+
+        nova.add(f);
+
+        c.setFaturas(nova);
     }
     
     
-    // Getters && Setters
-    
-    public int getNIF(){
-        return this.nif;
+    // Getters & Setters
+
+    public ArrayList<Setor> getSetores() {
+        return setores; // FIXME: 01/05/2018 
     }
-    
-    public void setNIF(int nif){
-        this.nif = nif;
+
+    public void setSetores(ArrayList<Setor> setores) {
+        this.setores = setores; // FIXME: 01/05/2018 
     }
-    
-    public String getEmail(){
-        return this.email;
-    }
-    
-    public void setEmail(String email){
-        this.email = email;
-    }
-    
-    public String getNome(){
-        return this.nome;
-    }
-    
-    /* public void setNome(String nome){
-    /*    this.nome = nome;
-    } */
-    
-    public String getMorada(){
-        return this.morada;
-    }
-    
-    public void setMorada(String morada){
-        this.morada = morada;
-    }
-    
-    public String getPassword(){
-        return this.password;
-    }
-    
-    public void setPassword(String password){
-        this.password = password;
-    }
-    
-    public boolean[] getSetores(){
-        boolean[] novo = Arrays.copyOf(this.setores, this.setores.length);
-        
-        return novo;
-    }
-    
-    public void setSetores(boolean[] setores){
-        this.setores = Arrays.copyOf(setores, setores.length);
-    }
-    
-    public double getFator(){
-        return this.fator;
-    }
-    
-    public void setFator(double fator){
-        this.fator = fator;
-    }
-    
-    
-    
-    
-    // Construtores
-    
-    public Empresa(){
-        this.nif = -1;
-        this.email = "";
-        this.nome = "";
-        this.morada = "";
-        this.password = "";
-        this.setores = null;
-        this.fator = 0;
-    }
-    
-    public Empresa(int nif, String email, String nome, String morada, String password, boolean[] setores, double fator){
-        this.nif = nif;
-        this.email = email;
-        this.nome = nome;
-        this.morada = morada;
-        this.password = password;
-        this.setores = Arrays.copyOf(setores, setores.length);
-        this.fator = fator;
-    }
-    
-    public Empresa(Empresa outro){
-        this.nif = outro.getNIF();
-        this.email = outro.getEmail();
-        this.nome = outro.getNome();
-        this.morada = outro.getMorada();
-        this.password = outro.getPassword();
-        this.setores = outro.getSetores();
-        this.fator = outro.getFator();
-    }
-    
-    // Equals and clone
+
+
+    // Equals & Clone & toString
     
     public boolean equals(Object o){
         if (this==o) return true;
         if ( o==null || this.getClass() != o.getClass()) return false;
         Empresa outro = (Empresa)o;
-        return 
-            this.nif == outro.getNIF() &&
-            this.email == outro.getEmail() &&
-            this.nome == outro.getNome() &&
-            this.morada == outro.getMorada() &&
-            this.password == outro.getPassword() &&
-            this.fator == outro.getFator();
-            //this.setores....
+
+        return super.equals(outro); // FIXME: 01/05/2018 Falta setores
+
     }
     
     public Empresa clone(){
@@ -145,9 +47,25 @@ public class Empresa{
     }
     
     public String toString(){
-        return "Nif: " + this.nif +"\nNome: "+this.nome+"\nEmail: "+this.email+"\nMorada: "+this.morada; //...ver o resto                            
-                          
-                 
+        return ""; // FIXME: 01/05/2018 
+    }
+
+
+    // Construtores
+
+    public Empresa(){
+        super();
+        this.setores = null;
+    }
+
+    public Empresa(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores){
+        super(nif, email, nome, morada, password);
+        this.setores = setores; // FIXME: 01/05/2018 
+    }
+
+    public Empresa(Empresa outro){
+        super(outro);
+        this.setores = outro.getSetores();
     }
     
 }

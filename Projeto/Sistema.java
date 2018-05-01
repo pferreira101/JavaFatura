@@ -1,33 +1,8 @@
+import java.util.HashMap;
 
-/**
- * Write a description of class Sistema here.
- *
- * @author (your name)
- * @version (a version number or a date)
- */
-public class Sistema
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class Sistema {
 
-    /**
-     * Constructor for objects of class Sistema
-     */
-    public Sistema()
-    {
-        // initialise instance variables
-        x = 0;
-    }
-
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
-    }
+    HashMap<Integer, Entidade> entidades = new HashMap<Integer, Entidade>(); // FIXME: 01/05/2018
+    String admin; // FIXME: 01/05/2018
+    String admin_password; // FIXME: 01/05/2018
 }
