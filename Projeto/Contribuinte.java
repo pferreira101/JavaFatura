@@ -9,29 +9,21 @@ public class Contribuinte extends Entidade{
     private int dep_familia;
     private int[] nif_familia;
     private double coe_fiscal;
-    private ArrayList<Setor> setores;
-    
     private ArrayList<Fatura> faturas;
+    private ArrayList<Fatura> faturas_pendentes;
 
 
-    TreeSet<Fatura> sortByDate(){
-        TreeSet<Fatura> r = new TreeSet<Fatura>(new Comparator<Fatura>(){
-                                                    public int compare(Fatura a, Fatura b){
-                                                        return a.getData().compareTo(b.getData());
-                                                    }
-                                                });
+
+    TreeSet<Fatura> sortBy(){
+        TreeSet<Fatura> r = new TreeSet<Fatura>();
 
         this.faturas.forEach(f -> r.add(f.clone()));
 
         return r;
     }
 
-    TreeSet<Fatura> sortByPrice(){
-        TreeSet<Fatura> r = new TreeSet<Fatura>(new Comparator<Fatura>(){
-                                                    public int compare(Fatura a, Fatura b){
-                                                        return (int)(a.valorAPagar() - b.valorAPagar()); // FIXME: 01/05/2018 17.50 - 17.25 = 0 double compare?
-                                                    }
-                                                });
+    TreeSet<Fatura> sortBy(Comparator<Fatura> c){
+        TreeSet<Fatura> r = new TreeSet<Fatura>(c);
 
         this.faturas.forEach(f -> r.add(f.clone()));
 
@@ -65,18 +57,6 @@ public class Contribuinte extends Entidade{
         this.coe_fiscal = coe_fiscal;
     }
 
-    public ArrayList<Setor> getSetores(){
-        return this.setores.stream().map(Setor::clone).
-                                     collect(Collectors.toCollection(ArrayList::new));
-
-    }
-
-    public void setSetores(ArrayList<Setor> setores){
-        this.setores = setores.stream().map(Setor::clone).
-                                        collect(Collectors.toCollection(ArrayList::new));
-
-    }
-
     public ArrayList<Fatura> getFaturas(){
         return this.faturas .stream().map(Fatura::clone).
                                       collect(Collectors.toCollection(ArrayList::new));
@@ -87,6 +67,18 @@ public class Contribuinte extends Entidade{
         this.faturas = f.stream().map(Fatura::clone).
                                   collect(Collectors.toCollection(ArrayList::new));
         
+    }
+
+    public ArrayList<Fatura> getFaturasPendentes(){
+        return this.faturas_pendentes.stream().map(Fatura::clone).
+                                               collect(Collectors.toCollection(ArrayList::new));
+
+    }
+
+    public void setFaturasPendentes(ArrayList<Fatura> f){
+        this.faturas_pendentes = f.stream().map(Fatura::clone).
+                                            collect(Collectors.toCollection(ArrayList::new));
+
     }
     
 
@@ -104,8 +96,8 @@ public class Contribuinte extends Entidade{
                this.dep_familia == c.getDepFamilia() &&
                Arrays.equals(this.nif_familia, c.getNIFFamilia()) &&
                this.coe_fiscal == c.getCoeficienteFiscal() &&
-               this.setores.equals(c.getSetores()) &&
-               this.faturas.equals(c.getFaturas());
+               this.faturas.equals(c.getFaturas()) &&
+               this.faturas_pendentes.equals(c.getFaturasPendentes());
     }
 
 
@@ -125,19 +117,19 @@ public class Contribuinte extends Entidade{
         this.dep_familia = 0;
         this.nif_familia = null;
         this.coe_fiscal = 0;
-        this.setores = new ArrayList<>();
         this.faturas = new ArrayList<>();
+        this.faturas_pendentes = new ArrayList<>();
     }
     
-    public Contribuinte(int nif, String email, String nome, String morada, String password, int dep_familia, int[] nif_familia, double coe_fiscal,  ArrayList<Setor> setores, ArrayList<Fatura> faturas){
-        super(nif, email, nome, morada, password);
+    public Contribuinte(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores, int dep_familia, int[] nif_familia, double coe_fiscal, ArrayList<Fatura> faturas, ArrayList<Fatura> faturas_pendentes){
+        super(nif, email, nome, morada, password, setores);
         this.dep_familia = dep_familia;
         this.nif_familia = Arrays.copyOf(nif_familia, nif_familia.length);
         this.coe_fiscal = coe_fiscal;
-        this.setores = setores.stream().map(Setor::clone).
-                                        collect(Collectors.toCollection(ArrayList::new));
         this.faturas = faturas.stream().map(Fatura::clone).
                                         collect(Collectors.toCollection(ArrayList::new));
+        this.faturas_pendentes = faturas.stream().map(Fatura::clone).
+                                                  collect(Collectors.toCollection(ArrayList::new));
     }
     
     public Contribuinte(Contribuinte outro){
@@ -145,7 +137,7 @@ public class Contribuinte extends Entidade{
         this.dep_familia = outro.getDepFamilia();
         this.nif_familia = outro.getNIFFamilia();
         this.coe_fiscal = outro.getCoeficienteFiscal();
-        this.setores = outro.getSetores();
         this.faturas = outro.getFaturas();
+        this.faturas_pendentes = outro.getFaturasPendentes();
     }
 }

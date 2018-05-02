@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Entidade {
 
@@ -7,6 +9,7 @@ public class Entidade {
     private String nome;
     private String morada;
     private String password;
+    private ArrayList<Setor> setores;
 
 
     // Getters & Setters
@@ -51,6 +54,16 @@ public class Entidade {
         this.password = password;
     }
 
+    public ArrayList<Setor> getSetores() {
+        return this.setores.stream().map(Setor::clone).
+                                     collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void setSetores(ArrayList<Setor> setores) {
+        this.setores = setores.stream().map(Setor::clone).
+                                        collect(Collectors.toCollection(ArrayList::new));
+    }
+
     // Equals && Clone && toString
 
     public boolean equals(Object o) {
@@ -63,7 +76,8 @@ public class Entidade {
                this.email.equals(entidade.getEmail()) &&
                this.nome.equals(entidade.getNome()) &&
                this.morada.equals(entidade.getMorada()) &&
-               this.password.equals(entidade.getPassword());
+               this.password.equals(entidade.getPassword()) &&
+               this.setores.equals(entidade.getSetores());
     }
 
     public Entidade clone(){
@@ -84,14 +98,17 @@ public class Entidade {
         this.nome = "";
         this.morada = "";
         this.password = "";
+        this.setores = new ArrayList<>();
     }
 
-    public Entidade(int nif, String email, String nome, String morada, String password) {
+    public Entidade(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores) {
         this.nif = nif;
         this.email = email;
         this.nome = nome;
         this.morada = morada;
         this.password = password;
+        this.setores = setores.stream().map(Setor::clone).
+                                        collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Entidade(Entidade outra){
@@ -100,5 +117,6 @@ public class Entidade {
         this.nome = outra.getNome();
         this.morada = outra.getMorada();
         this.password = outra.getPassword();
+        this.setores = outra.getSetores();
     }
 }

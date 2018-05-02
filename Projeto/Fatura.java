@@ -1,7 +1,7 @@
 /**
  * Classe Fatura:
  * 
- * @ Henrique Pereira (a80261), Pedro Moreira (a??), Pedro Ferreira (a??)
+ * @ Henrique Pereira (a80261), Pedro Moreira (a82364), Pedro Ferreira (a??)
  * @ 2º Ano, 2º Semestre, POO)
  */
 
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Scanner;
 
-public class Fatura{
+public class Fatura implements Comparable<Fatura>{
 
     private String empresa;
     private int nif_emitente;
@@ -133,6 +133,10 @@ public class Fatura{
         return ""; // FIXME: 01/05/2018
     }
 
+
+    public int compareTo(Fatura f){
+        return this.empresa.compareTo(f.getEmpresa());
+    }
 
     // Contrutores
 

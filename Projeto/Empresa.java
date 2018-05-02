@@ -1,36 +1,87 @@
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class Empresa extends Entidade{
 
-    private ArrayList<Setor> setores;
-    // FIXME: 01/05/2018 Adicionar faturas emitidas
+    private ArrayList<Fatura> faturas_emitidas;
 
 
-     /**
-     * Função que adiciona uma nova fatura ao Contribuinte
-     * @param f Fatura a adicionar
-     * @param c Contribuinte
-     */
-    void addFatura(Fatura f, Contribuinte c){
-        ArrayList<Fatura> nova = c.getFaturas();
 
-        nova.add(f);
+    public Fatura emiteFatura(int nif, String descricao, double valor, double taxa){ // FIXME: 02/05/2018 onde vamos buscar a taxa??
+        Fatura f = new Fatura(this.getNome(), this.getNif(), LocalDate.now(), nif, descricao, "", valor, taxa); // FIXME: 02/05/2018 Setor -> Gestor Setor
 
-        c.setFaturas(nova);
+        this.faturas_emitidas.add(f.clone());
+
+        return f;
     }
-    
+
+
+    public void addFatura(Fatura f, Contribuinte c){
+        if(f.getSetor().equals("MUDAR")){ // FIXME: 02/05/2018 setor -> Gestor Setor && comprimir
+            ArrayList<Fatura> nova = c.getFaturas();
+
+            nova.add(f);
+
+            c.setFaturas(nova);
+        }
+        else{
+            ArrayList<Fatura> nova = c.getFaturasPendentes();
+
+            nova.add(f);
+
+            c.setFaturasPendentes(nova);
+        }
+        
+    }
+
+
+    public double totalFaturado(){ // FIXME: 03/05/2018 que valor é que é deduzido?
+        return this.faturas_emitidas.stream().mapToDouble(Fatura::getValor).
+                                              sum();
+    }
+
+    public double totalFaturado(LocalDate inicio, LocalDate fim){
+        return this.faturas_emitidas.stream().filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
+                                              mapToDouble(Fatura::getValor).
+                                              sum();
+    }
+
+
+
+
+    // Sorts
+
+    TreeSet<Fatura> sortBy(){
+        TreeSet<Fatura> r = new TreeSet<Fatura>();
+
+        this.faturas_emitidas.forEach(f -> r.add(f.clone()));
+
+        return r;
+    }
+
+    TreeSet<Fatura> sortBy(Comparator<Fatura> c){
+        TreeSet<Fatura> r = new TreeSet<Fatura>(c);
+
+        this.faturas_emitidas.forEach(f -> r.add(f.clone()));
+
+        return r;
+    }
     
     // Getters & Setters
 
-    public ArrayList<Setor> getSetores() {
-        return this.setores.stream().map(Setor::clone).
-                                     collect(Collectors.toCollection(ArrayList::new));
+    public ArrayList<Fatura> getFaturasEmitidas(){
+        return this.faturas_emitidas.stream().map(Fatura::clone).
+                                              collect(Collectors.toCollection(ArrayList::new));
+
     }
 
-    public void setSetores(ArrayList<Setor> setores) {
-        this.setores = setores.stream().map(Setor::clone).
-                                        collect(Collectors.toCollection(ArrayList::new));
+    public void setFaturasEmitidas(ArrayList<Fatura> f){
+        this.faturas_emitidas = f.stream().map(Fatura::clone).
+                                           collect(Collectors.toCollection(ArrayList::new));
+
     }
 
 
@@ -43,7 +94,7 @@ public class Empresa extends Entidade{
         Empresa e = (Empresa)o;
 
         return super.equals(e) &&
-               this.setores.equals(e.getSetores());
+               this.faturas_emitidas.equals(e.getFaturasEmitidas());
 
     }
     
@@ -60,18 +111,18 @@ public class Empresa extends Entidade{
 
     public Empresa(){
         super();
-        this.setores = new ArrayList<>();
+        this.faturas_emitidas = new ArrayList<>();
     }
 
-    public Empresa(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores){
-        super(nif, email, nome, morada, password);
-        this.setores = setores.stream().map(Setor::clone).
-                                        collect(Collectors.toCollection(ArrayList::new));
+    public Empresa(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores, ArrayList<Fatura> faturas_emitidas){
+        super(nif, email, nome, morada, password, setores);
+        this.faturas_emitidas = faturas_emitidas.stream().map(Fatura::clone).
+                                                          collect(Collectors.toCollection(ArrayList::new));
     }
 
     public Empresa(Empresa outro){
         super(outro);
-        this.setores = outro.getSetores();
+        this.faturas_emitidas = outro.getFaturasEmitidas();
     }
     
 }
