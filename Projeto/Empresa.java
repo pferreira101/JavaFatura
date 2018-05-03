@@ -9,9 +9,17 @@ public class Empresa extends Entidade{
     private ArrayList<Fatura> faturas_emitidas;
 
 
-
     public Fatura emiteFatura(int nif, String descricao, double valor, double taxa){ // FIXME: 02/05/2018 onde vamos buscar a taxa??
-        Fatura f = new Fatura(this.getNome(), this.getNif(), LocalDate.now(), nif, descricao, "", valor, taxa); // FIXME: 02/05/2018 Setor -> Gestor Setor
+        GestorSetor gs;
+
+        if(this.getSetores().size() == 1){
+            gs = new GestorSetor(this.getSetores(), this.getSetores().get(0), new ArrayList<LogSetor>());
+        }
+        else{
+            gs = new GestorSetor(this.getSetores(), null, new ArrayList<LogSetor>());
+        }
+
+        Fatura f = new Fatura(this.getNome(), this.getNif(), LocalDate.now(), nif, descricao, gs, valor, taxa);
 
         this.faturas_emitidas.add(f.clone());
 
@@ -20,15 +28,17 @@ public class Empresa extends Entidade{
 
 
     public void addFatura(Fatura f, Contribuinte c){
-        if(f.getSetor().equals("MUDAR")){ // FIXME: 02/05/2018 setor -> Gestor Setor && comprimir
-            ArrayList<Fatura> nova = c.getFaturas();
+        ArrayList<Fatura> nova;
+
+        if(f.getGestorSetor().getSetores().size() == 1){ // FIXME: 02/05/2018 comprimir
+            nova = c.getFaturas();
 
             nova.add(f);
 
             c.setFaturas(nova);
         }
         else{
-            ArrayList<Fatura> nova = c.getFaturasPendentes();
+            nova = c.getFaturasPendentes();
 
             nova.add(f);
 
@@ -38,7 +48,7 @@ public class Empresa extends Entidade{
     }
 
 
-    public double totalFaturado(){ // FIXME: 03/05/2018 que valor é que é deduzido?
+    public double totalFaturado(){ // FIXME: 03/05/2018 que valor é que é faturado?
         return this.faturas_emitidas.stream().mapToDouble(Fatura::getValor).
                                               sum();
     }

@@ -16,7 +16,7 @@ public class Fatura implements Comparable<Fatura>{
     private LocalDate data; // data da fatura
     private int nif_cliente; // número de contribuinte do cliente
     private String descricao; // descrição breve da despesa
-    private String setor; // FIXME: 01/05/2018 Gestor de setor
+    private GestorSetor gestor_setor;
     private double valor; // valor da fatura antes dos impostos
     private double taxa;
     
@@ -70,12 +70,12 @@ public class Fatura implements Comparable<Fatura>{
         this.descricao = descricao;
     }
 
-    public String getSetor() {
-        return this.setor;
+    public GestorSetor getGestorSetor() {
+        return this.gestor_setor.clone();
     }
 
-    public void setSetor(String setor) {
-        this.setor = setor;
+    public void setGestorSetor(GestorSetor gestor_setor) {
+        this.gestor_setor = gestor_setor.clone();
     }
 
     public double getValor() {
@@ -111,7 +111,7 @@ public class Fatura implements Comparable<Fatura>{
                this.data.isEqual(fatura.getData()) &&
                this.nif_cliente == fatura.getNifCliente() &&
                this.descricao.equals(fatura.getDescricao()) &&
-               this.setor.equals(fatura.getSetor()) &&
+               this.gestor_setor.equals(fatura.getGestorSetor()) &&
                this.valor == fatura.getValor() &&
                this.taxa == fatura.getTaxa();
     }
@@ -149,7 +149,7 @@ public class Fatura implements Comparable<Fatura>{
         this.data = LocalDate.MIN;
         this.nif_cliente = -1;
         this.descricao = "";
-        this.setor = "";
+        this.gestor_setor = new GestorSetor();
         this.valor = -1;
         this.taxa = 0;
     }
@@ -157,13 +157,13 @@ public class Fatura implements Comparable<Fatura>{
     /**
      * Construtor parametrizado para objetos da classe Fatura
      */
-    public Fatura(String empresa, int nif_emitente, LocalDate data, int nif_cliente, String descricao, String setor, double valor, double taxa) {
+    public Fatura(String empresa, int nif_emitente, LocalDate data, int nif_cliente, String descricao, GestorSetor gestor_setor, double valor, double taxa) {
         this.empresa = empresa;
         this.nif_emitente = nif_emitente;
         this.data = data;
         this.nif_cliente = nif_cliente;
         this.descricao = descricao;
-        this.setor = setor;
+        this.gestor_setor = gestor_setor.clone();
         this.valor = valor;
         this.taxa = taxa;
     }
@@ -177,7 +177,7 @@ public class Fatura implements Comparable<Fatura>{
         this.data = outra.getData();
         this.nif_cliente = outra.getNifCliente();
         this.descricao = outra.getDescricao();
-        this.setor = outra.getSetor();
+        this.gestor_setor = outra.getGestorSetor();
         this.valor = outra.getValor();
         this.taxa = outra.getTaxa();
     }

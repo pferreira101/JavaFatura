@@ -13,7 +13,19 @@ public class Contribuinte extends Entidade{
     private ArrayList<Fatura> faturas_pendentes;
 
 
-
+    double totalDeduzido(){ // FIXME: 03/05/2018 setor - filter isDedutivel e max_dedutivel
+        return this.faturas.stream().filter(f -> f.getGestorSetor().getSetorAtivo() != null).
+                                     mapToDouble(f -> f.valorAPagar() * this.coe_fiscal).
+                                     sum();
+    }
+    
+    double totalDeduzido(String setor){ // FIXME: 03/05/2018 basta o segundo filter??
+        return this.faturas.stream().filter(f -> f.getGestorSetor().getSetorAtivo() != null).
+                                     filter(f -> f.getGestorSetor().getSetorAtivo().getNome().equals(setor)).
+                                     mapToDouble(f -> f.valorAPagar() * this.coe_fiscal).
+                                     sum();
+    }
+    
     TreeSet<Fatura> sortBy(){
         TreeSet<Fatura> r = new TreeSet<Fatura>();
 

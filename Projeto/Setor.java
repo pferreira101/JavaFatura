@@ -2,6 +2,8 @@ public class Setor {
 
     private final String nome;
     private final double taxa;
+    private final boolean dedutivel;
+    private final double max_dedutivel;
 
 
     public String getNome(){
@@ -12,7 +14,13 @@ public class Setor {
         return this.taxa;
     }
 
+    public boolean isDedutivel() {
+        return this.dedutivel;
+    }
 
+    public double getMaxDedutivel() {
+        return this.max_dedutivel;
+    }
 
     // Equals & Clone & toString
 
@@ -23,7 +31,8 @@ public class Setor {
         Setor s = (Setor) o;
 
         return this.nome.equals(s.getNome()) &&
-               this.taxa == s.getTaxa();
+               this.taxa == s.getTaxa() &&
+               this.dedutivel == s.isDedutivel() ;
     }
 
     public Setor clone(){
@@ -40,16 +49,22 @@ public class Setor {
 
     public Setor(){
         this.nome = "";
-        this.taxa = -1;
+        this.taxa = 0;
+        this.dedutivel = false;
+        this.max_dedutivel = 0;
     }
 
-    public Setor(String nome, double taxa){
+    public Setor(String nome, double taxa, boolean dedutivel, double max_dedutivel){
         this.nome = nome;
         this.taxa = taxa;
+        this.dedutivel = dedutivel;
+        this.max_dedutivel = max_dedutivel;
     }
 
     public Setor(Setor outro){
         this.nome = outro.getNome();
         this.taxa = outro.getTaxa();
+        this.dedutivel = outro.isDedutivel();
+        this.max_dedutivel = outro.getMaxDedutivel();
     }
 }
