@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import Setor.*;
 
 public class Contribuinte extends Entidade{
     
@@ -12,6 +13,26 @@ public class Contribuinte extends Entidade{
     private ArrayList<Fatura> faturas;
     private ArrayList<Fatura> faturas_pendentes;
 
+
+
+    public void addFatura(Fatura f){
+        ArrayList<Fatura> nova;
+
+        if(f.getGestorSetor().getSetores().size() == 1){ // FIXME: 02/05/2018 comprimir
+            nova = this.getFaturas();
+
+            nova.add(f);
+
+            this.setFaturas(nova);
+        }
+        else{
+            nova = this.getFaturasPendentes();
+
+            nova.add(f);
+
+            this.setFaturasPendentes(nova);
+        }
+    }
 
     double totalDeduzido(){ // FIXME: 03/05/2018 setor - filter isDedutivel e max_dedutivel
         return this.faturas.stream().filter(f -> f.getGestorSetor().getSetorAtivo() != null).

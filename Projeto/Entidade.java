@@ -1,6 +1,6 @@
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.stream.Collectors;
+import Setor.*;
 
 public class Entidade {
 

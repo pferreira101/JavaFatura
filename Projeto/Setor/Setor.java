@@ -1,3 +1,5 @@
+package Setor;
+
 public class Setor {
 
     private final String nome;

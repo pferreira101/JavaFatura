@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import Setor.*;
 
 public class Empresa extends Entidade{
 
@@ -16,7 +17,7 @@ public class Empresa extends Entidade{
             gs = new GestorSetor(this.getSetores(), this.getSetores().get(0), new ArrayList<LogSetor>());
         }
         else{
-            gs = new GestorSetor(this.getSetores(), null, new ArrayList<LogSetor>());
+            gs = new GestorSetor(this.getSetores(), null, new ArrayList<LogSetor>()); // FIXME: 07/05/2018 new Setor() ?
         }
 
         Fatura f = new Fatura(this.getNome(), this.getNif(), LocalDate.now(), nif, descricao, gs, valor, taxa);
@@ -26,26 +27,6 @@ public class Empresa extends Entidade{
         return f;
     }
 
-
-    public void addFatura(Fatura f, Contribuinte c){
-        ArrayList<Fatura> nova;
-
-        if(f.getGestorSetor().getSetores().size() == 1){ // FIXME: 02/05/2018 comprimir
-            nova = c.getFaturas();
-
-            nova.add(f);
-
-            c.setFaturas(nova);
-        }
-        else{
-            nova = c.getFaturasPendentes();
-
-            nova.add(f);
-
-            c.setFaturasPendentes(nova);
-        }
-        
-    }
 
 
     public double totalFaturado(){ // FIXME: 03/05/2018 que valor é que é faturado?

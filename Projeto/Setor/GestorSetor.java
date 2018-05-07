@@ -1,5 +1,6 @@
+package Setor;
+
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GestorSetor {

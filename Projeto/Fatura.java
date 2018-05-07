@@ -1,6 +1,6 @@
+import Setor.GestorSetor;
+
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Scanner;
 
 public class Fatura implements Comparable<Fatura>{
 
