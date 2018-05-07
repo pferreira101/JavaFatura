@@ -1,0 +1,27 @@
+#BlueJ class context
+comment0.target=LogSetor
+comment1.params=
+comment1.target=java.lang.String\ getAntes()
+comment10.params=
+comment10.target=LogSetor()
+comment11.params=antes\ depois\ data
+comment11.target=LogSetor(java.lang.String,\ java.lang.String,\ java.time.LocalDate)
+comment12.params=outro
+comment12.target=LogSetor(LogSetor)
+comment2.params=antes
+comment2.target=void\ setAntes(java.lang.String)
+comment3.params=
+comment3.target=java.lang.String\ getDepois()
+comment4.params=depois
+comment4.target=void\ setDepois(java.lang.String)
+comment5.params=
+comment5.target=java.time.LocalDate\ getData()
+comment6.params=data
+comment6.target=void\ setData(java.time.LocalDate)
+comment7.params=o
+comment7.target=boolean\ equals(java.lang.Object)
+comment8.params=
+comment8.target=LogSetor\ clone()
+comment9.params=
+comment9.target=java.lang.String\ toString()
+numComments=13

@@ -1,10 +1,3 @@
-/**
- * Classe Fatura:
- * 
- * @ Henrique Pereira (a80261), Pedro Moreira (a82364), Pedro Ferreira (a??)
- * @ 2º Ano, 2º Semestre, POO)
- */
-
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Scanner;
