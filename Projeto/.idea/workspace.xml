@@ -23,19 +23,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Lares.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Setor/Lares.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-              <folding>
-                <element signature="e#64#65#0" expanded="true" />
-                <element signature="e#112#113#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Contribuinte.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Contribuinte.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -99,6 +86,25 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Sistema.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Sistema.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="476">
+              <caret line="46" column="5" lean-forward="true" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
+              <folding>
+                <element signature="e#998#999#0" expanded="true" />
+                <element signature="e#1036#1037#0" expanded="true" />
+                <element signature="e#1073#1074#0" expanded="true" />
+                <element signature="e#1111#1112#0" expanded="true" />
+                <element signature="e#1165#1166#0" expanded="true" />
+                <element signature="e#1219#1220#0" expanded="true" />
+                <element signature="e#1261#1262#0" expanded="true" />
+                <element signature="e#1311#1312#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Cabeleireiros.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Setor/Cabeleireiros.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -112,11 +118,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Empresa.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Empresa.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Empresa.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="306">
+              <caret line="18" column="13" lean-forward="true" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2652#2653#0" expanded="true" />
@@ -150,7 +156,6 @@
         <option value="$PROJECT_DIR$/LogSetor.java" />
         <option value="$PROJECT_DIR$/GestorSetor.java" />
         <option value="$PROJECT_DIR$/Fatura.java" />
-        <option value="$PROJECT_DIR$/Sistema.java" />
         <option value="$PROJECT_DIR$/Setor/Saude.java" />
         <option value="$PROJECT_DIR$/Setor/Imoveis.java" />
         <option value="$PROJECT_DIR$/Setor/Educacao.java" />
@@ -166,6 +171,7 @@
         <option value="$PROJECT_DIR$/Entidade.java" />
         <option value="$PROJECT_DIR$/Contribuinte.java" />
         <option value="$PROJECT_DIR$/Empresa.java" />
+        <option value="$PROJECT_DIR$/Sistema.java" />
       </list>
     </option>
   </component>
@@ -312,7 +318,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -581,17 +586,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Sistema.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="4" lean-forward="true" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-          <folding>
-            <element signature="e#915#916#0" expanded="true" />
-            <element signature="e#933#934#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Setor/Geral.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -736,14 +730,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Empresa.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+        <state relative-caret-position="306">
+          <caret line="18" column="13" lean-forward="true" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2652#2653#0" expanded="true" />
             <element signature="e#2692#2693#0" expanded="true" />
             <element signature="e#2727#2728#0" expanded="true" />
             <element signature="e#2774#2775#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sistema.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="46" column="5" lean-forward="true" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
+          <folding>
+            <element signature="e#998#999#0" expanded="true" />
+            <element signature="e#1036#1037#0" expanded="true" />
+            <element signature="e#1073#1074#0" expanded="true" />
+            <element signature="e#1111#1112#0" expanded="true" />
+            <element signature="e#1165#1166#0" expanded="true" />
+            <element signature="e#1219#1220#0" expanded="true" />
+            <element signature="e#1261#1262#0" expanded="true" />
+            <element signature="e#1311#1312#0" expanded="true" />
           </folding>
         </state>
       </provider>
