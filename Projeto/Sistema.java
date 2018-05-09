@@ -6,19 +6,18 @@ public class Sistema {
     private String admin; // FIXME: 01/05/2018
     private String admin_password; // FIXME: 01/05/2018
     private boolean admin_mode;
-    private Entidade entidade_ativa;
 
     public boolean registaEntidade(Entidade e) {
         Entidade nova = this.entidades.putIfAbsent(e.getNif(), e.clone());
         return (nova == null);
     }
 
-    public boolean entidadeLogIn(int nif, String password) { // FIXME: 07/05/2018 mudar para void e fazer Exception?
+    public boolean entidadeLogIn(int nif, String password) {
         Entidade entidade = this.entidades.get(nif);
         if (entidade == null) return false;
 
         if(entidade.getPassword().equals(password)){
-            setEntidadeAtiva(entidade);
+
             return true;
         }
         return false;
@@ -38,12 +37,6 @@ public class Sistema {
         return this.admin_mode;
     }
 
-    public void setEntidadeAtiva(Entidade entidade){
-        this.entidade_ativa = entidade.clone();
-    }
 
-    public Entidade getEntidadeAtiva() {
-        return this.entidade_ativa.clone();
-    }
 
 }
