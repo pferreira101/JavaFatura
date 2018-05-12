@@ -7,7 +7,7 @@ public class Entidade {
     private int nif;
     private String email;
     private String nome;
-    private String morada; // FIXME: 12/05/2018 para class Morada
+    private Morada morada;
     private String password;
     private ArrayList<Setor> setores;
 
@@ -38,12 +38,12 @@ public class Entidade {
         this.nome = nome;
     }
 
-    public String getMorada() {
-        return this.morada;
+    public Morada getMorada() {
+        return this.morada.clone();
     }
 
-    public void setMorada(String morada) {
-        this.morada = morada;
+    public void setMorada(Morada morada) {
+        this.morada = morada.clone();
     }
 
     public String getPassword() {
@@ -96,16 +96,16 @@ public class Entidade {
         this.nif = -1;
         this.email = "";
         this.nome = "";
-        this.morada = "";
+        this.morada = null; // FIXME: 12/05/2018
         this.password = "";
         this.setores = new ArrayList<>();
     }
 
-    public Entidade(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores) {
+    public Entidade(int nif, String email, String nome, Morada morada, String password, ArrayList<Setor> setores) {
         this.nif = nif;
         this.email = email;
         this.nome = nome;
-        this.morada = morada;
+        this.morada = morada.clone();
         this.password = password;
         this.setores = setores.stream().map(Setor::clone).
                                         collect(Collectors.toCollection(ArrayList::new));

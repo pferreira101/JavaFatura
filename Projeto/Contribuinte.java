@@ -154,7 +154,7 @@ public class Contribuinte extends Entidade{
         this.faturas_pendentes = new ArrayList<>();
     }
     
-    public Contribuinte(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores, int dep_familia, int[] nif_familia, double coe_fiscal, ArrayList<Fatura> faturas, ArrayList<Fatura> faturas_pendentes){
+    public Contribuinte(int nif, String email, String nome, Morada morada, String password, ArrayList<Setor> setores, int dep_familia, int[] nif_familia, double coe_fiscal, ArrayList<Fatura> faturas, ArrayList<Fatura> faturas_pendentes){
         super(nif, email, nome, morada, password, setores);
         this.dep_familia = dep_familia;
         this.nif_familia = Arrays.copyOf(nif_familia, nif_familia.length);

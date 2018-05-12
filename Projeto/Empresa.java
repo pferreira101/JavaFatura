@@ -1,13 +1,21 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import Setor.*;
 
 public class Empresa extends Entidade{
 
+
     private ArrayList<Fatura> faturas_emitidas;
+
+
+    public boolean doInterior(){
+        // FIXME: 12/05/2018 como ver que é do interior?
+        return true;
+    }
 
 
     public Fatura emiteFatura(int nif, String descricao, double valor, double taxa){ // FIXME: 02/05/2018 onde vamos buscar a taxa??
@@ -29,22 +37,61 @@ public class Empresa extends Entidade{
 
 
 
+    // Requisitos Básicos
+
+    public Set<Fatura> faturasEmitidas(){
+        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f1.getValor().compareTo(f2.getValor()));
+
+        this.faturas_emitidas.forEach(f -> r.add(f.clone()));
+
+        return r;
+    }
+
+    public Set<Fatura> faturasEmitidas(LocalDate inicio, LocalDate fim){
+        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f1.getData().compareTo(f2.getData()));
+
+        this.faturas_emitidas.stream().filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
+                                       forEach(f -> r.add(f.clone()));
+
+        return r;
+    }
+
+
+    public Set<Fatura> faturasFromNIF(int nif, LocalDate inicio, LocalDate fim){
+        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f1.getData().compareTo(f2.getData()));
+
+        this.faturas_emitidas.stream().filter(f -> f.getNifCliente() == nif).
+                                       filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
+                                       forEach(f -> r.add(f.clone()));
+
+        return r;
+    }
+
+    public Set<Fatura> faturasFromNIF(int nif){
+        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f2.getValor().compareTo(f1.getValor()));
+
+        this.faturas_emitidas.stream().filter(f -> f.getNifCliente() == nif).
+                              forEach(f -> r.add(f.clone()));
+
+        return r;
+    }
+
+
     public double totalFaturado(){ // FIXME: 03/05/2018 que valor é que é faturado?
         return this.faturas_emitidas.stream().mapToDouble(Fatura::getValor).
-                                              sum();
+                sum();
     }
 
     public double totalFaturado(LocalDate inicio, LocalDate fim){
         return this.faturas_emitidas.stream().filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
-                                              mapToDouble(Fatura::getValor).
-                                              sum();
+                mapToDouble(Fatura::getValor).
+                sum();
     }
 
 
 
-
     // Sorts
-
+    // FIXME: 12/05/2018 isto era para a interface mas serão precisas agora?
     TreeSet<Fatura> sortBy(){
         TreeSet<Fatura> r = new TreeSet<Fatura>();
 
@@ -60,7 +107,8 @@ public class Empresa extends Entidade{
 
         return r;
     }
-    
+
+
     // Getters & Setters
 
     public ArrayList<Fatura> getFaturasEmitidas(){
@@ -98,6 +146,7 @@ public class Empresa extends Entidade{
     }
 
 
+
     // Construtores
 
     public Empresa(){
@@ -105,7 +154,7 @@ public class Empresa extends Entidade{
         this.faturas_emitidas = new ArrayList<>();
     }
 
-    public Empresa(int nif, String email, String nome, String morada, String password, ArrayList<Setor> setores, ArrayList<Fatura> faturas_emitidas){
+    public Empresa(int nif, String email, String nome, Morada morada, String password, ArrayList<Setor> setores, ArrayList<Fatura> faturas_emitidas){
         super(nif, email, nome, morada, password, setores);
         this.faturas_emitidas = faturas_emitidas.stream().map(Fatura::clone).
                                                           collect(Collectors.toCollection(ArrayList::new));
