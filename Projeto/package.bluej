@@ -1,17 +1,17 @@
 #BlueJ package file
-dependency1.from=Programa
-dependency1.to=Sistema
+dependency1.from=Empresa
+dependency1.to=Fatura
 dependency1.type=UsesDependency
-dependency2.from=Programa
-dependency2.to=Entidade
+dependency2.from=Contribuinte
+dependency2.to=Fatura
 dependency2.type=UsesDependency
-dependency3.from=Empresa
-dependency3.to=Fatura
+dependency3.from=Sistema
+dependency3.to=Entidade
 dependency3.type=UsesDependency
-dependency4.from=Contribuinte
-dependency4.to=Fatura
+dependency4.from=Programa
+dependency4.to=Sistema
 dependency4.type=UsesDependency
-dependency5.from=Sistema
+dependency5.from=Programa
 dependency5.to=Entidade
 dependency5.type=UsesDependency
 editor.fx.0.height=739

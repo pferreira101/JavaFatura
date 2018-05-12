@@ -7,7 +7,7 @@ public class Entidade {
     private int nif;
     private String email;
     private String nome;
-    private String morada;
+    private String morada; // FIXME: 12/05/2018 para class Morada
     private String password;
     private ArrayList<Setor> setores;
 
