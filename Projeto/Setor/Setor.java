@@ -1,12 +1,13 @@
 package Setor;
 
+
 public class Setor {
 
     private final String nome;
     private final double taxa;
     private final boolean dedutivel;
     private final double max_dedutivel;
-
+    private double montante_deduzido;
 
     public String getNome(){
         return this.nome;
@@ -23,7 +24,20 @@ public class Setor {
     public double getMaxDedutivel() {
         return this.max_dedutivel;
     }
-
+    
+    public double getMontDeduzido() {
+        return this.montante_deduzido;
+    }
+    // Calcular valor a deduzir de uma fatura
+    
+    public void processaFatura(double valorFatura){
+    double a_deduzir = valorFatura*taxa;
+    
+    if(montante_deduzido + a_deduzir > max_dedutivel)
+        montante_deduzido = max_dedutivel;
+    else     
+        montante_deduzido += a_deduzir;
+    }
     // Equals & Clone & toString
 
     public boolean equals(Object o) {
@@ -54,13 +68,15 @@ public class Setor {
         this.taxa = 0;
         this.dedutivel = false;
         this.max_dedutivel = 0;
+        this.montante_deduzido = 0;
     }
 
-    public Setor(String nome, double taxa, boolean dedutivel, double max_dedutivel){
+    public Setor(String nome, double taxa, boolean dedutivel, double max_dedutivel, double montante_deduzido){
         this.nome = nome;
         this.taxa = taxa;
         this.dedutivel = dedutivel;
         this.max_dedutivel = max_dedutivel;
+        this.montante_deduzido = montante_deduzido;
     }
 
     public Setor(Setor outro){
@@ -68,5 +84,6 @@ public class Setor {
         this.taxa = outro.getTaxa();
         this.dedutivel = outro.isDedutivel();
         this.max_dedutivel = outro.getMaxDedutivel();
+        this.montante_deduzido = outro.getMontDeduzido();
     }
 }

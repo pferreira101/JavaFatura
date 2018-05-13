@@ -1,8 +1,11 @@
 import java.io.*;
+import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import Setor.*;
 
 public class Sistema {
 
@@ -27,6 +30,7 @@ public class Sistema {
         return false;
     }
 
+
     public void adminLogIn(String nome, String password) {
         if (this.admin.equals(nome) && this.admin_password.equals(password)) {
             setAdminMode(true);
@@ -42,11 +46,23 @@ public class Sistema {
     }
 
 
+    // Metodo para um contribuinte consultar montantes deduzidos por dependentes
+    
+    public Map<String, ArrayList<Setor>> consultaDeducoes(Contribuinte c){
+        HashMap<String, ArrayList<Setor>> res = new HashMap<>();
+        
+        for(int nif : c.getNIFFamilia()){
+            Contribuinte cf = (Contribuinte) entidades.get(nif);
+            ArrayList<Setor> setores = cf.getSetores();
+            res.put(cf.getNome(), setores);
+        }
+        return res;
+    }
 
     // ADMIN ONLY
 
     public Set<Contribuinte> top10Contribuintes(){
-        TreeSet<Contribuinte> r = new TreeSet<>((c1, c2) -> c1.totalDeduzido().compareTo(c2.totalDeduzido()));
+        TreeSet<Contribuinte> r = new TreeSet<>((c1,c2) -> Double.compare(c1.totalDeduzido(), c2.totalDeduzido()));
 
         this.entidades.values().stream().filter(e -> e instanceof Contribuinte).
                                          map(e -> { Contribuinte c = (Contribuinte) (e.clone());
@@ -59,8 +75,8 @@ public class Sistema {
     }
 
     public Set<Empresa> topXEmpresas(int x){
-        TreeSet<Empresa> r = new TreeSet<>((e1, e2) -> e1.totalDeduzido().compareTo(e2.totalDeduzido())); // FIXME: 12/05/2018 totalFaturado? total de faturas?
-
+        TreeSet<Empresa> r = new TreeSet<>((e1,e2) -> Double.compare(e1.totalFaturado(), e2.totalFaturado())); 
+        
         this.entidades.values().stream().filter(e -> e instanceof Empresa).
                                          map(e -> { Empresa em = (Empresa) (e.clone());
                                                     return em;

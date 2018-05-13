@@ -40,7 +40,7 @@ public class Empresa extends Entidade{
     // Requisitos Básicos
 
     public Set<Fatura> faturasEmitidas(){
-        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f1.getValor().compareTo(f2.getValor()));
+        TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> Double.compare(f1.getValor(), f2.getValor()));
 
         this.faturas_emitidas.forEach(f -> r.add(f.clone()));
 
@@ -68,7 +68,7 @@ public class Empresa extends Entidade{
     }
 
     public Set<Fatura> faturasFromNIF(int nif){
-        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f2.getValor().compareTo(f1.getValor()));
+        TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> Double.compare(f1.getValor(), f2.getValor()));
 
         this.faturas_emitidas.stream().filter(f -> f.getNifCliente() == nif).
                               forEach(f -> r.add(f.clone()));
