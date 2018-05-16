@@ -10,40 +10,38 @@ import Setor.*;
 public class Sistema {
 
     private HashMap<Integer, Entidade> entidades = new HashMap<>(); // FIXME: 01/05/2018
-    private String admin; // FIXME: 01/05/2018
+    private int admin_nif; // FIXME: 01/05/2018
     private String admin_password; // FIXME: 01/05/2018
     private boolean admin_mode;
+
+
+    // Registo de Entidades
 
     public boolean registaEntidade(Entidade e) {
         Entidade nova = this.entidades.putIfAbsent(e.getNif(), e.clone());
         return (nova == null);
     }
 
-    public boolean entidadeLogIn(int nif, String password) {
+    public boolean logIn(int nif, String password) {
         Entidade entidade = this.entidades.get(nif);
         if (entidade == null) return false;
 
         if(entidade.getPassword().equals(password)){
-
+            if(nif == this.getAdminNIF()) setAdminMode(true);
+            // FIXME: 16/05/2018 temos que ter entidade_ativa nesta class e fazer aqui o seu set
             return true;
         }
+
         return false;
     }
 
 
-    public void adminLogIn(String nome, String password) {
-        if (this.admin.equals(nome) && this.admin_password.equals(password)) {
-            setAdminMode(true);
-        }
+
+    public Entidade getEntidade(int nif){
+        return this.entidades.get(nif).clone();
     }
 
-    public void setAdminMode(boolean mode) {
-        this.admin_mode = mode;
-    }
 
-    public boolean getAdminMode() {
-        return this.admin_mode;
-    }
 
 
     // Metodo para um contribuinte consultar montantes deduzidos por dependentes
@@ -89,7 +87,7 @@ public class Sistema {
 
     // I/O
 
-    public void guardaEstado(String nome_ficheiro) throws FileNotFoundException, IOException{
+    public void saveSystem(String nome_ficheiro) throws FileNotFoundException, IOException{
         FileOutputStream fos = new FileOutputStream(nome_ficheiro);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -99,7 +97,7 @@ public class Sistema {
         oos.close();
     }
 
-    public static Sistema carregaEstado(String nome_ficheiro) throws FileNotFoundException, IOException, ClassNotFoundException{
+    public static Sistema loadSystem(String nome_ficheiro) throws FileNotFoundException, IOException, ClassNotFoundException{
         FileInputStream fis = new FileInputStream(nome_ficheiro);
         ObjectInputStream ois = new ObjectInputStream(fis);
 
@@ -108,6 +106,36 @@ public class Sistema {
         ois.close();
 
         return sys;
+    }
+
+
+
+
+    // Getters & Setters
+
+    public void setAdminMode(boolean mode) {
+        this.admin_mode = mode;
+    }
+
+    public boolean getAdminMode() {
+        return this.admin_mode;
+    }
+
+
+    public void setAdminNIF(int nif){
+        this.admin_nif = nif;
+    }
+
+    public int getAdminNIF(){
+        return this.admin_nif;
+    }
+
+    public void setAdminPassword(String pw){
+        this.admin_password = pw;
+    }
+
+    public String getAdminPassword(){
+        return this.admin_password;
     }
 
 }

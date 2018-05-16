@@ -6,3 +6,5 @@ Projeto/package.bluej
 *.xml
 Projeto/.idea/workspace.xml
 Projeto/Setor/LogSetor.class
+*.ctxt
+*.class
