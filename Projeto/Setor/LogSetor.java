@@ -1,8 +1,9 @@
 package Setor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class LogSetor {
+public class LogSetor implements Serializable {
 
     private String antes;
     private String depois;

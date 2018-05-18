@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,7 +7,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import Setor.*;
 
-public class Empresa extends Entidade{
+public class Empresa extends Entidade implements Serializable {
 
 
     private ArrayList<Fatura> faturas_emitidas;

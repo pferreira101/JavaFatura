@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -5,7 +6,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import Setor.*;
 
-public class Contribuinte extends Entidade{
+public class Contribuinte extends Entidade implements Serializable {
     
     private int dep_familia;
     private int[] nif_familia;

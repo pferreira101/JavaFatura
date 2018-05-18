@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Morada {
+public class Morada implements Serializable {
 
     private String rua;
     private int cod_postal;

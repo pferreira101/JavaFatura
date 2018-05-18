@@ -1,11 +1,12 @@
+import java.awt.desktop.SystemSleepEvent;
 import java.io.*;
+import java.util.Scanner;
 
-public class Menu {
+public class Menu implements Serializable{
 
     private int op;
     private String[][] operacoes = {{"1 - Login", "2 - Registar Entidade", "3 - Registar Empresa"},
-                                    {"1 - Total deduzido", "2 - Total deduzido por setor", "3 - "}};
-
+                                    {"1 - Total deduzido", "2 - Total deduzido por setor"}};
 
 
 
@@ -17,7 +18,9 @@ public class Menu {
     }
 
     public int getOp(){
-        return this.op;
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Operação: ");
+        return sc.nextInt();
     }
 
 

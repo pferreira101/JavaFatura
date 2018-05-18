@@ -1,9 +1,10 @@
 package Setor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class GestorSetor {
+public class GestorSetor implements Serializable {
     
     private ArrayList<Setor> setores;
     private Setor setor_ativo;

@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import Setor.*;
 
-public class Entidade {
+public class Entidade implements Serializable {
 
     private int nif;
     private String email;

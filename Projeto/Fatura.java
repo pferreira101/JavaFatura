@@ -1,8 +1,9 @@
 import Setor.GestorSetor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Fatura implements Comparable<Fatura>{
+public class Fatura implements Comparable<Fatura> , Serializable {
 
     private String empresa;
     private int nif_emitente;

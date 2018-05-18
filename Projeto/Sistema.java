@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import Setor.*;
 
-public class Sistema {
+public class Sistema implements Serializable{
 
     private HashMap<Integer, Entidade> entidades = new HashMap<>(); // FIXME: 01/05/2018
     private int admin_nif; // FIXME: 01/05/2018
