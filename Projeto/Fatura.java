@@ -1,5 +1,5 @@
 import Setor.GestorSetor;
-
+import Setor.Setor;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -122,9 +122,25 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     /**
      * Método que transforma um objeto Fatura numa String
      */
-    public String toString () {
-
-        return ""; // FIXME: 01/05/2018
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        String setor_fatura = "";
+        
+        if(gestor_setor.getSetores().size() == 1){
+            Setor setor_ativo = gestor_setor.getSetores().get(0);
+            setor_fatura = setor_ativo.getClass().getSimpleName();
+        }    
+        
+        s.append("Empresa: "); s.append(empresa); s.append('\n');
+        s.append("NIF emitente: "); s.append(nif_emitente); s.append('\n');
+        s.append("Setor: "); s.append(setor_fatura); s.append('\n');
+        s.append("Data: "); s.append(data); s.append('\n');
+        s.append("NIF cliente: "); s.append(nif_cliente); s.append('\n');
+        s.append("Valor: "); s.append(valor); s.append('\n');
+        s.append("Taxa: "); s.append(taxa); s.append('\n');
+        s.append("Total a pagar: "); s.append(this.valorAPagar()); s.append('\n');
+        s.append("*********************"); s.append('\n');
+        return s.toString(); 
     }
 
 

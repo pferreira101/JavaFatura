@@ -17,21 +17,12 @@ public class Contribuinte extends Entidade implements Serializable {
 
 
     public void addFatura(Fatura f){
-        ArrayList<Fatura> nova;
-
-        if(f.getGestorSetor().getSetores().size() == 1){ // FIXME: 02/05/2018 comprimir
-            nova = this.getFaturas();
-
-            nova.add(f);
-
-            this.setFaturas(nova);
+        
+        if(f.getGestorSetor().getSetores().size() == 1){ 
+            faturas.add(f.clone());
         }
         else{
-            nova = this.getFaturasPendentes();
-
-            nova.add(f);
-
-            this.setFaturasPendentes(nova);
+            faturas_pendentes.add(f.clone());
         }
     }
 

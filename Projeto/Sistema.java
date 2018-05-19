@@ -37,8 +37,17 @@ public class Sistema implements Serializable{
 
 
 
-    public Entidade getEntidade(int nif){
-        return this.entidades.get(nif).clone();
+    public Entidade getEntidade(int nif) throws NIFNaoRegistadoException{
+        Entidade r = this.entidades.get(nif);
+        
+        if(r == null){
+            StringBuilder error = new StringBuilder("NIF: ");
+            error.append(nif);
+            error.append("não se encontra registado no sistema.");
+            throw new NIFNaoRegistadoException(error.toString());
+        }
+        
+        return r.clone();
     }
 
 

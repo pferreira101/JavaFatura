@@ -1,4 +1,3 @@
-import java.awt.desktop.SystemSleepEvent;
 import java.io.*;
 import java.util.Scanner;
 
@@ -6,7 +5,7 @@ public class Menu implements Serializable{
 
     private int op;
     private String[][] operacoes = {{"1 - Login", "2 - Registar Entidade", "3 - Registar Empresa"},
-                                    {"1 - Total deduzido", "2 - Total deduzido por setor"}};
+                                    {"1 - Consultar Faturas", "2 - Total deduzido", "3 - Deduções Agregado Familiar"}};
 
 
 
