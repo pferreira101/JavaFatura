@@ -6,7 +6,11 @@ public class Menu implements Serializable{
     private int op;
     private String[][] operacoes = {{"1 - Login", "2 - Registar Entidade", "3 - Registar Empresa"},
                                     {"1 - Consultar Faturas", "2 - Total Deduzido", "3 - Deduções Agregado Familiar"},
-                                    {"1 - Emitir Fatura", "2 - Consultar Faturas (por data de emissão)", "3 - Consultar Faturas (por valor)", "4 - Total Faturado"}};
+                                    {"1 - Emitir Fatura", "2 - Consultar Faturas (por data de emissão)",
+                                            "3 - Consultar Faturas (por valor)",
+                                            "4 - Consultar Faturas De Certo Contribuinte (entre determinada data)",
+                                            "5 - Consultar Faturas De Certo Contribuinte (por valor)", "6 - Total Faturado"}
+                                    };
 
 
 
@@ -14,7 +18,8 @@ public class Menu implements Serializable{
         for(int i = 0; i < this.operacoes[menu].length; i++){
             System.out.println(this.operacoes[menu][i]);
         }
-        System.out.println("0 - Retroceder");
+        if (menu==0)System.out.println("0 - Gravar e Sair");
+        else System.out.println("0 - Logout");
     }
 
     public int getOp(){

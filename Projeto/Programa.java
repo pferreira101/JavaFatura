@@ -168,6 +168,36 @@ public class Programa implements Serializable {
         System.out.println(toPrint);
     }
 
+    // Método que imprime e ordena as faturas de uma empresa de um determinado contribuinte
+    // segundo uma ordem especifica (passada como arg: 0 pela data, 1 pelo valor)
+    public static void printFaturas(Empresa e, int nif, LocalDate inicio, LocalDate fim, int ord){
+        List <String> toPrint;
+
+        if(ord==0)
+            toPrint =  e.faturasFromNIF(nif,inicio,fim).stream().map(Fatura::toString).collect(Collectors.toList());
+        else
+            toPrint =  e.faturasFromNIF(nif).stream().map(Fatura::toString).collect(Collectors.toList());
+
+        System.out.println(toPrint);
+    }
+
+    public static void consultaFaturasNIF(Empresa e, int ord) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Introduza o NIF pretendido: ");
+        int nif = sc.nextInt();
+        if (ord==0) {
+            System.out.println("Introduza a data de início do intervalo a consultar (AAAA-MM-DD): ");
+            String str_inicio = sc.next();
+            LocalDate inicio = LocalDate.parse(str_inicio);
+            System.out.println("Introduza a data de fim do intervalo a consultar (AAAA-MM-DD): ");
+            String str_fim = sc.next();
+            LocalDate fim = LocalDate.parse(str_fim);
+            printFaturas(e, nif, inicio, fim, ord);
+        }
+        else printFaturas(e, nif, null, null, ord);
+    }
+
         
     // Metodo para fazer display dos valores deduzidos pelo contribuinte até então
     public static void printDeducoes(Contribuinte c){
@@ -231,11 +261,10 @@ public class Programa implements Serializable {
         }
         */
 
-        System.out.println("BEM-VINDO!");
-
         while(estado != -1){
             switch(estado){
                 case 0: do{ // ESTADO = 0 -> LOGIN PAGE
+                            System.out.println("JAVA FATURA - INÍCIO\n");
                             menu.showOps(0);
 
                             switch (menu.getOp()){
@@ -261,7 +290,8 @@ public class Programa implements Serializable {
                             }
                         } while(estado == 0);
                         break;
-                case 1: do{
+                case 1: do{ // ESTADO = 1 -> Página do Contribuinte
+                            System.out.println("BEM-VINDO(A) "+((Contribuinte)entidade_ativa).getNome()+"!\n");
                             menu.showOps(1);
 
                             switch (menu.getOp()){
@@ -281,7 +311,8 @@ public class Programa implements Serializable {
                             }
                         } while(estado == 1);
                         break;
-                case 2: do{
+                case 2: do{ // ESTADO = 2 -> Página da Empresa
+                            System.out.println("BEM-VINDO(A) "+((Empresa)entidade_ativa).getNome()+"!\n");
                             menu.showOps(2);
 
                             switch (menu.getOp()){
@@ -295,7 +326,13 @@ public class Programa implements Serializable {
                                 case 3 : printFaturas((Empresa) entidade_ativa,1);
                                          break;
 
-                                case 4 : printValorFaturado((Empresa)entidade_ativa);
+                                case 4 : consultaFaturasNIF((Empresa)entidade_ativa,0);
+                                         break;
+
+                                case 5 : consultaFaturasNIF((Empresa)entidade_ativa,1);
+                                         break;
+
+                                case 6 : printValorFaturado((Empresa)entidade_ativa);
                                          break;
 
                                 case 0: estado = 0;
