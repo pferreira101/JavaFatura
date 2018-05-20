@@ -5,7 +5,8 @@ public class Menu implements Serializable{
 
     private int op;
     private String[][] operacoes = {{"1 - Login", "2 - Registar Entidade", "3 - Registar Empresa"},
-                                    {"1 - Consultar Faturas", "2 - Total deduzido", "3 - Deduções Agregado Familiar"}};
+                                    {"1 - Consultar Faturas", "2 - Total deduzido", "3 - Deduções Agregado Familiar"},
+                                    {"1 - Emitir Fatura"}};
 
 
 

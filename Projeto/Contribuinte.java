@@ -16,6 +16,7 @@ public class Contribuinte extends Entidade implements Serializable {
 
 
 
+    // FIXME: 20/05/2018 Contabilizar valor dedutivel ao adicionar fatura
     public void addFatura(Fatura f){
         
         if(f.getGestorSetor().getSetores().size() == 1){ 

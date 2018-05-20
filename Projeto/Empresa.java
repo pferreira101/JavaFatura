@@ -19,21 +19,8 @@ public class Empresa extends Entidade implements Serializable {
     }
 
 
-    public Fatura emiteFatura(int nif, String descricao, double valor, double taxa){ // FIXME: 02/05/2018 onde vamos buscar a taxa??
-        GestorSetor gs;
-
-        if(this.getSetores().size() == 1){
-            gs = new GestorSetor(this.getSetores(), this.getSetores().get(0), new ArrayList<LogSetor>());
-        }
-        else{
-            gs = new GestorSetor(this.getSetores(), null, new ArrayList<LogSetor>()); // FIXME: 07/05/2018 new Setor() ?
-        }
-
-        Fatura f = new Fatura(this.getNome(), this.getNif(), LocalDate.now(), nif, descricao, gs, valor, taxa);
-
+    public void addFatura(Fatura f){ 
         this.faturas_emitidas.add(f.clone());
-
-        return f;
     }
 
 

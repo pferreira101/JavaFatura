@@ -12,7 +12,7 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     private String descricao; // descrição breve da despesa
     private GestorSetor gestor_setor;
     private double valor; // valor da fatura antes dos impostos
-    private double taxa;
+    private double taxa; 
     
 
 

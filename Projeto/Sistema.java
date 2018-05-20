@@ -34,8 +34,14 @@ public class Sistema implements Serializable{
 
         return false;
     }
-
-
+    
+    public void addFaturaSistema(Fatura f) throws NIFNaoRegistadoException {
+        Contribuinte cliente = (Contribuinte) getEntidade(f.getNifCliente());
+        Empresa empresa = (Empresa) getEntidade(f.getNifEmitente());
+        
+        cliente.addFatura(f);
+        empresa.addFatura(f);
+    }
 
     public Entidade getEntidade(int nif) throws NIFNaoRegistadoException{
         Entidade r = this.entidades.get(nif);
@@ -54,7 +60,7 @@ public class Sistema implements Serializable{
 
 
     // Metodo para um contribuinte consultar montantes deduzidos por dependentes
-    
+    // Eliminar talvez?
     public Map<String, ArrayList<Setor>> consultaDeducoes(Contribuinte c){
         HashMap<String, ArrayList<Setor>> res = new HashMap<>();
         

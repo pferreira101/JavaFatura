@@ -1,5 +1,5 @@
 import Setor.Setor;
-
+import Setor.GestorSetor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 import static java.lang.System.exit;
 
@@ -116,6 +117,36 @@ public class Programa implements Serializable {
         sys.registaEntidade(e);
 
     }
+   
+    // FIXME: 20/05/2018 Ver taxas e setores
+    public static void criaFatura(Empresa emp, Sistema sys){
+        Scanner sc = new Scanner(System.in);
+        LocalDate data;
+        int nif_cliente;
+        String descricao;
+        double valor;
+
+        System.out.println("NIF Cliente: ");
+        nif_cliente = sc.nextInt();
+
+        System.out.println("Valor: ");
+        valor = sc.nextDouble();
+
+        System.out.println("Descrição: ");
+        descricao = sc.next();
+        
+        data = LocalDate.now();
+        
+        Fatura f = new Fatura(emp.getNome(), emp.getNif(), data, nif_cliente, descricao, new GestorSetor(), valor, 0);
+
+        try{
+            sys.addFaturaSistema(f);
+        }
+        catch(NIFNaoRegistadoException e){
+            System.out.println(e.getMessage());
+        }
+
+    }
     
     // Este metodo pode ser generalizado para contribuinte e empresas (inclusao arrayList faturas na entidade)
     // Acrescentando um parametro pode ser usado para atribuir ordenacao á ordem de impressao
@@ -158,7 +189,7 @@ public class Programa implements Serializable {
     public static void main(String args[]){
         Sistema sys = new Sistema();
         Menu menu = new Menu();
-        int estado = 0; // FIXME: 16/05/2018 um estado para cada tipo de entidade? contribuinte, empresa, admin = contribuinte + ...
+        int estado = 0; 
         Entidade entidade_ativa = null;
 
 
@@ -192,7 +223,14 @@ public class Programa implements Serializable {
 
                             switch (menu.getOp()){
                                 case 1: entidade_ativa = loginEntidade(sys);
-                                        estado = 1; // FIXME: 16/05/2018 determinar que tipo de entidade fez login
+                                
+                                        if(entidade_ativa.getClass().getSimpleName().equals("Contribuinte"))
+                                            estado = 1;
+                                        else
+                                            if(entidade_ativa.getClass().getSimpleName().equals("Empresa"))
+                                                estado = 2;
+                                            else
+                                                estado = 3;
                                         break;
 
                                 case 2: registaContribuinte(sys);
@@ -224,7 +262,20 @@ public class Programa implements Serializable {
                                         entidade_ativa = null;
                                         break;
                             }
-                         } while(estado == 1);     
+                         } while(estado == 1);
+                  case 2: do{
+                            menu.showOps(2);
+
+                            switch (menu.getOp()){
+                                
+                                case 1: criaFatura((Empresa) entidade_ativa, sys);
+                                        break;
+                                        
+                                case 0: estado = 0;
+                                        entidade_ativa = null;
+                                        break;
+                            }
+                         } while(estado == 2);         
             }
 
         }
