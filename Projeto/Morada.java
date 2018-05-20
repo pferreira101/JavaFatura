@@ -4,7 +4,7 @@ import java.util.Objects;
 public class Morada implements Serializable {
 
     private String rua;
-    private int cod_postal;
+    private String cod_postal;
     private Distrito distrito;
 
     public String getRua(){
@@ -15,11 +15,11 @@ public class Morada implements Serializable {
         this.rua = rua;
     }
 
-    public int getCodPostal(){
+    public String getCodPostal(){
         return this.cod_postal;
     }
 
-    public void setCodPostal(int cod_postal){
+    public void setCodPostal(String cod_postal){
         this.cod_postal = cod_postal;
     }
 
@@ -42,7 +42,7 @@ public class Morada implements Serializable {
         Morada morada = (Morada) o;
         
         return this.rua.equals(morada.getRua()) &&
-               this.cod_postal == morada.getCodPostal() &&
+               this.cod_postal.equals(morada.getCodPostal()) &&
                this.distrito.equals(morada.getDistrito());
     }
     
@@ -58,11 +58,11 @@ public class Morada implements Serializable {
     
     public Morada(){
         this.rua = "";
-        this.cod_postal = -1;
+        this.cod_postal = "";
         this.distrito = null; // FIXME: 12/05/2018 
     }
 
-    public Morada(String rua, int cod_postal, Distrito distrito){
+    public Morada(String rua, String cod_postal, Distrito distrito){
         this.rua = rua;
         this.cod_postal = cod_postal;
         this.distrito = distrito;

@@ -69,7 +69,7 @@ public class Programa implements Serializable {
         System.out.println("Rua: ");
         String rua = sc.next();
         System.out.println("Código Postal: ");
-        int cod_postal = sc.nextInt();
+        String cod_postal = sc.next();
         // FIXME: 18/05/2018 Distrito
 
         morada = new Morada(rua, cod_postal, null);
@@ -95,18 +95,18 @@ public class Programa implements Serializable {
         nif = sc.nextInt();
 
         System.out.println("Nome: ");
-        nome = sc.next();
+        nome = sc.nextLine();
 
         System.out.println("E-mail: ");
-        email = sc.next();
+        email = sc.nextLine();
 
         System.out.println("Password: ");
-        password = sc.next();
+        password = sc.nextLine();
 
         System.out.println("Rua: ");
-        String rua = sc.next();
+        String rua = sc.nextLine();
         System.out.println("Código Postal: ");
-        int cod_postal = sc.nextInt();
+        String cod_postal = sc.nextLine();
         // FIXME: 18/05/2018 Distrito
 
         morada = new Morada(rua, cod_postal, null);
