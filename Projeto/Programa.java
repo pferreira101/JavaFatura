@@ -156,14 +156,31 @@ public class Programa implements Serializable {
         System.out.println(toPrint);
     }
 
+    // Método que imprime e ordena as faturas de uma empresa segundo uma ordem especifica (passada como arg: 0 pela data, 1 pelo valor)
+    public static void printFaturas(Empresa e, int ord){
+        List <String> toPrint;
+
+        if(ord==0)
+            toPrint =  e.faturasEmitidasData().stream().map(Fatura::toString).collect(Collectors.toList());
+        else
+            toPrint =  e.faturasEmitidasValor().stream().map(Fatura::toString).collect(Collectors.toList());
+
+        System.out.println(toPrint);
+    }
+
         
     // Metodo para fazer display dos valores deduzidos pelo contribuinte até então
     public static void printDeducoes(Contribuinte c){
         for(Setor s : c.getSetores()){
             System.out.println(s.getClass().getSimpleName() + ": " + s.getMontDeduzido());
         }
-        
+
         System.out.println("Total Deduzido: " + c.totalDeduzido());
+    }
+
+    // Metodo para fazer display do valor total faturado por uma empresa
+    public static void printValorFaturado(Empresa e){
+        System.out.println("Total Faturado: " + e.totalFaturado());
     }
     
     // Metodo para consultar o valor deduzido pelos familiares
@@ -243,8 +260,8 @@ public class Programa implements Serializable {
                                         break;
                             }
                         } while(estado == 0);
-                        
-                 case 1: do{
+                        break;
+                case 1: do{
                             menu.showOps(1);
 
                             switch (menu.getOp()){
@@ -262,20 +279,31 @@ public class Programa implements Serializable {
                                         entidade_ativa = null;
                                         break;
                             }
-                         } while(estado == 1);
-                  case 2: do{
+                        } while(estado == 1);
+                        break;
+                case 2: do{
                             menu.showOps(2);
 
                             switch (menu.getOp()){
                                 
                                 case 1: criaFatura((Empresa) entidade_ativa, sys);
                                         break;
-                                        
+
+                                case 2 : printFaturas((Empresa) entidade_ativa,0);
+                                         break;
+
+                                case 3 : printFaturas((Empresa) entidade_ativa,1);
+                                         break;
+
+                                case 4 : printValorFaturado((Empresa)entidade_ativa);
+                                         break;
+
                                 case 0: estado = 0;
                                         entidade_ativa = null;
                                         break;
                             }
-                         } while(estado == 2);         
+                        } while(estado == 2);
+                        break;
             }
 
         }

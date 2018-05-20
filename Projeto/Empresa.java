@@ -27,8 +27,16 @@ public class Empresa extends Entidade implements Serializable {
 
     // Requisitos Básicos
 
-    public Set<Fatura> faturasEmitidas(){
+    public Set<Fatura> faturasEmitidasValor(){
         TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> Double.compare(f1.getValor(), f2.getValor()));
+
+        this.faturas_emitidas.forEach(f -> r.add(f.clone()));
+
+        return r;
+    }
+
+    public Set<Fatura> faturasEmitidasData(){
+        TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> f1.getData().compareTo(f2.getData()));
 
         this.faturas_emitidas.forEach(f -> r.add(f.clone()));
 
