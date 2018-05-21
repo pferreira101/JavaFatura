@@ -14,8 +14,7 @@ public class Empresa extends Entidade implements Serializable {
 
 
     public boolean doInterior(){
-        // FIXME: 12/05/2018 como ver que é do interior?
-        return true;
+        return super.getMorada().getDistrito().isInterior();
     }
 
 
