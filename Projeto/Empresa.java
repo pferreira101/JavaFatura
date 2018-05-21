@@ -14,7 +14,7 @@ public class Empresa extends Entidade implements Serializable {
 
 
     public boolean doInterior(){
-        return super.getMorada().getDistrito().isInterior();
+        return getMorada().getDistrito().isInterior();
     }
 
 

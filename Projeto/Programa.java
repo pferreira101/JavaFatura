@@ -46,11 +46,13 @@ public class Programa implements Serializable {
 
     public static void registaContribuinte(Sistema sys){ // FIXME: 16/05/2018 verificar se todos os inputs sao validos porque senao crash
         Scanner sc = new Scanner(System.in);
-        int nif, dep_familia = 0;
+        int nif, dep_familia = 0, n_distrito;
         int[] nif_familia = {};
         double coe_fiscal = 0;
         String email, nome, password;
         Morada morada;
+        Distrito[] distritos = Distrito.values();
+        Distrito distrito;
         ArrayList<Setor> setores = new ArrayList<Setor>(); // FIXME: 16/05/2018 como vamos criar novos setores ao ler uma string do scanner?
         ArrayList<Fatura> faturas = new ArrayList<Fatura>(), faturas_pendentes = new ArrayList<Fatura>();
 
@@ -72,11 +74,17 @@ public class Programa implements Serializable {
         System.out.println("Código Postal (XXXX-XXX): ");
         String cod_postal = sc.next();
 
-        System.out.println("Distrito: \n1 - AVEIRO; 2 - BEJA; 3 - BRAGA; 4 - BRAGANÇA; 5 - CASTELO BRANCO; 6 - COIMBRA\n" +
-                "7 - ÉVORA; 8 - FARO; 9 - GUARDA; 10 - LEIRIA; 11 - LISBOA; 12 - PORTALEGRE\n13 - PORTO;" +
-                " 14 - SANTARÉM; 15 - SETÚBAL; 16 - VIANA DO CASTELO; 17 - VILA REAL; 18 - VISEU");
-        int distrito = sc.nextInt();
-
+        System.out.println("Distrito:");
+        for(Distrito d : distritos)
+            System.out.printf("%d - %s\n", d.ordinal()+1, d.getNome());
+            
+        do{
+            n_distrito = sc.nextInt();            
+        }
+        while(n_distrito < 1 || n_distrito > distritos.length);
+        
+        distrito = distritos[n_distrito-1];
+        
         morada = new Morada(rua, cod_postal,distrito);
 
         // FIXME: 16/05/2018 fazer o resto
@@ -91,9 +99,11 @@ public class Programa implements Serializable {
 
     public static void registaEmpresa(Sistema sys){ // FIXME: 16/05/2018 verificar se todos os inputs sao validos porque senao crash
         Scanner sc = new Scanner(System.in);
-        int nif;
+        int nif, n_distrito;
         String email, nome, password;
         Morada morada;
+        Distrito[] distritos = Distrito.values();
+        Distrito distrito;
         ArrayList<Setor> setores = new ArrayList<Setor>(); // FIXME: 16/05/2018 como vamos criar novos setores ao ler uma string do scanner?
         ArrayList<Fatura> faturas_emitidas = new ArrayList<Fatura>();
 
@@ -113,12 +123,18 @@ public class Programa implements Serializable {
         String rua = sc.next();
         System.out.println("Código Postal (XXXX-XXX): ");
         String cod_postal = sc.next();
+        
+        System.out.println("Distrito:");
+        for(Distrito d : distritos)
+            System.out.printf("%d - %s\n", d.ordinal()+1, d.getNome());
+            
+        do{
+            n_distrito = sc.nextInt();            
+        }
+        while(n_distrito < 1 || n_distrito > distritos.length);
 
-        System.out.println("Distrito: \n1 - AVEIRO; 2 - BEJA; 3 - BRAGA; 4 - BRAGANÇA; 5 - CASTELO BRANCO; 6 - COIMBRA\n" +
-                "7 - ÉVORA; 8 - FARO; 9 - GUARDA; 10 - LEIRIA; 11 - LISBOA; 12 - PORTALEGRE\n13 - PORTO;" +
-                " 14 - SANTARÉM; 15 - SETÚBAL; 16 - VIANA DO CASTELO; 17 - VILA REAL; 18 - VISEU");
-        int distrito = sc.nextInt();
-
+        distrito = distritos[n_distrito-1];
+        
         morada = new Morada(rua, cod_postal,distrito);
 
         Empresa e = new Empresa(nif, email, nome, morada, password, setores, faturas_emitidas);
