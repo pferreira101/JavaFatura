@@ -68,9 +68,10 @@ public class Programa implements Serializable {
 
         System.out.println("Rua: ");
         String rua = sc.next();
+
         System.out.println("Código Postal (XXXX-XXX): ");
         String cod_postal = sc.next();
-        // FIXME: 18/05/2018 Distrito: Fica assim??
+
         System.out.println("Distrito: \n1 - AVEIRO; 2 - BEJA; 3 - BRAGA; 4 - BRAGANÇA; 5 - CASTELO BRANCO; 6 - COIMBRA\n" +
                 "7 - ÉVORA; 8 - FARO; 9 - GUARDA; 10 - LEIRIA; 11 - LISBOA; 12 - PORTALEGRE\n13 - PORTO;" +
                 " 14 - SANTARÉM; 15 - SETÚBAL; 16 - VIANA DO CASTELO; 17 - VILA REAL; 18 - VISEU");
@@ -112,7 +113,7 @@ public class Programa implements Serializable {
         String rua = sc.next();
         System.out.println("Código Postal (XXXX-XXX): ");
         String cod_postal = sc.next();
-        // FIXME: 21/05/2018 Distrito: Fica assim?
+
         System.out.println("Distrito: \n1 - AVEIRO; 2 - BEJA; 3 - BRAGA; 4 - BRAGANÇA; 5 - CASTELO BRANCO; 6 - COIMBRA\n" +
                 "7 - ÉVORA; 8 - FARO; 9 - GUARDA; 10 - LEIRIA; 11 - LISBOA; 12 - PORTALEGRE\n13 - PORTO;" +
                 " 14 - SANTARÉM; 15 - SETÚBAL; 16 - VIANA DO CASTELO; 17 - VILA REAL; 18 - VISEU");
