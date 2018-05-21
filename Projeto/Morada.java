@@ -31,8 +31,6 @@ public class Morada implements Serializable {
         this.distrito = distrito;
     }
 
-    
-
     // Equals & Clone & toString
     
     public boolean equals(Object o){
@@ -66,6 +64,31 @@ public class Morada implements Serializable {
         this.rua = rua;
         this.cod_postal = cod_postal;
         this.distrito = distrito;
+    }
+
+    public Morada(String rua, String cod_postal, int distrito){
+        this.rua = rua;
+        this.cod_postal = cod_postal;
+        switch(distrito) {
+            case 1: this.distrito = Distrito.AVEIRO; break;
+            case 2: this.distrito = Distrito.BEJA; break;
+            case 3: this.distrito = Distrito.BRAGA; break;
+            case 4: this.distrito = Distrito.BRAGANCA; break;
+            case 5: this.distrito = Distrito.CASTELOBRANCO; break;
+            case 6: this.distrito = Distrito.COIMBRA; break;
+            case 7: this.distrito = Distrito.EVORA; break;
+            case 8: this.distrito = Distrito.FARO; break;
+            case 9: this.distrito = Distrito.GUARDA; break;
+            case 10: this.distrito = Distrito.LEIRIA; break;
+            case 11: this.distrito = Distrito.LISBOA; break;
+            case 12: this.distrito = Distrito.PORTALEGRE; break;
+            case 13: this.distrito = Distrito.PORTO; break;
+            case 14: this.distrito = Distrito.SANTAREM; break;
+            case 15: this.distrito = Distrito.SETUBAL;
+            case 16: this.distrito = Distrito.VIANACASTELO; break;
+            case 17: this.distrito = Distrito.VILAREAL; break;
+            case 18: this.distrito = Distrito.VISEU; break;
+        }
     }
     
     public Morada(Morada outra){

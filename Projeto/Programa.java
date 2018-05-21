@@ -68,18 +68,23 @@ public class Programa implements Serializable {
 
         System.out.println("Rua: ");
         String rua = sc.next();
-        System.out.println("Código Postal: ");
+        System.out.println("Código Postal (XXXX-XXX): ");
         String cod_postal = sc.next();
-        // FIXME: 18/05/2018 Distrito
+        // FIXME: 18/05/2018 Distrito: Fica assim??
+        System.out.println("Distrito: \n1 - AVEIRO; 2 - BEJA; 3 - BRAGA; 4 - BRAGANÇA; 5 - CASTELO BRANCO; 6 - COIMBRA\n" +
+                "7 - ÉVORA; 8 - FARO; 9 - GUARDA; 10 - LEIRIA; 11 - LISBOA; 12 - PORTALEGRE\n13 - PORTO;" +
+                " 14 - SANTARÉM; 15 - SETÚBAL; 16 - VIANA DO CASTELO; 17 - VILA REAL; 18 - VISEU");
+        int distrito = sc.nextInt();
 
-        morada = new Morada(rua, cod_postal, null);
+        morada = new Morada(rua, cod_postal,distrito);
 
         // FIXME: 16/05/2018 fazer o resto
-
 
         Contribuinte c = new Contribuinte(nif, email, nome, morada, password, setores, dep_familia, nif_familia, coe_fiscal, faturas, faturas_pendentes);
 
         sys.registaEntidade(c);
+
+        System.out.println("Registo efetuado com sucesso!");
 
     }
 
@@ -95,26 +100,31 @@ public class Programa implements Serializable {
         nif = sc.nextInt();
 
         System.out.println("Nome: ");
-        nome = sc.nextLine();
+        nome = sc.next();
 
         System.out.println("E-mail: ");
-        email = sc.nextLine();
+        email = sc.next();
 
         System.out.println("Password: ");
-        password = sc.nextLine();
+        password = sc.next();
 
         System.out.println("Rua: ");
-        String rua = sc.nextLine();
-        System.out.println("Código Postal: ");
-        String cod_postal = sc.nextLine();
-        // FIXME: 18/05/2018 Distrito
+        String rua = sc.next();
+        System.out.println("Código Postal (XXXX-XXX): ");
+        String cod_postal = sc.next();
+        // FIXME: 21/05/2018 Distrito: Fica assim?
+        System.out.println("Distrito: \n1 - AVEIRO; 2 - BEJA; 3 - BRAGA; 4 - BRAGANÇA; 5 - CASTELO BRANCO; 6 - COIMBRA\n" +
+                "7 - ÉVORA; 8 - FARO; 9 - GUARDA; 10 - LEIRIA; 11 - LISBOA; 12 - PORTALEGRE\n13 - PORTO;" +
+                " 14 - SANTARÉM; 15 - SETÚBAL; 16 - VIANA DO CASTELO; 17 - VILA REAL; 18 - VISEU");
+        int distrito = sc.nextInt();
 
-        morada = new Morada(rua, cod_postal, null);
-
+        morada = new Morada(rua, cod_postal,distrito);
 
         Empresa e = new Empresa(nif, email, nome, morada, password, setores, faturas_emitidas);
 
         sys.registaEntidade(e);
+
+        System.out.println("Registo efetuado com sucesso!");
 
     }
    
