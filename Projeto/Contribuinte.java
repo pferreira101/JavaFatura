@@ -8,9 +8,8 @@ import java.util.stream.Collectors;
 
 public class Contribuinte extends Entidade implements Serializable {
     
-    private int[] nif_familia;
+    private List<Integer> nif_familia;
     private int num_dependentes;
-    private double bonus_fam_num;
     private GestorSetor gestor_deducoes;
     private ArrayList<Fatura> faturas;
     private ArrayList<Fatura> faturas_pendentes;
@@ -110,20 +109,12 @@ public class Contribuinte extends Entidade implements Serializable {
         this.num_dependentes = num_dependentes;
     }
     
-    public int[] getNIFFamilia(){
-        return Arrays.copyOf(this.nif_familia, this.nif_familia.length);
+    public List<Integer> getNIFFamilia(){
+        return new ArrayList(this.nif_familia);
     }
     
-    public void setNIFFamilia(int[] nif_familia){
-        this.nif_familia = Arrays.copyOf(nif_familia, nif_familia.length);
-    }
-
-    public double getBonusDeducao(){
-        return this.bonus_fam_num;
-    }
-
-    public void setBonusDeducao(double bonus){
-        this.bonus_fam_num = bonus;
+    public void setNIFFamilia(List<Integer> nif_familia){
+        nif_familia.stream().forEach(nif -> this.nif_familia.add(nif));
     }
 
     public ArrayList<Fatura> getFaturas(){
@@ -169,8 +160,7 @@ public class Contribuinte extends Entidade implements Serializable {
 
         return super.equals(c) &&
                this.num_dependentes == c.getNumDependentes() &&
-               Arrays.equals(this.nif_familia, c.getNIFFamilia()) &&
-               this.bonus_fam_num == c.getBonusDeducao() &&
+               this.nif_familia.equals(c.getNIFFamilia()) &&
                this.faturas.equals(c.getFaturas()) &&
                this.faturas_pendentes.equals(c.getFaturasPendentes());
     }
@@ -191,16 +181,14 @@ public class Contribuinte extends Entidade implements Serializable {
         super();
         this.num_dependentes = 0;
         this.nif_familia = null;
-        this.bonus_fam_num = 0;
         this.faturas = new ArrayList<>();
         this.faturas_pendentes = new ArrayList<>();
     }
     
-    public Contribuinte(int nif, String email, String nome, Morada morada, String password, int num_dependentes, int[] nif_familia, double bonus, GestorSetor ges_deducoes, ArrayList<Fatura> faturas, ArrayList<Fatura> faturas_pendentes){
+    public Contribuinte(int nif, String email, String nome, Morada morada, String password, int num_dependentes, List<Integer> nif_familia, GestorSetor ges_deducoes, List<Fatura> faturas, List<Fatura> faturas_pendentes){
         super(nif, email, nome, morada, password);
         this.num_dependentes = num_dependentes;
-        this.nif_familia = Arrays.copyOf(nif_familia, nif_familia.length);
-        this.bonus_fam_num = bonus;
+        this.nif_familia = nif_familia.stream().collect(Collectors.toCollection(ArrayList::new));
         this.faturas = faturas.stream().map(Fatura::clone).
                                         collect(Collectors.toCollection(ArrayList::new));
         this.faturas_pendentes = faturas.stream().map(Fatura::clone).
@@ -212,7 +200,6 @@ public class Contribuinte extends Entidade implements Serializable {
         super(outro);
         this.num_dependentes = outro.getNumDependentes();
         this.nif_familia = outro.getNIFFamilia();
-        this.bonus_fam_num = outro.getBonusDeducao();
         this.faturas = outro.getFaturas();
         this.faturas_pendentes = outro.getFaturasPendentes();
         this.gestor_deducoes = outro.getGestorSetor();

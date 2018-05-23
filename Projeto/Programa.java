@@ -44,14 +44,14 @@ public class Programa implements Serializable {
 
     public static void registaContribuinte(Sistema sys){ // FIXME: 16/05/2018 verificar se todos os inputs sao validos porque senao crash
         Scanner sc = new Scanner(System.in);
-        int nif, dep_familia = 0, n_distrito;
-        int[] nif_familia = {};
+        int nif, dep_familia = 0, n_distrito, nif_filho, n_filhos, n_nifs_inseridos=0;
         double coe_fiscal = 0;
         String email, nome, password;
         Morada morada;
         Distrito[] distritos = Distrito.values();
         Distrito distrito;
         GestorSetor gestor = new GestorSetor();
+        ArrayList<Integer> nif_familia = new ArrayList<>();
         ArrayList<Setor> setores = new ArrayList<Setor>(); // FIXME: 16/05/2018 como vamos criar novos setores ao ler uma string do scanner?
         ArrayList<Fatura> faturas = new ArrayList<Fatura>(), faturas_pendentes = new ArrayList<Fatura>();
 
@@ -86,9 +86,21 @@ public class Programa implements Serializable {
         
         morada = new Morada(rua, cod_postal,distrito);
 
-        // FIXME: 16/05/2018 fazer o resto
+        System.out.println("Número de filhos:");
+        n_filhos = sc.nextInt();
+        
+        System.out.println("Insira o(s) seu(s) NIF(s)");
+        while(n_nifs_inseridos != n_filhos){
+            nif_filho = sc.nextInt();
+            if(!nif_familia.contains(nif_filho)){
+                nif_familia.add(nif_filho);
+                n_nifs_inseridos++;
+            }
+            else 
+                System.out.println("Já inseriu esse NIF");
+        }
 
-        Contribuinte c = new Contribuinte(nif, email, nome, morada, password, dep_familia, nif_familia, coe_fiscal, gestor, faturas, faturas_pendentes);
+        Contribuinte c = new Contribuinte(nif, email, nome, morada, password, dep_familia, nif_familia, gestor, faturas, faturas_pendentes);
 
         sys.registaEntidade(c);
 
@@ -348,7 +360,7 @@ public class Programa implements Serializable {
             }
         }
         
-        if(c.getNIFFamilia().length == 0)
+        if(c.getNIFFamilia().size() == 0)
             System.out.println("Não possui elementos no seu agregado familiar");
     }
     
