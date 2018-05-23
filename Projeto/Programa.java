@@ -1,5 +1,3 @@
-import Setor.Setor;
-import Setor.GestorSetor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -53,6 +51,7 @@ public class Programa implements Serializable {
         Morada morada;
         Distrito[] distritos = Distrito.values();
         Distrito distrito;
+        GestorSetor gestor = new GestorSetor();
         ArrayList<Setor> setores = new ArrayList<Setor>(); // FIXME: 16/05/2018 como vamos criar novos setores ao ler uma string do scanner?
         ArrayList<Fatura> faturas = new ArrayList<Fatura>(), faturas_pendentes = new ArrayList<Fatura>();
 
@@ -89,7 +88,7 @@ public class Programa implements Serializable {
 
         // FIXME: 16/05/2018 fazer o resto
 
-        Contribuinte c = new Contribuinte(nif, email, nome, morada, password, setores, dep_familia, nif_familia, coe_fiscal, faturas, faturas_pendentes);
+        Contribuinte c = new Contribuinte(nif, email, nome, morada, password, dep_familia, nif_familia, coe_fiscal, gestor, faturas, faturas_pendentes);
 
         sys.registaEntidade(c);
 
@@ -99,13 +98,15 @@ public class Programa implements Serializable {
 
     public static void registaEmpresa(Sistema sys){ // FIXME: 16/05/2018 verificar se todos os inputs sao validos porque senao crash
         Scanner sc = new Scanner(System.in);
-        int nif, n_distrito;
-        String email, nome, password;
+        int nif, n_distrito, n_setores, n_escolhidos=0;
+        String email, nome, password, setor_escolhido;
         Morada morada;
+        GestorSetor setores_aux = new GestorSetor();
+        List<Setor> setores = setores_aux.getSetores();
         Distrito[] distritos = Distrito.values();
         Distrito distrito;
-        ArrayList<Setor> setores = new ArrayList<Setor>(); // FIXME: 16/05/2018 como vamos criar novos setores ao ler uma string do scanner?
-        ArrayList<Fatura> faturas_emitidas = new ArrayList<Fatura>();
+        ArrayList<String> set_emp = new ArrayList<>(); // FIXME: 16/05/2018 como vamos criar novos setores ao ler uma string do scanner?
+        ArrayList<Fatura> faturas_emitidas = new ArrayList<>();
 
         System.out.println("NIF: ");
         nif = sc.nextInt();
@@ -126,8 +127,8 @@ public class Programa implements Serializable {
         
         System.out.println("Distrito:");
         for(Distrito d : distritos)
-            System.out.printf("%d - %s\n", d.ordinal()+1, d.getNome());
-            
+            System.out.printf("%d - %s\n", d.ordinal()+1, d.getNome());     
+        
         do{
             n_distrito = sc.nextInt();            
         }
@@ -135,9 +136,24 @@ public class Programa implements Serializable {
 
         distrito = distritos[n_distrito-1];
         
+        System.out.println("Número de setores económicos em que a empresa participa:"); 
+        do{
+            n_setores = sc.nextInt();
+        }while(n_setores < 1 || n_setores > setores.size());    
+        
+        do{
+            setor_escolhido = escolheSetor();
+            if(!set_emp.contains(setor_escolhido)){
+                set_emp.add(setor_escolhido);
+                n_escolhidos++;
+            }
+            else
+                System.out.println("Já escolheu esse setor.");
+        }while(n_escolhidos != n_setores);
+        
         morada = new Morada(rua, cod_postal,distrito);
 
-        Empresa e = new Empresa(nif, email, nome, morada, password, setores, faturas_emitidas);
+        Empresa e = new Empresa(nif, email, nome, morada, password, set_emp, faturas_emitidas);
 
         sys.registaEntidade(e);
 
@@ -164,7 +180,7 @@ public class Programa implements Serializable {
         
         data = LocalDate.now();
         
-        Fatura f = new Fatura(emp.getNome(), emp.getNif(), data, nif_cliente, descricao, new GestorSetor(), valor, 0);
+        Fatura f = new Fatura(emp.getNome(), emp.getNif(), data, nif_cliente, descricao, new LogSetor(), valor, 0, emp.getBonusDeducao());
 
         try{
             sys.addFaturaSistema(f);
@@ -174,6 +190,83 @@ public class Programa implements Serializable {
         }
 
     }
+    
+    public static Fatura escolheFatura(List<Fatura> faturas){
+        Scanner sc = new Scanner(System.in);
+        Fatura f_escolhida = null;
+        int i = 1, opcao;
+        
+        System.out.println("Escolha uma Fatura:");
+        for(Fatura f : faturas)
+            System.out.printf("%d - %s %s %f\n", i++, f.getData().toString(), f.getEmpresa(), f.getValor());
+       
+        System.out.printf("\n\n0 - Retroceder");    
+        
+        do{
+            opcao = sc.nextInt();              
+        }
+        while(opcao < 0 || opcao > faturas.size());
+        
+        if(opcao != 0)
+            f_escolhida = faturas.get(opcao-1);
+        
+        return f_escolhida;        
+    }
+    
+    public static String escolheSetor(){
+        Scanner sc = new Scanner(System.in);
+        GestorSetor aux = new GestorSetor();
+        List <Setor> setores = aux.getSetores();
+        String setor_escolhido = null;
+        int i = 1, opcao;
+        
+        System.out.println("Escolha um Setor de Atividade Económica:");
+        for(Setor setor : setores)
+            System.out.printf("%d - %s\n", i++, setor.getNome());
+       
+        System.out.printf("\n\n0 - Retroceder");    
+        
+        do{
+            opcao = sc.nextInt();              
+        }
+        while(opcao < 0 || opcao > setores.size());
+        
+        if(opcao != 0)
+            setor_escolhido = setores.get(opcao-1).getNome();
+        
+        return setor_escolhido;    
+    }
+    
+
+ 
+    // Metodo que permite atribuir sector a uma fatura
+    // recebe como argumentos uma lista de faturas para poder ser aplicada tanto a pendentes como em casos de alteracao de setor
+    public static void atribuiSetor(Sistema sys, Contribuinte c, List<Fatura> faturas){
+        Fatura a_alterar;
+        String setor;
+        
+        if(faturas.size() == 0)
+            System.out.println("Não tem faturas nesta categoria");
+            
+        else{   
+            
+            do{
+                a_alterar = escolheFatura(faturas);
+                setor = escolheSetor();
+            
+                if(a_alterar == null)
+                    break;
+            }while(setor == null);
+        
+            if(a_alterar != null)
+                sys.alteraSetorFatura(c, a_alterar, setor);                
+        }
+    }
+    
+    
+    
+    
+    
     
     // Este metodo pode ser generalizado para contribuinte e empresas (inclusao arrayList faturas na entidade)
     // Acrescentando um parametro pode ser usado para atribuir ordenacao á ordem de impressao
@@ -317,19 +410,26 @@ public class Programa implements Serializable {
                             }
                         } while(estado == 0);
                         break;
-                case 1: do{ // ESTADO = 1 -> Página do Contribuinte
-                            System.out.println("BEM-VINDO(A) "+((Contribuinte)entidade_ativa).getNome()+"!\n");
+                case 1: Contribuinte contribuinte = (Contribuinte) entidade_ativa;
+                        do{ // ESTADO = 1 -> Página do Contribuinte
+                            System.out.println("BEM-VINDO(A) "+(contribuinte).getNome()+"!\n");
                             menu.showOps(1);
 
                             switch (menu.getOp()){
                                 
-                                case 1: printFaturas((Contribuinte)entidade_ativa); // tirar o cast depois de resolver tudo
+                                case 1: printFaturas(contribuinte); 
                                         break;
                                         
-                                case 2: printDeducoes((Contribuinte)entidade_ativa);
+                                case 2: printDeducoes(contribuinte);
                                         break;
                                         
-                                case 3: printDeducoesFamilia((Contribuinte)entidade_ativa, sys);
+                                case 3: printDeducoesFamilia(contribuinte, sys);
+                                        break;
+                                  
+                                case 4: atribuiSetor(sys, contribuinte, contribuinte.getFaturasPendentes());
+                                        break;
+                                         
+                                case 5: atribuiSetor(sys, contribuinte, contribuinte.getFaturas());
                                         break;
                                         
                                 case 0: estado = 0;
@@ -338,28 +438,29 @@ public class Programa implements Serializable {
                             }
                         } while(estado == 1);
                         break;
-                case 2: do{ // ESTADO = 2 -> Página da Empresa
-                            System.out.println("BEM-VINDO(A) "+((Empresa)entidade_ativa).getNome()+"!\n");
+                case 2: Empresa empresa = (Empresa) entidade_ativa;
+                        do{ // ESTADO = 2 -> Página da Empresa
+                            System.out.println("BEM-VINDO(A) "+empresa.getNome()+"!\n");
                             menu.showOps(2);
 
                             switch (menu.getOp()){
                                 
-                                case 1: criaFatura((Empresa) entidade_ativa, sys);
+                                case 1: criaFatura(empresa, sys);
                                         break;
 
-                                case 2 : printFaturas((Empresa) entidade_ativa,0);
+                                case 2 : printFaturas(empresa,0);
                                          break;
 
-                                case 3 : printFaturas((Empresa) entidade_ativa,1);
+                                case 3 : printFaturas(empresa,1);
                                          break;
 
-                                case 4 : consultaFaturasNIF((Empresa)entidade_ativa,0);
+                                case 4 : consultaFaturasNIF(empresa,0);
                                          break;
 
-                                case 5 : consultaFaturasNIF((Empresa)entidade_ativa,1);
+                                case 5 : consultaFaturasNIF(empresa,1);
                                          break;
 
-                                case 6 : printValorFaturado((Empresa)entidade_ativa);
+                                case 6 : printValorFaturado(empresa);
                                          break;
 
                                 case 0: estado = 0;

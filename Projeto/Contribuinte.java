@@ -3,30 +3,71 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.TreeSet;
+import java.util.List;
 import java.util.stream.Collectors;
-import Setor.*;
 
 public class Contribuinte extends Entidade implements Serializable {
     
-    private int dep_familia;
     private int[] nif_familia;
-    private double coe_fiscal;
+    private int num_dependentes;
+    private double bonus_fam_num;
+    private GestorSetor gestor_deducoes;
     private ArrayList<Fatura> faturas;
     private ArrayList<Fatura> faturas_pendentes;
 
 
 
     // FIXME: 20/05/2018 Contabilizar valor dedutivel ao adicionar fatura
+    
     public void addFatura(Fatura f){
         
-        if(f.getGestorSetor().getSetores().size() == 1){ 
+        if(f.hasSetor()){ 
             faturas.add(f.clone());
         }
         else{
             faturas_pendentes.add(f.clone());
         }
     }
-
+    
+    public void alteraSetorFatura(Fatura f, String novo_setor){
+        Fatura a_alterar;
+        String setor_antigo;
+        int pos = 0;
+        boolean fstSetor = !f.hasSetor();
+        
+        if(fstSetor){
+            for(Fatura fat : this.faturas_pendentes){
+                if(fat.equals(f))
+                    break;          
+                    pos++;
+            }
+            
+            a_alterar = faturas_pendentes.get(pos);
+        }
+        else{
+            for(Fatura fat : this.faturas){
+                if(fat.equals(f))
+                    break;          
+                    pos++;
+            }
+            
+            a_alterar = faturas.get(pos);
+        }
+        
+        setor_antigo = a_alterar.getSetor();
+        
+        a_alterar.mudaSetor(novo_setor);
+        
+        if(fstSetor){
+            this.faturas.add(a_alterar);
+            this.faturas_pendentes.remove(pos);
+        }
+        else
+            this.gestor_deducoes.descontabilizaFatura(a_alterar, setor_antigo); // tem de ser retirado o valor atribuido ao antigo setor da fatura
+        
+        this.gestor_deducoes.contabilizaFatura(a_alterar);
+    }
+    
     double totalDeduzido(){ 
         return this.getSetores().stream().mapToDouble(s -> s.getMontDeduzido()).sum();
                                  
@@ -61,12 +102,12 @@ public class Contribuinte extends Entidade implements Serializable {
     
     // Getters & Setters
     
-    public int getDepFamilia(){
-        return this.dep_familia;
+    public int getNumDependentes(){
+        return this.num_dependentes;
     }
     
-    public void setDepFamilia(int dep_familia){
-        this.dep_familia = dep_familia;
+    public void setNumDependentes(int num_dependentes){
+        this.num_dependentes = num_dependentes;
     }
     
     public int[] getNIFFamilia(){
@@ -77,12 +118,12 @@ public class Contribuinte extends Entidade implements Serializable {
         this.nif_familia = Arrays.copyOf(nif_familia, nif_familia.length);
     }
 
-    public double getCoeficienteFiscal(){
-        return this.coe_fiscal;
+    public double getBonusDeducao(){
+        return this.bonus_fam_num;
     }
 
-    public void setCoeficienteFiscal(double coe_fiscal){
-        this.coe_fiscal = coe_fiscal;
+    public void setBonusDeducao(double bonus){
+        this.bonus_fam_num = bonus;
     }
 
     public ArrayList<Fatura> getFaturas(){
@@ -109,8 +150,14 @@ public class Contribuinte extends Entidade implements Serializable {
 
     }
     
-
+    public List<Setor> getSetores(){
+        return this.gestor_deducoes.getSetores().stream().map(Setor::clone).
+                                          collect(Collectors.toCollection(ArrayList::new));        
+    }
     
+    public GestorSetor getGestorSetor(){
+        return this.gestor_deducoes.clone();
+    }
     
     // Equals & Clone & toString
 
@@ -121,9 +168,9 @@ public class Contribuinte extends Entidade implements Serializable {
         Contribuinte c = (Contribuinte) outro;
 
         return super.equals(c) &&
-               this.dep_familia == c.getDepFamilia() &&
+               this.num_dependentes == c.getNumDependentes() &&
                Arrays.equals(this.nif_familia, c.getNIFFamilia()) &&
-               this.coe_fiscal == c.getCoeficienteFiscal() &&
+               this.bonus_fam_num == c.getBonusDeducao() &&
                this.faturas.equals(c.getFaturas()) &&
                this.faturas_pendentes.equals(c.getFaturasPendentes());
     }
@@ -142,30 +189,32 @@ public class Contribuinte extends Entidade implements Serializable {
     
     public Contribuinte(){
         super();
-        this.dep_familia = 0;
+        this.num_dependentes = 0;
         this.nif_familia = null;
-        this.coe_fiscal = 0;
+        this.bonus_fam_num = 0;
         this.faturas = new ArrayList<>();
         this.faturas_pendentes = new ArrayList<>();
     }
     
-    public Contribuinte(int nif, String email, String nome, Morada morada, String password, ArrayList<Setor> setores, int dep_familia, int[] nif_familia, double coe_fiscal, ArrayList<Fatura> faturas, ArrayList<Fatura> faturas_pendentes){
-        super(nif, email, nome, morada, password, setores);
-        this.dep_familia = dep_familia;
+    public Contribuinte(int nif, String email, String nome, Morada morada, String password, int num_dependentes, int[] nif_familia, double bonus, GestorSetor ges_deducoes, ArrayList<Fatura> faturas, ArrayList<Fatura> faturas_pendentes){
+        super(nif, email, nome, morada, password);
+        this.num_dependentes = num_dependentes;
         this.nif_familia = Arrays.copyOf(nif_familia, nif_familia.length);
-        this.coe_fiscal = coe_fiscal;
+        this.bonus_fam_num = bonus;
         this.faturas = faturas.stream().map(Fatura::clone).
                                         collect(Collectors.toCollection(ArrayList::new));
         this.faturas_pendentes = faturas.stream().map(Fatura::clone).
                                                   collect(Collectors.toCollection(ArrayList::new));
+        this.gestor_deducoes = ges_deducoes.clone();                                          
     }
     
     public Contribuinte(Contribuinte outro){
         super(outro);
-        this.dep_familia = outro.getDepFamilia();
+        this.num_dependentes = outro.getNumDependentes();
         this.nif_familia = outro.getNIFFamilia();
-        this.coe_fiscal = outro.getCoeficienteFiscal();
+        this.bonus_fam_num = outro.getBonusDeducao();
         this.faturas = outro.getFaturas();
         this.faturas_pendentes = outro.getFaturasPendentes();
+        this.gestor_deducoes = outro.getGestorSetor();
     }
 }

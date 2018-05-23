@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import Setor.*;
 
 public class Sistema implements Serializable{
 
@@ -57,10 +56,14 @@ public class Sistema implements Serializable{
     }
 
 
-
+    public void alteraSetorFatura(Contribuinte c, Fatura f, String novo_setor){
+        Contribuinte contribuinte = (Contribuinte) entidades.get(c.getNif());
+        contribuinte.alteraSetorFatura(f, novo_setor);
+    }
 
     // Metodo para um contribuinte consultar montantes deduzidos por dependentes
     // Eliminar talvez?
+    /*
     public Map<String, ArrayList<Setor>> consultaDeducoes(Contribuinte c){
         HashMap<String, ArrayList<Setor>> res = new HashMap<>();
         
@@ -71,7 +74,7 @@ public class Sistema implements Serializable{
         }
         return res;
     }
-
+    */
     // ADMIN ONLY
 
     public Set<Contribuinte> top10Contribuintes(){

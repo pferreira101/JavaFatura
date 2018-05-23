@@ -1,15 +1,21 @@
-package Setor;
-
-
 import java.io.Serializable;
+import java.util.Map;
+import java.util.TreeMap;
 
+/*
+ * Adicionar TreeMap ordenado por data ao setor para manter
+ * registo dos valores deduzidos e podermos retirar corretamente o valor deduzido por uma fatura
+ * ex: fatura registada quando tinha 4 filhos descontou 10, se adicionar um filho e alterar o setor da fatura
+ * sera retirado 12.5 ao setor antigo 
+ */
 public class Setor implements Serializable {
 
     private final String nome;
     private final double taxa;
     private final boolean dedutivel;
     private final double max_dedutivel;
-    private double montante_deduzido;
+    private double montante_deduzido;    
+    private Map<Fatura,Double> valores_deduzidos;
 
     public String getNome(){
         return this.nome;
@@ -30,15 +36,34 @@ public class Setor implements Serializable {
     public double getMontDeduzido() {
         return this.montante_deduzido;
     }
-    // Calcular valor a deduzir de uma fatura
     
-    public void processaFatura(double valorFatura){
-    double a_deduzir = valorFatura*taxa;
+    /*
+      Falta adicionar ao tree map a fatura
+     */
+    public void addFaturaSetor(Fatura f){
+        this.valores_deduzidos.put(f, aDeduzir(f));
+    }
     
-    if(montante_deduzido + a_deduzir > max_dedutivel)
-        montante_deduzido = max_dedutivel;
-    else     
-        montante_deduzido += a_deduzir;
+    /*
+     * Assinatura correta do metodo
+     *  public void removeValorDeduzido(Fatura f)
+     */
+   
+    public void removeFaturaSetor(Fatura f){
+        this.valores_deduzidos.remove(f);
+    }
+  
+    // adicionar taxa de empresa e assim **************************
+    public double aDeduzir(Fatura f){
+        return f.getValor() * ( + this.taxa);
+    }
+    
+    public double valorDeduzido(){
+        double total_deduzido = 0;
+        for( double valor_deduzido : valores_deduzidos.values())
+            total_deduzido += valor_deduzido;
+        
+        return total_deduzido > this.max_dedutivel? this.max_dedutivel : total_deduzido;    
     }
     // Equals & Clone & toString
 
@@ -66,6 +91,7 @@ public class Setor implements Serializable {
     // Construtores
 
     public Setor(){
+        //this.valores_deduzidos = new TreeMap<>();
         this.nome = "";
         this.taxa = 0;
         this.dedutivel = false;

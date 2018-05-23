@@ -1,5 +1,3 @@
-import Setor.GestorSetor;
-import Setor.Setor;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -10,8 +8,9 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     private LocalDate data; // data da fatura
     private int nif_cliente; // número de contribuinte do cliente
     private String descricao; // descrição breve da despesa
-    private GestorSetor gestor_setor;
+    private LogSetor reg_alteracoes; // registo alteracoes de setor
     private double valor; // valor da fatura antes dos impostos
+    private double bonificacao; // percetagem extra a ser descontadada
     private double taxa; 
     
 
@@ -64,12 +63,12 @@ public class Fatura implements Comparable<Fatura> , Serializable {
         this.descricao = descricao;
     }
 
-    public GestorSetor getGestorSetor() {
-        return this.gestor_setor.clone();
+    public LogSetor getLogSetor() {
+        return this.reg_alteracoes.clone();
     }
 
-    public void setGestorSetor(GestorSetor gestor_setor) {
-        this.gestor_setor = gestor_setor.clone();
+    public void setLogSetor(LogSetor log_setor) {
+        this.reg_alteracoes = log_setor.clone();
     }
 
     public double getValor() {
@@ -87,8 +86,31 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     public void setTaxa(double taxa) {
         this.taxa = taxa;
     }
-
-
+    
+    public void setBonificacao(double bonus){
+        this.bonificacao = bonus;
+    }
+    
+    public double getBonificacao(){
+        return this.bonificacao;
+    }
+    
+    public String getSetor(){
+        return reg_alteracoes.getSetorAtivo();
+    }
+    
+    public boolean hasSetor(){
+        return reg_alteracoes.hasSetorAtivo();
+    }
+    
+    // Metodo para alterar setor de uma fatura
+    
+    public void mudaSetor(String novo_setor){
+        reg_alteracoes.addAlteracao(this.getSetor(), novo_setor);
+    }
+    
+    
+    
     // Equals & Clone & toString
     
     /**
@@ -105,7 +127,7 @@ public class Fatura implements Comparable<Fatura> , Serializable {
                this.data.isEqual(fatura.getData()) &&
                this.nif_cliente == fatura.getNifCliente() &&
                this.descricao.equals(fatura.getDescricao()) &&
-               this.gestor_setor.equals(fatura.getGestorSetor()) &&
+               this.reg_alteracoes.equals(fatura.getLogSetor()) &&
                this.valor == fatura.getValor() &&
                this.taxa == fatura.getTaxa();
     }
@@ -122,6 +144,7 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     /**
      * Método que transforma um objeto Fatura numa String
      */
+    /*
     public String toString() {
         StringBuilder s = new StringBuilder();
         String setor_fatura = "";
@@ -143,7 +166,7 @@ public class Fatura implements Comparable<Fatura> , Serializable {
         return s.toString(); 
     }
 
-
+    */
     public int compareTo(Fatura f){
         return this.empresa.compareTo(f.getEmpresa());
     }
@@ -159,23 +182,25 @@ public class Fatura implements Comparable<Fatura> , Serializable {
         this.data = LocalDate.MIN;
         this.nif_cliente = -1;
         this.descricao = "";
-        this.gestor_setor = new GestorSetor();
+        this.reg_alteracoes = new LogSetor();
         this.valor = -1;
         this.taxa = 0;
+        this.bonificacao = 0;
     }
 
     /**
      * Construtor parametrizado para objetos da classe Fatura
      */
-    public Fatura(String empresa, int nif_emitente, LocalDate data, int nif_cliente, String descricao, GestorSetor gestor_setor, double valor, double taxa) {
+    public Fatura(String empresa, int nif_emitente, LocalDate data, int nif_cliente, String descricao, LogSetor log_setor, double valor, double taxa, double bonificacao) {
         this.empresa = empresa;
         this.nif_emitente = nif_emitente;
         this.data = data;
         this.nif_cliente = nif_cliente;
         this.descricao = descricao;
-        this.gestor_setor = gestor_setor.clone();
+        this.reg_alteracoes = log_setor.clone();
         this.valor = valor;
         this.taxa = taxa;
+        this.bonificacao = bonificacao;
     }
 
     /**
@@ -187,8 +212,9 @@ public class Fatura implements Comparable<Fatura> , Serializable {
         this.data = outra.getData();
         this.nif_cliente = outra.getNifCliente();
         this.descricao = outra.getDescricao();
-        this.gestor_setor = outra.getGestorSetor();
+        this.reg_alteracoes = outra.getLogSetor();
         this.valor = outra.getValor();
         this.taxa = outra.getTaxa();
+        this.bonificacao = outra.getBonificacao();
     }
 }

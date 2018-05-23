@@ -5,24 +5,31 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import Setor.*;
+import java.util.List;
+
 
 public class Empresa extends Entidade implements Serializable {
 
 
     private ArrayList<Fatura> faturas_emitidas;
-
+    ArrayList<String> setores;
+    
 
     public boolean doInterior(){
         return getMorada().getDistrito().isInterior();
     }
-
+    
+    public double getBonusDeducao(){
+        return getMorada().getDistrito().getTaxa();
+    }
 
     public void addFatura(Fatura f){ 
         this.faturas_emitidas.add(f.clone());
     }
 
-
+    public List<String> getSetores(){
+        return setores.stream().collect(Collectors.toList());
+    }
 
     // Requisitos Básicos
 
@@ -147,12 +154,16 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa(){
         super();
         this.faturas_emitidas = new ArrayList<>();
+        this.setores = new ArrayList<>();
     }
 
-    public Empresa(int nif, String email, String nome, Morada morada, String password, ArrayList<Setor> setores, ArrayList<Fatura> faturas_emitidas){
-        super(nif, email, nome, morada, password, setores);
+    public Empresa(int nif, String email, String nome, Morada morada, String password, ArrayList<String> setores, ArrayList<Fatura> faturas_emitidas){
+        super(nif, email, nome, morada, password);
+        
         this.faturas_emitidas = faturas_emitidas.stream().map(Fatura::clone).
                                                           collect(Collectors.toCollection(ArrayList::new));
+                                                          
+        this.setores =   setores.stream().collect(Collectors.toCollection(ArrayList::new));                                                
     }
 
     public Empresa(Empresa outro){

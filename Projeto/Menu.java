@@ -4,12 +4,23 @@ import java.util.Scanner;
 public class Menu implements Serializable{
 
     private int op;
-    private String[][] operacoes = {{"1 - Login", "2 - Registar Entidade", "3 - Registar Empresa"},
-                                    {"1 - Consultar Faturas", "2 - Total Deduzido", "3 - Deduções Agregado Familiar"},
-                                    {"1 - Emitir Fatura", "2 - Consultar Faturas (por data de emissão)",
-                                            "3 - Consultar Faturas (por valor)",
-                                            "4 - Consultar Faturas De Certo Contribuinte (entre determinada data)",
-                                            "5 - Consultar Faturas De Certo Contribuinte (por valor)", "6 - Total Faturado"}
+    private String[][] operacoes = { // Menu inicial
+                                    { "1 - Login", 
+                                      "2 - Registar Entidade", 
+                                      "3 - Registar Empresa"},
+                                     // Menu contribuinte 
+                                    { "1 - Consultar Faturas", 
+                                      "2 - Total Deduzido", 
+                                      "3 - Deduções Agregado Familiar", 
+                                      "4 - Atribuir Setor de Atividade Económica a uma Fatura",
+                                      "5 - Alterar Setor de Atividade Económica de uma Fatura"},
+                                     // Menu empresa 
+                                    { "1 - Emitir Fatura", 
+                                      "2 - Consultar Faturas (por data de emissão)",
+                                      "3 - Consultar Faturas (por valor)",
+                                      "4 - Consultar Faturas De Certo Contribuinte (entre determinada data)",
+                                      "5 - Consultar Faturas De Certo Contribuinte (por valor)", 
+                                      "6 - Total Faturado"}
                                     };
 
 
