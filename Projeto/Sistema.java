@@ -3,8 +3,11 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.AbstractMap.SimpleEntry;
+import java.time.LocalDate;
 
 public class Sistema implements Serializable{
 
@@ -12,53 +15,148 @@ public class Sistema implements Serializable{
     private int admin_nif; // FIXME: 01/05/2018
     private String admin_password; // FIXME: 01/05/2018
     private boolean admin_mode;
-
+    private int nif_ativo;
 
     // Registo de Entidades
 
-    public boolean registaEntidade(Entidade e) {
-        Entidade nova = this.entidades.putIfAbsent(e.getNif(), e.clone());
-        return (nova == null);
+    public void registaEntidade (Integer nif, String nome, String email, String password, String rua, String cod_postal, String concelho, Distritos distrito, int n_filhos, List<Integer> nif_familia) throws NIFJaRegistadoException{
+        Morada morada = new Morada(rua, cod_postal, concelho, distrito);        
+        Entidade nova = new Contribuinte(nif, email, nome,  morada, password, n_filhos,  nif_familia, new GestorSetor(), new ArrayList<Fatura>(), new ArrayList<Fatura>());
+        if(this.entidades.putIfAbsent(nova.getNif(),nova) != null)
+            throw new NIFJaRegistadoException(nif.toString());
+ 
     }
-
-    public boolean logIn(int nif, String password) {
+    
+    public void registaEntidade (Integer nif, String nome, String email, String password, String rua, String cod_postal, String concelho, Distritos distrito, List<String> setores) throws ConcelhoNaoEInteriorException, NIFJaRegistadoException{
+        Entidade nova;
+        ConcelhosInterior concelhos_int = new ConcelhosInterior();
+        double bonus=0;
+        Morada morada = new Morada(rua, cod_postal, concelho, distrito);
+        
+        if(concelhos_int.isInterior(concelho)){
+            bonus = concelhos_int.getBonusDeducao(concelho);
+            nova = new EmpresaInterior(nif, email, nome, morada, password, setores, new ArrayList<Fatura>(), bonus);            
+        }
+        else
+            nova = new Empresa(nif, email, nome, morada, password, setores, new ArrayList<Fatura>());
+        
+        if(this.entidades.putIfAbsent(nova.getNif(),nova) != null)
+            throw new NIFJaRegistadoException(nif.toString());
+    }
+    
+    
+    // Log in   
+    public boolean logIn (int nif, String password){
         Entidade entidade = this.entidades.get(nif);
         if (entidade == null) return false;
 
         if(entidade.getPassword().equals(password)){
             if(nif == this.getAdminNIF()) setAdminMode(true);
-            // FIXME: 16/05/2018 temos que ter entidade_ativa nesta class e fazer aqui o seu set
+            else
+                this.nif_ativo = nif; // carrega o nif da entidade ativa
             return true;
         }
 
         return false;
     }
     
-    public void addFaturaSistema(Fatura f) throws NIFNaoRegistadoException {
-        Contribuinte cliente = (Contribuinte) getEntidade(f.getNifCliente());
-        Empresa empresa = (Empresa) getEntidade(f.getNifEmitente());
+    // Obter faturas do nif ativo
+    public List<Fatura> getFaturasNIFAtivo(){
+        List<Fatura> faturas = null;
+        Entidade e = this.entidades.get(nif_ativo);
+            if(e instanceof Empresa)
+                faturas = ((Empresa)e).getFaturasEmitidas();
+            else if (e instanceof Contribuinte) 
+                faturas = ((Contribuinte)e).getFaturas();
+        return faturas;
+    }
+    
+    public List<Fatura> getFaturasPendentes() throws NIFNaoEDeUmContribuinteException{
+         Entidade e = this.entidades.get(nif_ativo);
+         
+         if(!(e instanceof Contribuinte))
+            throw new NIFNaoEDeUmContribuinteException(String.valueOf(nif_ativo));
+            
+         return ((Contribuinte)e).getFaturasPendentes();  
+    }
+    
+    // Obter deducoes do nif ativo
+    public List<SimpleEntry<String,Double>> getDeducoesNIFAtivo() throws NIFNaoEDeUmContribuinteException{     
+        Entidade e = this.entidades.get(nif_ativo);
+        if(!(e instanceof Contribuinte))
+             throw new NIFNaoEDeUmContribuinteException(String.valueOf(nif_ativo));
         
-        cliente.addFatura(f);
-        empresa.addFatura(f);
+        Contribuinte c = (Contribuinte) e;
+        
+        return c.valoresDeduzidos();     
+    }
+    
+    // Metodo para consultar o valor deduzido pelos familiares
+    public List< SimpleEntry<Integer, List<SimpleEntry<String, Double>>>>  getDeducoesFamilia() throws NIFNaoEDeUmContribuinteException{
+        List< SimpleEntry<Integer, List<SimpleEntry<String, Double>>>> deducoes_fam = new ArrayList<>();
+        Entidade e = this.entidades.get(nif_ativo);
+        Contribuinte familiar;
+        
+        if(!(e instanceof Contribuinte))
+             throw new NIFNaoEDeUmContribuinteException(String.valueOf(nif_ativo));
+             
+        Contribuinte c = (Contribuinte) e;     
+        
+        for(int nif : c.getNIFFamilia()){
+            familiar = (Contribuinte) this.entidades.get(nif);
+            if(familiar != null)
+                deducoes_fam.add(new SimpleEntry<Integer, List<SimpleEntry<String, Double>>>(nif, familiar.valoresDeduzidos()));
+        }
+       
+        return deducoes_fam;
+    }
+    
+    
+    public void addFaturaSistema(Integer nif_cliente, double valor, String descricao) throws NIFNaoRegistadoException, NIFDaFaturaEEmpresaException, EntidadeAtivaNaoEEmpresaException {
+        Entidade cliente =  getEntidade(nif_cliente);
+        Entidade empresa_emitente =  getEntidade(this.nif_ativo);
+        double bonus=0;
+        
+        if(cliente instanceof Empresa)
+            throw new NIFDaFaturaEEmpresaException(nif_cliente.toString());
+            
+        if(!(empresa_emitente instanceof Empresa))
+            throw new EntidadeAtivaNaoEEmpresaException(String.valueOf(nif_ativo));
+        
+        Empresa emp = (Empresa) empresa_emitente;
+        Contribuinte cont = (Contribuinte) cliente;
+        
+        if (empresa_emitente instanceof EmpresaInterior)
+            bonus += ((EmpresaInterior)empresa_emitente).reducaoImposto();
+        if (cliente instanceof ContribuinteFamiliaNumerosa)
+            bonus += ((ContribuinteFamiliaNumerosa)cliente).reducaoImposto();
+        
+        Fatura f = new Fatura(emp.getNome(), emp.getNif(),  LocalDate.now(), nif_cliente, descricao, new LogSetor(), valor, 0, bonus);    
+        
+        emp.addFatura(f);
+        cont.addFatura(f);
     }
 
-    public Entidade getEntidade(int nif) throws NIFNaoRegistadoException{
-        Entidade r = this.entidades.get(nif);
+    private Entidade getEntidade(Integer nif) throws NIFNaoRegistadoException{
+        Entidade e = this.entidades.get(nif);
         
-        if(r == null){
-            StringBuilder error = new StringBuilder("NIF: ");
-            error.append(nif);
-            error.append("não se encontra registado no sistema.");
-            throw new NIFNaoRegistadoException(error.toString());
+        if(e == null){
+            throw new NIFNaoRegistadoException(nif.toString());
         }
         
-        return r.clone();
+        return e;
     }
 
 
-    public void alteraSetorFatura(Contribuinte c, Fatura f, String novo_setor){
-        Contribuinte contribuinte = (Contribuinte) entidades.get(c.getNif());
-        contribuinte.alteraSetorFatura(f, novo_setor);
+    public void alteraSetorFatura(Fatura f, String novo_setor) throws  NIFNaoEDeUmContribuinteException{
+        Entidade e = this.entidades.get(nif_ativo);
+        
+        if(!(e instanceof Contribuinte))
+             throw new NIFNaoEDeUmContribuinteException(String.valueOf(nif_ativo));
+             
+        Contribuinte c = (Contribuinte) e; 
+        
+        c.alteraSetorFatura(f, novo_setor);
     }
 
     // Metodo para um contribuinte consultar montantes deduzidos por dependentes

@@ -5,7 +5,8 @@ public class Morada implements Serializable {
 
     private String rua;
     private String cod_postal;
-    private Distrito distrito;
+    private String concelho;
+    private Distritos distrito;
 
     public String getRua(){
         return this.rua;
@@ -22,12 +23,20 @@ public class Morada implements Serializable {
     public void setCodPostal(String cod_postal){
         this.cod_postal = cod_postal;
     }
-
-    public Distrito getDistrito(){
+    
+    public String getConcelho(){
+        return this.concelho;
+    }
+    
+    public void setConcelho(String concelho){
+        this.concelho = concelho;
+    }
+    
+    public Distritos getDistrito(){
         return this.distrito;
     }
 
-    public void setDistrito(Distrito distrito){
+    public void setDistrito(Distritos distrito){
         this.distrito = distrito;
     }
 
@@ -41,6 +50,7 @@ public class Morada implements Serializable {
         
         return this.rua.equals(morada.getRua()) &&
                this.cod_postal.equals(morada.getCodPostal()) &&
+               this.concelho.equals(morada.getConcelho()) &&
                this.distrito.equals(morada.getDistrito());
     }
     
@@ -57,18 +67,21 @@ public class Morada implements Serializable {
     public Morada(){
         this.rua = "";
         this.cod_postal = "";
+        this.concelho = "";
         this.distrito = null; // FIXME: 12/05/2018 
     }
 
-    public Morada(String rua, String cod_postal, Distrito distrito){
+    public Morada(String rua, String cod_postal, String concelho, Distritos distrito){
         this.rua = rua;
         this.cod_postal = cod_postal;
+        this.concelho = concelho;
         this.distrito = distrito;
     }
 
     public Morada(Morada outra){
         this.rua = outra.getRua();
         this.cod_postal = outra.getCodPostal();
+        this.concelho = outra.getConcelho();
         this.distrito = outra.getDistrito();
     }
 }

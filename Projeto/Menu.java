@@ -2,11 +2,10 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Menu implements Serializable{
-
-    private int op;
+    
     private String[][] operacoes = { // Menu inicial
                                     { "1 - Login", 
-                                      "2 - Registar Entidade", 
+                                      "2 - Registar Contribuinte", 
                                       "3 - Registar Empresa"},
                                      // Menu contribuinte 
                                     { "1 - Consultar Faturas", 
@@ -22,9 +21,20 @@ public class Menu implements Serializable{
                                       "5 - Consultar Faturas De Certo Contribuinte (por valor)", 
                                       "6 - Total Faturado"}
                                     };
-
-
-
+        
+    public String[] getMainMenu(){
+        return this.operacoes[0];
+    }
+    
+    public String[] getMenuContribuinte(){
+        return this.operacoes[1];
+    }
+    
+    public String[] getMenuEmpresa(){
+        return this.operacoes[2];
+    }
+    
+    /*
     public void showOps(int menu){
         for(int i = 0; i < this.operacoes[menu].length; i++){
             System.out.println(this.operacoes[menu][i]);
@@ -32,12 +42,7 @@ public class Menu implements Serializable{
         if (menu==0)System.out.println("0 - Gravar e Sair");
         else System.out.println("0 - Logout");
     }
-
-    public int getOp(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Operação: ");
-        return sc.nextInt();
-    }
+    */
 
 
     // I/O

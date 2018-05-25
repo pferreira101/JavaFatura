@@ -11,17 +11,9 @@ import java.util.List;
 public class Empresa extends Entidade implements Serializable {
 
 
-    private ArrayList<Fatura> faturas_emitidas;
-    ArrayList<String> setores;
+    private List<Fatura> faturas_emitidas;
+    private List<String> setores;
     
-
-    public boolean doInterior(){
-        return getMorada().getDistrito().isInterior();
-    }
-    
-    public double getBonusDeducao(){
-        return getMorada().getDistrito().getTaxa();
-    }
 
     public void addFatura(Fatura f){ 
         this.faturas_emitidas.add(f.clone());
@@ -113,7 +105,7 @@ public class Empresa extends Entidade implements Serializable {
 
     // Getters & Setters
 
-    public ArrayList<Fatura> getFaturasEmitidas(){
+    public List<Fatura> getFaturasEmitidas(){
         return this.faturas_emitidas.stream().map(Fatura::clone).
                                               collect(Collectors.toCollection(ArrayList::new));
 
@@ -157,7 +149,7 @@ public class Empresa extends Entidade implements Serializable {
         this.setores = new ArrayList<>();
     }
 
-    public Empresa(int nif, String email, String nome, Morada morada, String password, ArrayList<String> setores, ArrayList<Fatura> faturas_emitidas){
+    public Empresa(int nif, String email, String nome, Morada morada, String password, List<String> setores, List<Fatura> faturas_emitidas){
         super(nif, email, nome, morada, password);
         
         this.faturas_emitidas = faturas_emitidas.stream().map(Fatura::clone).
@@ -169,6 +161,7 @@ public class Empresa extends Entidade implements Serializable {
     public Empresa(Empresa outro){
         super(outro);
         this.faturas_emitidas = outro.getFaturasEmitidas();
+        this.setores = outro.getSetores();
     }
     
 }

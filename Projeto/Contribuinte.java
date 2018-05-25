@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.TreeSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.AbstractMap.SimpleEntry;
 
 public class Contribuinte extends Entidade implements Serializable {
     
@@ -68,18 +69,17 @@ public class Contribuinte extends Entidade implements Serializable {
     }
     
     double totalDeduzido(){ 
-        return this.getSetores().stream().mapToDouble(s -> s.getMontDeduzido()).sum();
+        return this.getSetores().stream().mapToDouble(s -> s.valorDeduzido()).sum();
                                  
     }
     
-    double totalDeduzido(String setor) { 
-        double total=0;
+    // Metodo para saber quanto é um contribuinte deduziu por setor
+    public List< SimpleEntry<String, Double>> valoresDeduzidos(){
+        List< SimpleEntry<String, Double>> deducoes = new ArrayList<>();
+        for(Setor setor : this.gestor_deducoes.getSetores())
+            deducoes.add(new SimpleEntry<>(setor.getNome(), setor.valorDeduzido()));
         
-        for(Setor s : this.getSetores())
-            if(s.getClass().getSimpleName().equals(setor))
-                total = s.getMontDeduzido();           
-        
-        return total;
+        return deducoes;    
     }
     
     TreeSet<Fatura> sortBy(){

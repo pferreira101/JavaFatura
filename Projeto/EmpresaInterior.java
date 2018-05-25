@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class EmpresaInterior extends Empresa implements BenificioFiscal{
@@ -9,14 +9,7 @@ public class EmpresaInterior extends Empresa implements BenificioFiscal{
         return taxa_bonus;
     }
 
-
-
-
-    // Getters & Setters
-
-    public double getTaxaBonus() {
-        return this.taxa_bonus;
-    }
+    // Getters & Setter
 
     public void setTaxaBonus(double taxa_bonus) {
         this.taxa_bonus = taxa_bonus;
@@ -32,7 +25,7 @@ public class EmpresaInterior extends Empresa implements BenificioFiscal{
 
         EmpresaInterior e = (EmpresaInterior) o;
 
-        return this.taxa_bonus == e.getTaxaBonus();
+        return this.taxa_bonus == e.reducaoImposto();
     }
 
 
@@ -53,13 +46,13 @@ public class EmpresaInterior extends Empresa implements BenificioFiscal{
         this.taxa_bonus = taxa_bonus;
     }
 
-    public EmpresaInterior(int nif, String email, String nome, Morada morada, String password, ArrayList<String> setores, ArrayList<Fatura> faturas_emitidas, double taxa_bonus) {
+    public EmpresaInterior(int nif, String email, String nome, Morada morada, String password, List<String> setores, List<Fatura> faturas_emitidas, double taxa_bonus) {
         super(nif, email, nome, morada, password, setores, faturas_emitidas);
         this.taxa_bonus = taxa_bonus;
     }
 
     public EmpresaInterior(EmpresaInterior outro) {
         super(outro);
-        this.taxa_bonus = outro.getTaxaBonus();
+        this.taxa_bonus = outro.reducaoImposto();
     }
 }

@@ -14,7 +14,6 @@ public class Setor implements Serializable {
     private final double taxa;
     private final boolean dedutivel;
     private final double max_dedutivel;
-    private double montante_deduzido;    
     private Map<Fatura,Double> valores_deduzidos;
 
     public String getNome(){
@@ -33,21 +32,12 @@ public class Setor implements Serializable {
         return this.max_dedutivel;
     }
     
-    public double getMontDeduzido() {
-        return this.montante_deduzido;
-    }
-    
-    /*
-      Falta adicionar ao tree map a fatura
-     */
+   
     public void addFaturaSetor(Fatura f){
         this.valores_deduzidos.put(f, aDeduzir(f));
     }
     
-    /*
-     * Assinatura correta do metodo
-     *  public void removeValorDeduzido(Fatura f)
-     */
+
    
     public void removeFaturaSetor(Fatura f){
         this.valores_deduzidos.remove(f);
@@ -55,7 +45,7 @@ public class Setor implements Serializable {
   
     // adicionar taxa de empresa e assim **************************
     public double aDeduzir(Fatura f){
-        return f.getValor() * ( + this.taxa);
+        return f.getValor() * (this.taxa);
     }
     
     public double valorDeduzido(){
@@ -96,15 +86,14 @@ public class Setor implements Serializable {
         this.taxa = 0;
         this.dedutivel = false;
         this.max_dedutivel = 0;
-        this.montante_deduzido = 0;
+
     }
 
-    public Setor(String nome, double taxa, boolean dedutivel, double max_dedutivel, double montante_deduzido){
+    public Setor(String nome, double taxa, boolean dedutivel, double max_dedutivel){
         this.nome = nome;
         this.taxa = taxa;
         this.dedutivel = dedutivel;
         this.max_dedutivel = max_dedutivel;
-        this.montante_deduzido = montante_deduzido;
     }
 
     public Setor(Setor outro){
@@ -112,6 +101,5 @@ public class Setor implements Serializable {
         this.taxa = outro.getTaxa();
         this.dedutivel = outro.isDedutivel();
         this.max_dedutivel = outro.getMaxDedutivel();
-        this.montante_deduzido = outro.getMontDeduzido();
     }
 }
