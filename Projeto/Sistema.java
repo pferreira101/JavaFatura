@@ -11,14 +11,15 @@ import java.time.LocalDate;
 
 public class Sistema implements Serializable{
 
-    private HashMap<Integer, Entidade> entidades = new HashMap<>(); // FIXME: 01/05/2018
-    private int admin_nif; // FIXME: 01/05/2018
-    private String admin_password; // FIXME: 01/05/2018
+    private HashMap<Integer, Entidade> entidades = new HashMap<>(); 
+    private int admin_nif; 
+    private String admin_password; 
     private boolean admin_mode;
     private int nif_ativo;
 
     // Registo de Entidades
 
+    // Método para registar um Contribuinte no sistema
     public void registaEntidade (Integer nif, String nome, String email, String password, String rua, String cod_postal, String concelho, Distritos distrito, int n_filhos, List<Integer> nif_familia) throws NIFJaRegistadoException{
         Morada morada = new Morada(rua, cod_postal, concelho, distrito);        
         Entidade nova = new Contribuinte(nif, email, nome,  morada, password, n_filhos,  nif_familia, new GestorSetor(), new ArrayList<Fatura>(), new ArrayList<Fatura>());
@@ -27,6 +28,7 @@ public class Sistema implements Serializable{
  
     }
     
+    // Método para registar uma Empresa no sistema
     public void registaEntidade (Integer nif, String nome, String email, String password, String rua, String cod_postal, String concelho, Distritos distrito, List<String> setores) throws ConcelhoNaoEInteriorException, NIFJaRegistadoException{
         Entidade nova;
         ConcelhosInterior concelhos_int = new ConcelhosInterior();
@@ -61,14 +63,12 @@ public class Sistema implements Serializable{
     }
     
     // Obter faturas do nif ativo
-    public List<Fatura> getFaturasNIFAtivo(){
-        List<Fatura> faturas = null;
+    public List<Fatura> getFaturasContribuinte() throws NIFNaoEDeUmContribuinteException{
         Entidade e = this.entidades.get(nif_ativo);
-            if(e instanceof Empresa)
-                faturas = ((Empresa)e).getFaturasEmitidas();
-            else if (e instanceof Contribuinte) 
-                faturas = ((Contribuinte)e).getFaturas();
-        return faturas;
+        if(!(e instanceof Contribuinte))
+            throw new NIFNaoEDeUmContribuinteException(String.valueOf(nif_ativo));
+            
+        return ((Contribuinte)e).getFaturas();
     }
     
     public List<Fatura> getFaturasPendentes() throws NIFNaoEDeUmContribuinteException{
@@ -79,6 +79,55 @@ public class Sistema implements Serializable{
             
          return ((Contribuinte)e).getFaturasPendentes();  
     }
+    
+    // Obter faturas da empresa ordenadas por valor
+    public Set<Fatura> getFaturasEmpByValor() throws EntidadeAtivaNaoEEmpresaException{
+        Entidade e = this.entidades.get(nif_ativo);
+        
+        if(!(e instanceof Empresa))
+            throw new EntidadeAtivaNaoEEmpresaException(String.valueOf(nif_ativo));
+        
+        return ((Empresa) e).faturasEmitidasValor();
+    }
+    // Obter faturas da empresa ordenadas por data
+    public Set<Fatura> getFaturasEmpByData() throws EntidadeAtivaNaoEEmpresaException{
+        Entidade e = this.entidades.get(nif_ativo);
+        
+        if(!(e instanceof Empresa))
+            throw new EntidadeAtivaNaoEEmpresaException(String.valueOf(nif_ativo));
+        
+        return ((Empresa) e).faturasEmitidasData();
+    }
+     
+    // Obter faturas da empresa ordenadas por data
+    public Set<Fatura> faturasEmpresa(LocalDate inicio, LocalDate fim) throws EntidadeAtivaNaoEEmpresaException{
+        Entidade e = this.entidades.get(nif_ativo);
+        
+        if(!(e instanceof Empresa))
+            throw new EntidadeAtivaNaoEEmpresaException(String.valueOf(nif_ativo));
+        
+        return ((Empresa) e).faturasEmitidas(inicio, fim);
+    }
+    
+    // Obter faturas da empresa emitidas para um determinado contribuinte, ordenadas por data
+    public Set<Fatura> faturasCliente(LocalDate inicio, LocalDate fim, int nif) throws EntidadeAtivaNaoEEmpresaException{
+        Entidade e = this.entidades.get(nif_ativo);
+        
+        if(!(e instanceof Empresa))
+            throw new EntidadeAtivaNaoEEmpresaException(String.valueOf(nif_ativo));
+        
+        return ((Empresa) e).faturasFromNIF(nif, inicio, fim);
+    }    
+    
+    // Obter faturas da empresa emitidas para um contribuinte
+    public Set<Fatura> faturasCliente(int nif) throws EntidadeAtivaNaoEEmpresaException{
+        Entidade e = this.entidades.get(nif_ativo);
+        
+        if(!(e instanceof Empresa))
+            throw new EntidadeAtivaNaoEEmpresaException(String.valueOf(nif_ativo));
+        
+        return ((Empresa) e).faturasFromNIF(nif);
+    }    
     
     // Obter deducoes do nif ativo
     public List<SimpleEntry<String,Double>> getDeducoesNIFAtivo() throws NIFNaoEDeUmContribuinteException{     
