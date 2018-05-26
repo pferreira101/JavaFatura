@@ -25,23 +25,33 @@ public class Empresa extends Entidade implements Serializable {
 
     // Requisitos Básicos
 
-    public Set<Fatura> faturasEmitidasValor(){
+    public Set<Fatura> faturasEmitidasByValor(){
         TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> Double.compare(f1.getValor(), f2.getValor()));
 
         this.faturas_emitidas.forEach(f -> r.add(f.clone()));
 
         return r;
     }
+    
+    public Set<Fatura> faturasEmitidasByValor(LocalDate inicio, LocalDate fim){
+        TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> Double.compare(f1.getValor(), f2.getValor()));
 
-    public Set<Fatura> faturasEmitidasData(){
+        this.faturas_emitidas.stream().filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
+                                       forEach(f -> r.add(f.clone()));
+                                       
+        return r;
+    }
+    
+    public Set<Fatura> faturasEmitidasByData(){
         TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> f1.getData().compareTo(f2.getData()));
 
         this.faturas_emitidas.forEach(f -> r.add(f.clone()));
 
         return r;
     }
-
-    public Set<Fatura> faturasEmitidas(LocalDate inicio, LocalDate fim){
+    
+    
+    public Set<Fatura> faturasEmitidasByData(LocalDate inicio, LocalDate fim){
         TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f1.getData().compareTo(f2.getData()));
 
         this.faturas_emitidas.stream().filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
@@ -49,19 +59,8 @@ public class Empresa extends Entidade implements Serializable {
 
         return r;
     }
-
-
-    public Set<Fatura> faturasFromNIF(int nif, LocalDate inicio, LocalDate fim){
-        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f1.getData().compareTo(f2.getData()));
-
-        this.faturas_emitidas.stream().filter(f -> f.getNifCliente() == nif).
-                                       filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
-                                       forEach(f -> r.add(f.clone()));
-
-        return r;
-    }
-
-    public Set<Fatura> faturasFromNIF(int nif){
+    
+    public Set<Fatura> faturasEmitidasFromNIF(int nif){
         TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> Double.compare(f1.getValor(), f2.getValor()));
 
         this.faturas_emitidas.stream().filter(f -> f.getNifCliente() == nif).
@@ -70,10 +69,14 @@ public class Empresa extends Entidade implements Serializable {
         return r;
     }
 
+    public Set<Fatura> faturasEmitidasFromNIF(int nif, LocalDate inicio, LocalDate fim){
+        TreeSet<Fatura> r = new TreeSet<>((f1, f2) -> f1.getData().compareTo(f2.getData()));
 
-    public double totalFaturado(){ // FIXME: 03/05/2018 que valor é que é faturado?
-        return this.faturas_emitidas.stream().mapToDouble(Fatura::getValor).
-                sum();
+        this.faturas_emitidas.stream().filter(f -> f.getNifCliente() == nif).
+                                       filter(f -> f.getData().isAfter(inicio) && f.getData().isBefore(fim)).
+                                       forEach(f -> r.add(f.clone()));
+
+        return r;
     }
 
     public double totalFaturado(LocalDate inicio, LocalDate fim){

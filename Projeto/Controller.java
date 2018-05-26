@@ -4,16 +4,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Set;
+import java.time.LocalDate;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Controller{
     
     private Sistema estado;
-    private Menu menus;
     
-    // Metodos de instancia
-    public void setSistema(Sistema sistema){ this.estado = sistema;}
-    
-    public void setMenu(Menu menu) {this.menus = menu;}
+    // Contrutor
+    public Controller(Sistema estado){
+        this.estado = estado;
+    }
     
     // Método para ler uma opcao do terminal
     public int readOp(){
@@ -28,7 +30,7 @@ public class Controller{
     // Método para imprimir opcoes
     public void showOps(String[] ops){
         for(String op : ops)
-            System.out.println(ops);
+            System.out.println(op);
     }
     
     // Método para adicionar uma fatura ao sistema
@@ -62,8 +64,14 @@ public class Controller{
     
     // Método para imprimir faturas
     public void printFaturasContribuinte(){
-        List <Fatura> faturas =  this.estado.getFaturasContribuinte();
-        printOpcoesFatura(faturas, 0, 1);
+        
+        try{
+            List <Fatura> faturas =  this.estado.faturasContribuinte();
+            printOpcoesFatura(faturas, 0, 1);
+        }
+        catch(NIFNaoEDeUmContribuinteException e){
+            System.out.println(e.getMessage());
+        }
     }
        
     // Metodo converter set<Fatura> em List<Fatura>
@@ -72,34 +80,70 @@ public class Controller{
     }
     
     // Metodo para imprimir faturas empresa por data
-    // mode 0 - ordenadas por data
-    // mode 1 - ordenadas por valor
-    public void printTodasFaturasEmpresa(int mode){
-        List<Fatura> faturas;
+    // tipo 0 - ordenadas por data
+    // tipo 1 - ordenadas por valor
+    // tipo 2 - todas de um dado nif
+    // mode 0 - todas as faturas
+    // mode 1 - apenas entre um certo intervalo de tempo
+    public void printFaturasEmpresa(int tipo, int modo){
+        Scanner sc = new Scanner(System.in);
+        List<Fatura> faturas=null;
+        String inicio, fim;
+        LocalDate data_inicio=null, data_fim=null;
+        int nif=-1;
         
-        if(mode == 0){
-            faturas = setParaList(this.estado.getFaturasEmpByData());
-        }
-        else{
-            faturas = setParaList(this.estado.getFaturasEmpByValor());
-            
+        if(tipo == 2){
+            nif = sc.nextInt();
         }
         
-        printOpcoesFatura(faturas, 1, 1);        
+        
+        if (modo==1){
+            System.out.println("Introduza a data de início do intervalo a consultar (AAAA-MM-DD): ");
+            inicio = sc.next();
+            data_inicio = LocalDate.parse(inicio);
+            System.out.println("Introduza a data de fim do intervalo a consultar (AAAA-MM-DD): ");
+            fim = sc.next();
+            data_fim = LocalDate.parse(fim);
+        }
+        
+        try{
+            switch(tipo){
+                    case 0: if(modo == 0) faturas = setParaList(this.estado.faturasEmpByData());
+                            else faturas = setParaList(this.estado.faturasEmpByData(data_inicio, data_fim));
+                            break;
+                    case 1: if(modo == 0) faturas = setParaList(this.estado.faturasEmpByValor());
+                            else faturas = setParaList(this.estado.faturasEmpByValor(data_inicio, data_fim));
+                            break;  
+                    case 2: if(modo == 0) faturas = setParaList(this.estado.faturasEmpFromCliente(nif));
+                            else faturas = setParaList(this.estado.faturasEmpFromCliente(data_inicio, data_fim, nif));
+                            break;
+            }
+        }
+        catch (EntidadeAtivaNaoEEmpresaException e){
+            System.out.println(e.getMessage());
+        }
+        printOpcoesFatura(faturas, 1, 1);
+        sc.close();
     }
     
-    public void printFaturasCliente(){
-        List <Fatura> faturas;
+    // Metodo para obter valor faturado por uma empresa entre determinada data
+    public void valorFaturadoEmpresa(){
         Scanner sc = new Scanner(System.in);
-        
-        System.out.println("Insira um NIF:");
-        int nif = sc.nextInt();
-        
-        faturas = setParaList(this.estado.faturasCliente(nif));
-        printOpcoesFatura(faturas, 1, 1);
-        
-    }
-     
+        System.out.println("Introduza a data de início do intervalo a consultar (AAAA-MM-DD): ");
+        String inicio = sc.next();
+        LocalDate data_inicio = LocalDate.parse(inicio);
+        System.out.println("Introduza a data de fim do intervalo a consultar (AAAA-MM-DD): ");
+        String fim = sc.next();
+        LocalDate data_fim = LocalDate.parse(fim);
+        sc.close();
+        try{    
+            this.estado.valorFaturadoEmpresa(data_inicio, data_fim);
+        }
+        catch(EntidadeAtivaNaoEEmpresaException e){
+            System.out.println(e.getMessage());
+        }
+    } 
+    
     // Metodo para fazer imprimir os pares setor - valor deduzido
     public void printParesSetorDeducao(List<SimpleEntry<String, Double>> valores_deduzidos){
        Double total_deduzido=0.0;
@@ -120,6 +164,7 @@ public class Controller{
             System.out.println("NIF: " + e.getMessage() + "não é de um contribuinte.");
         }        
     }
+  
     
     // Metodo para consultar o valor deduzido pelos familiares
     public void printDeducoesFamilia(){
@@ -149,8 +194,8 @@ public class Controller{
         String setor;
         
         try{
-            if(mode == 0) faturas = this.estado.getFaturasPendentes();
-            else faturas = this.estado.getFaturasContribuinte();
+            if(mode == 0) faturas = this.estado.faturasPendentes();
+            else faturas = this.estado.faturasContribuinte();
             
             if(faturas.size() == 0)
                 System.out.println("Não tem faturas nesta categoria");
@@ -210,7 +255,8 @@ public class Controller{
         }
         while(opcao != 0);
         
-        sc.close();
+        sc.close();        
+        return f_escolhida;
     }
 
     // Escolhe o setor a atribuir a uma fatura
@@ -301,9 +347,9 @@ public class Controller{
     // Método para fazer log in
     public void loginEntidade(){
         Scanner sc = new Scanner(System.in);
-        boolean dadosOk = false;
+        int tipoEntidade = -1;
         Entidade e = null;
-        int nif;
+        int nif, sair=0;
         String pw;
 
         do{
@@ -313,14 +359,23 @@ public class Controller{
             System.out.println("Password: ");
             pw = sc.next();
             
-            dadosOk = this.estado.logIn(nif, pw);
+            tipoEntidade = this.estado.logIn(nif, pw);
             
-            if(!dadosOk)
-                System.out.println("NIF ou password incorretos. Tente novamente.");
+            if(tipoEntidade == -1){
+                System.out.println("NIF ou password incorretos. Tente novamente.\n\n1 - Tentar novamente\n0 - Cancelar operação");
+                do{
+                    sair = sc.nextInt();
+                }while(sair != 0 && sair != 1);
+            }
                 
-        }while(!dadosOk);
-   
+        }while(tipoEntidade == -1 && sair != 0);
+        
         sc.close();
+        
+        if(tipoEntidade == 0) execMenuContribuinte();
+        if(tipoEntidade == 1) execMenuEmpresa();
+        //if(tipoEntidade == 2)
+        
     }
     
     // Metodo para registar um contribuinte
@@ -425,7 +480,7 @@ public class Controller{
     // Metodo para  executar main menu
     public void start(){
         int opcao;  
-        String[] menu = this.menus.getMainMenu();
+        String[] menu = Menu.getMainMenu();
      
         do{
             showOps(menu);
@@ -444,7 +499,7 @@ public class Controller{
     
     public void execMenuContribuinte(){
         int opcao;  
-        String[] menu = this.menus.getMenuContribuinte();
+        String[] menu = Menu.getMenuContribuinte();
         do{   
             showOps(menu);
             opcao = readOp();            
@@ -461,23 +516,58 @@ public class Controller{
     }
     
     // Metodo para executar meno das empresas
-    
+        // tipo 0 - ordenadas por data
+    // tipo 1 - ordenadas por valor
+    // tipo 2 - todas de um dado nif
+    // mode 0 - todas as faturas
+    // mode 1 - apenas entre um certo intervalo de tempo
     public void execMenuEmpresa(){
         int opcao;  
-        String[] menu = this.menus.getMenuEmpresa();
+        String[] menu = Menu.getMenuEmpresa();
         do{   
             showOps(menu);
             opcao = readOp();            
             switch(opcao){
                 case 0: break;
                 case 1: criaFatura(); break;
-                case 2: printFaturas(); break;
-                case 3: printFaturas(); break;
-                case 4: printFaturas(); break;
-                case 5: printFaturas(); break;
-                case 6: totalFaturado(); break;
+                case 2: printFaturasEmpresa(0,0); break;
+                case 3: printFaturasEmpresa(1,0); break;
+                case 4: printFaturasEmpresa(2,0); break;
+                case 5: printFaturasEmpresa(0,1); break;
+                case 6: printFaturasEmpresa(1,1); break;
+                case 7: printFaturasEmpresa(2,1); break;
+                case 8: valorFaturadoEmpresa(); break;
                 default: System.out.println("Insira uma opção correta");
             }
         }while(opcao != 0);
+    }
+    
+    public static void main(String args[]){
+        Sistema sistema = new Sistema();
+        Menu menu = new Menu();
+
+        try {
+            sistema = Sistema.loadSystem("data");
+        }
+        catch (IOException e){
+            System.out.println("Não conseguiu ler ficheiro de dados");
+        }
+        catch (ClassNotFoundException e){
+            System.out.println("Não conseguiu ler ficheiro de dados 2"); 
+        } 
+        
+        Controller controlador = new Controller(sistema);
+        
+        controlador.start();
+        
+        try {
+            sistema.saveSystem("data");
+        }
+        catch (IOException e){
+            System.out.println("Erro ao gravar dados");
+        }  
+        System.out.println("Obrigado!");
+        
+        
     }
 }
