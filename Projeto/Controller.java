@@ -16,12 +16,12 @@ public class Controller{
     
     private Sistema estado;
     
-    // Contrutor
+    // Construtor
+
     /**
     * Construtor parametrizado
     * 
     * @param estado Estado do Sistema
-    * 
     */
     public Controller(Sistema estado){
         this.estado = estado;
@@ -40,9 +40,11 @@ public class Controller{
         sc.close();
         return op;
     }
-    
+
+
     /**
     * Método para imprimir as opções do menu
+    * @param ops lista de operações possíveis
     */
     public void showOps(String[] ops){
         for(String op : ops)
