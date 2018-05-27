@@ -13,42 +13,83 @@ public class Entidade implements Serializable {
 
     // Getters & Setters
 
+    /**
+     * Getter do NIF
+     * @return nif
+     */
     public int getNif() {
         return this.nif;
     }
 
+    /**
+     * Setter do nif
+     * @param nif novo nif
+     */
     public void setNif(int nif) {
         this.nif = nif;
     }
 
+    /**
+     * Getter do email
+     * @return email
+     */
     public String getEmail() {
         return this.email;
     }
 
+    /**
+     * Setter do email
+     * @param email novo email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Getter do nome
+     * @return nome
+     */
     public String getNome() {
         return this.nome;
     }
 
+
+    /**
+     * Setter do nome
+     * @param nome novo nome
+     */
     public void setNome(String nome) {
         this.nome = nome;
     }
 
+    /**
+     * Getter da morada
+     * @return morada
+     */
     public Morada getMorada() {
         return this.morada.clone();
     }
 
+    /**
+     * Setter da morada
+     * @param morada nova morada
+     */
     public void setMorada(Morada morada) {
         this.morada = morada.clone();
     }
 
+    /**
+     * Getter da password
+     * @return password
+     */
     public String getPassword() {
         return this.password;
     }
 
+    /**
+     * Setter da password
+     * @param password nova password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
@@ -56,6 +97,11 @@ public class Entidade implements Serializable {
 
     // Equals && Clone && toString
 
+    /**
+     * Função que verifica se duas entidades são iguais
+     * @param o Objeto a comparar
+     * @return true se forem iguais
+     */
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -69,18 +115,29 @@ public class Entidade implements Serializable {
                this.password.equals(entidade.getPassword());
     }
 
+    /**
+     * Clone da class Entidade
+     * @return entidade igual
+     */
     public Entidade clone(){
         return new Entidade(this);
     }
-    
+
+    /**
+     * Transforma em String a Entidade
+     * @return string do objeto
+     */
     public String toString(){
         return ""; // FIXME: 01/05/2018 
     }
 
 
 
-// Construtores
+    // Construtores
 
+    /**
+     * Construtor default para objetos da classe Entidade
+     */
     public Entidade() {
         this.nif = -1;
         this.email = "";
@@ -89,6 +146,14 @@ public class Entidade implements Serializable {
         this.password = "";
     }
 
+    /**
+     * Construtor paramético da classe Entidade
+     * @param nif
+     * @param email
+     * @param nome
+     * @param morada
+     * @param password
+     */
     public Entidade(int nif, String email, String nome, Morada morada, String password) {
         this.nif = nif;
         this.email = email;
@@ -97,6 +162,10 @@ public class Entidade implements Serializable {
         this.password = password;
     }
 
+    /**
+     * Cpnstrutor de cópia da classe Entidade
+     * @param outra
+     */
     public Entidade(Entidade outra){
         this.nif = outra.getNif();
         this.email = outra.getEmail();

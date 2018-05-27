@@ -16,72 +16,139 @@ public class Fatura implements Comparable<Fatura> , Serializable {
 
     // Getters & Setters
 
+    /**
+     * Getter do nome da empresa
+     * @return nome da empresa
+     */
     public String getEmpresa() {
         return this.empresa;
     }
 
+    /**
+     * Setter do nome da empresa
+     * @param empresa novo nome da empresa
+     */
     public void setEmpresa(String empresa) {
         this.empresa = empresa;
     }
 
+    /**
+     * Getter do NIF Emitente
+     * @return nif emitente
+     */
     public int getNifEmitente() {
         return this.nif_emitente;
     }
 
+    /**
+     * Setter do NIF emitente
+      * @param nif_emitente novo NIF emitente
+     */
     public void setNifEmitente(int nif_emitente) {
         this.nif_emitente = nif_emitente;
     }
 
+    /**
+     * Getter da data de emissão da fatura
+     * @return data de emissão da fatura
+     */
     public LocalDateTime getData() {
         return this.data;
     }
 
+    /**
+     * Setter da data de emissão da fatura
+     * @param data nova data
+     */
     public void setData(LocalDateTime data) {
         this.data = data;
     }
 
+    /**
+     * Getter do NIF do cliente
+     * @return NIF do cliente
+     */
     public int getNifCliente() {
         return this.nif_cliente;
     }
 
+    /**
+     * Setter do NIF do cliente
+     * @param nif_cliente novo NIF do cliente
+     */
     public void setNifCliente(int nif_cliente) {
         this.nif_cliente = nif_cliente;
     }
 
+    /**
+     * Getter da descrição da fatura
+     * @return descrição
+     */
     public String getDescricao() {
         return this.descricao;
     }
 
+    /**
+     * Setter da descrição da fatura
+     * @param descricao nova descrição
+     */
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
+    /**
+     * Getter do LogSetor da fatura
+     * @return LogSetor
+     */
     public LogSetor getLogSetor() {
         return this.reg_alteracoes.clone();
     }
 
+    /**
+     * Setter do LogSetor da fatura
+     * @param log_setor nova LogSetor
+     */
     public void setLogSetor(LogSetor log_setor) {
         this.reg_alteracoes = log_setor.clone();
     }
 
+    /**
+     * Getter do valor da fatura
+     * @return valor da fatura
+     */
     public double getValor() {
         return this.valor;
     }
 
+    /**
+     * Setter do valor da fatura
+     * @param valor novo valor
+     */
     public void setValor(double valor) {
         this.valor = valor;
     }
 
+    /**
+     * Getter do Setor de atividade económica da fatura
+     * @return setor de atividade económica
+     */
     public String getSetor(){
         return reg_alteracoes.getSetorAtivo();
     }
-    
+
+    /**
+     * Verifica se a fatura tem um setor ativo
+     * @return true se tiver setor ativo
+     */
     public boolean hasSetor(){
         return reg_alteracoes.hasSetorAtivo();
     }
-    
-    // Metodo para alterar setor de uma fatura
-    
+
+
+    /**
+     * Metodo para alterar setor de uma fatura
+     * @param novo_setor novo setor ativo
+     */
     public void mudaSetor(String novo_setor){
         reg_alteracoes.addAlteracao(this.getSetor(), novo_setor);
     }
@@ -92,6 +159,7 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     
     /**
      * Método que verifica se duas faturas são iguais
+     * @return true se forem iguais
      */
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,6 +179,8 @@ public class Fatura implements Comparable<Fatura> , Serializable {
 
     /**
      * Método que faz o clone de uma fatura
+     *
+     * @return fatura igual
      */
     public Fatura clone(){
         return new Fatura(this);
@@ -119,8 +189,8 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     
     /**
      * Método que transforma um objeto Fatura numa String
+     * @return 
      */
-   
     public String toString() {
         StringBuilder s = new StringBuilder();
         String setor_fatura = "";     
@@ -139,6 +209,8 @@ public class Fatura implements Comparable<Fatura> , Serializable {
         return this.empresa.compareTo(f.getEmpresa());
     }
 
+
+
     // Contrutores
 
     /**
@@ -155,7 +227,14 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     }
 
     /**
-     * Construtor parametrizado para objetos da classe Fatura
+     * Construtor parametrizado da classe Fatura
+     * @param empresa
+     * @param nif_emitente
+     * @param data
+     * @param nif_cliente
+     * @param descricao
+     * @param log_setor
+     * @param valor
      */
     public Fatura(String empresa, int nif_emitente, LocalDateTime data, int nif_cliente, String descricao, LogSetor log_setor, double valor) {
         this.empresa = empresa;
