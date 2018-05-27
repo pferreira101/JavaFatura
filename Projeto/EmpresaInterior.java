@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Objects;
 
-public class EmpresaInterior extends Empresa implements BenificioFiscal{
+public class EmpresaInterior extends Empresa implements BeneficioFiscal{
     
     private double taxa_bonus;
     

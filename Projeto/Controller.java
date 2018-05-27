@@ -52,10 +52,10 @@ public class Controller{
             this.estado.addFaturaSistema(nif_cliente, valor, descricao);
         }
         catch(NIFNaoRegistadoException e){
-            System.out.println(e.getMessage());
+            System.out.println("O NIF: "+ e.getMessage() + " não se encontra registado");
         }
         catch(NIFDaFaturaEEmpresaException e){
-            System.out.println(e.getMessage());
+            System.out.println("Não pode emitir faturas para o seguinte NIF: " + e.getMessage() +" pois corresponde a uma empresa");
         }
         catch(EntidadeAtivaNaoEEmpresaException e){
             System.out.println(e.getMessage());
@@ -285,9 +285,10 @@ public class Controller{
             
             if(opcao != 0 && opcao <= faturas.size()){
                 f_escolhida = faturas.get(opcao-1);
+                printSeparador();
                 System.out.println(f_escolhida.toString());
                 if(mode == 1){
-                    System.out.println("\n\n0 - Retroceder");
+                    System.out.println("\n0 - Retroceder");
                     do{
                         recuar = sc.nextInt();
                     }while(recuar != 0);
@@ -546,7 +547,7 @@ public class Controller{
             printSeparador();
             showOps(menu);
             opcao = readOp();
-            printSeparador();
+            if(opcao!=0)printSeparador();
             switch(opcao){
                 case 0: break;
                 case 1: printFaturasContribuinte(); break;
@@ -572,7 +573,7 @@ public class Controller{
             printSeparador();
             showOps(menu);
             opcao = readOp(); 
-            printSeparador();
+            if(opcao!=0) printSeparador();
             switch(opcao){
                 case 0: break;
                 case 1: criaFatura(); break;

@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Objects;
 
-public class ContribuinteFamiliaNumerosa extends Contribuinte implements BenificioFiscal{
+public class ContribuinteFamiliaNumerosa extends Contribuinte implements BeneficioFiscal{
     
     private double taxa_bonus;
     private static double bonus = 0.05;

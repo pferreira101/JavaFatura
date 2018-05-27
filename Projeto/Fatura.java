@@ -131,7 +131,6 @@ public class Fatura implements Comparable<Fatura> , Serializable {
         s.append("Data: "); s.append(data); s.append('\n');
         s.append("NIF cliente: "); s.append(nif_cliente); s.append('\n');
         s.append("Valor: "); s.append(valor); s.append('\n');
-        s.append("*********************"); s.append('\n');
         return s.toString(); 
     }
 
