@@ -296,7 +296,7 @@ public class Controller{
     */
     public void printTopContribuintes() {
         try {
-            ArrayList<Contribuinte> list = estado.top10Contribuintes();
+            List<Contribuinte> list = estado.top10Contribuintes();
             int size = list.size();
             if (size==0) {
                 System.out.println("Não existem contribuintes no sistema.");

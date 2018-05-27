@@ -364,19 +364,25 @@ public class Sistema implements Serializable{
     * 
     * @return Lista com os 10 contribuintes
     */
-    public ArrayList<Contribuinte> top10Contribuintes() throws AdminModeNaoAtivadoException {
+    public List<Contribuinte> top10Contribuintes() throws AdminModeNaoAtivadoException {
 
         if (!admin_mode) throw new AdminModeNaoAtivadoException("Admin Mode não está ativado.");
 
-        TreeSet<Contribuinte> r = new TreeSet<>((c1,c2) -> Double.compare(c2.valorTotalFaturas(), c1.valorTotalFaturas()));
-
+        TreeSet<Contribuinte> r = new TreeSet<>((c1,c2) -> {
+                                                    if (c2.valorTotalFaturas()!=c1.valorTotalFaturas()) {
+                                                        return Double.compare(c2.valorTotalFaturas(), c1.valorTotalFaturas());
+                                                    } else {
+                                                        return c2.getNif() - c1.getNif();
+                                                    }
+                                                });
+                                                
         this.entidades.values().stream().filter(e -> e instanceof Contribuinte).
                                          map(e -> { Contribuinte c = (Contribuinte) (e.clone());
                                                     return c;
                                                   }).
                                          forEach(c -> r.add(c));
 
-        ArrayList<Contribuinte> list = new ArrayList<>();
+        List<Contribuinte> list = new ArrayList<>();
         Iterator<Contribuinte> it = r.iterator();
         int i=0;
         while (i<10 && it.hasNext()) {
@@ -394,20 +400,63 @@ public class Sistema implements Serializable{
     * 
     * @return Lista com as N empresas
     */
-    /*public TreeSet<Empresa> topXEmpresas(int x) throws AdminModeNaoAtivadoException {
+     public List<SimpleEntry<Empresa, Double>> topXEmpresas(int x) throws AdminModeNaoAtivadoException {
+        List<SimpleEntry<Empresa, Double>>  resultado = new ArrayList<>();
+        double valor_acumulado;
+        int i=0;
+
         if (!admin_mode) throw new AdminModeNaoAtivadoException("Admin Mode não está ativado.");
 
-        TreeSet<Empresa> r = new TreeMap<>(Integer::compare);
+        Map<Empresa, Double> empresas = new TreeMap<>((e1,e2) ->{
+                                                    if (e2.totalFaturado()!=e1.totalFaturado()) {
+                                                        return Double.compare(e2.totalFaturado(), e1.totalFaturado());
+                                                    } else {
+                                                        return e2.getNif() - e1.getNif();
+                                                    }
+                                                });
         
         this.entidades.values().stream().filter(e -> e instanceof Empresa).
-                                         map(e -> { Empresa em = (Empresa) (e.clone());
-                                                    return em;
-                                                  }).
-                                         forEach(em -> r.put(em.getNFatEmitidas(),em));
+                                         map(e -> (Empresa) e).
+                                         forEach(emp -> empresas.put(emp,0.0));
 
+        
+        List<Contribuinte> contribuintes = this.entidades.values().stream().
+                                                filter(e -> e instanceof Contribuinte).
+                                                map(e -> (Contribuinte) e).
+                                                collect(Collectors.toList());                              
 
-        return r;
-    }*/
+        for(Contribuinte c : contribuintes)
+          for(Fatura f : c.getFaturas()){
+              Empresa emitente = (Empresa) this.entidades.get(f.getNifEmitente());
+              valor_acumulado = empresas.get(emitente);
+              empresas.put(emitente, valor_acumulado + calculaValorDeduzir(f.getValor(), f.getSetor(), 0, emitente, c));
+          }
+
+          
+        for(Map.Entry<Empresa, Double> entry : empresas.entrySet()){
+              resultado.add(new SimpleEntry <Empresa, Double> (entry.getKey().clone(),entry.getValue()));
+              i++;
+              if(i==x)
+                break;
+        }
+
+        return resultado; 
+    }
+
+    /** Método que adicionar um novo setor de atividade ao sistema
+    * 
+    * @param nome Nome do setor
+    * @param taxa Taxa de dedução associada ao setor
+    * @param isDedutivel Boleano que dita a dedutividade do setor
+    * @param maxDedutivel Valor máximo dedutível
+    *
+    */
+    public void addSetorAtividadeEconomica(String nome, double taxa, boolean isDedutivel, double maxDedutivel)throws AdminModeNaoAtivadoException {
+
+        if (!admin_mode) throw new AdminModeNaoAtivadoException("Admin Mode não está ativado.");
+        
+        this.gestor_setores.addSetor(nome, taxa, isDedutivel, maxDedutivel);
+    }
 
 
     // I/O

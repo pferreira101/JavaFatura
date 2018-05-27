@@ -47,30 +47,33 @@
 \section{Introdução}
 \label{sec:intro}
 
- No contexto da Unidade Curricular Programação Orientada aos Objetos (POO) foi proposto o desenvolvimento, na linguagem Java, da
- aplicação JAVA-Fatura. O enunciado proposto pelos docentes visa o desenvolvimento de uma versão da plataforma de disponibilização aos contribuintes
- da informação referente às faturas que foram emitidas em seu nome. Os requisitos básicos são, por exemplo, verificar as faturas 
- emitidas em seu nome, por parte do contribuinte individual, e obter o total faturado, por parte de uma empresa.
+ No contexto da Unidade Curricular Programação Orientada aos Objetos (POO), foi-nos proposto o desenvolvimento de uma aplicação chamada JAVA-Fatura. 
+ Tal como o nome indica, o enunciado proposto pelos docentes visa o desenvolvimento de uma versão da plataforma E-Fatura, de consulta e emissão de faturas, na linguagem \texit{Java}.
+ Os requisitos básicos são, por exemplo, por parte do contribuinte individual, verificar as faturas 
+ emitidas em seu nome e, por parte de uma empresa, obter o total faturado.
  Na seção \ref{sec:java} serão apresentados mais requisitos desta aplicação e também serão discutidas as classes 
  criadas para a concretização dos requisitos apresentados.
- Na seção \ref{sec:funcionalidades} será discutida a forma como um utilizador pode interagir com a aplicação.
+ Na seção \ref{sec:funcionalidades} será discutida a forma como os utilizadores podem interagir com a aplicação.
 
 
 \section{JAVA-Fatura}
 \label{sec:java}
 
+A aplicação teria que permitir, além da criação de novos contribuintes e empresas no sistema, de fazer a identificação correta da entidade que se encontra a utilizar o Java-Fatura, isto é, teria que ser capaz de efetuar o Login no Sistema com sucesso, perante as credenciais dadas.
 Para além dos requisitos já referidos, os contribuintes individuais devem ser capazes de verificar o montante de dedução fiscal acumulado (por si
-e pelo agregado familiar), atribuir o setor de atividade económica a uma fatura que necessite, entre outros. As empresas deverão ser capazes de de obter
+e pelo agregado familiar) e atribuir ou corrigir o setor de atividade económica de uma fatura, sendo que esta alteração teria que ser mantida em registo. 
+As empresas deverão ser capazes de de obter
 vários tipos de listagens sobre as faturas que emitiram, ordenadas por valor ou data. Para além disso, a aplicação necessita de ter um admistrador capaz 
-de determinar os contribuintes que mais gastam no sistema ou de adicionar um novo setor de ativividade económica. Para a realização deste projeto, decidimos
-criar as seguintes classes.	
+de determinar os contribuintes que mais gastam no sistema e as empresas que mais faturaram ou de adicionar um novo setor de ativividade económica. Para a realização deste projeto, decidimos
+criar as classes que descrevemos na secção \ref{sec:classes}.
+}
 	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Classes}
 \label{sec:classes}
 
-Antes de iniciarmos a descrição de cada uma das classes, começamos por mostrar o seguinte diagrama das classes implementadas.
+Antes de iniciarmos a descrição de cada uma das classes, começamos por mostrar o diagrama das classes implementadas (pelo \textit{BLUEJ}).
 
 	% IMAGEM 
 	
@@ -78,90 +81,96 @@ Antes de iniciarmos a descrição de cada uma das classes, começamos por mostra
 
 
 Interface definida para que as famílias numerosas e as empresas do interior
-terem um beneficio fiscal aquando da dedução das suas faturas.
+possam ter um beneficio fiscal aquando da dedução das suas faturas.
+Esta interface contém o método reducaoImposto não definido.
 
 
 \subsubsection{ConcelhosInterior} %%%%%%%%%%%%%%%
 
-Classe que contém os concelhos que beneficiam de beneficio fiscal. MAIS!
+Classe que contém os concelhos que podem usufruir de beneficio fiscal. Pelo facto de serem imensos, decidimos optar por selecionar apenas nove concelhos abrangidos por este benefício, entre eles Penalva do Castelo, Vinhais, Resende, Ribeira de Pena, Baião, Celorico de Bastos, Tabuaço, Cinfães e Mirandela.
+
+Possui apenas uma variável de instância: um mapa que associa a cada concelho do interior a sua taxa de dedução.
 
 
 \subsubsection{Contribuinte} %%%%%%%%%%%%%%%
 
-Sendo subclasse de Entidade, esta classe tem a lista das faturas emitidas em seu nome (separadas pelas que são 
-fiscalmente válidas ou inválidas), o número de dependentes familiares assim como os NIFs de toda a família.
+Sendo subclasse de Entidade, esta classe tem como variáveis de instância a lista das faturas emitidas em seu nome (separadas pelas que são 
+fiscalmente válidas ou inválidas/pendentes) e o número de dependentes familiares e os seus NIF's.
 
 
 \subsubsection{ContribuinteFamiliaNumerosa} %%%%%%%%%%%%%%%
 
-Implementa a interface BeneficioFiscal. MAIS!
+Implementa a interface BeneficioFiscal e é subclasse de Contribuinte. É aqui que definimos a taxa de benefício fiscal das famílias numerosas e o bónus fiscal que cada dependente representa.
 
 
 \subsubsection{Controller} %%%%%%%%%%%%%%%
 
-Classe intermediária entre a comunicação do utilizador com o sistema. MAIS! 
+Classe intermediária entre a comunicação do utilizador com o sistema. É lá que está definida a \textit{main} e as funções que nos permitem interagir com os menus por nós criados, e apresentados pelo terminal. A variável de instância que representa o estado do Sistema é criada aqui.
 
 
 \subsubsection{Distritos} %%%%%%%%%%%%%%%
 
-Enum contendo todos os distritos do país.
+Enum contendo todos os dezoito distritos do país.
 
 
 \subsubsection{Empresa} %%%%%%%%%%%%%%%
 
-Subclasse de Entidade que contém as faturas emitidas e os setores de atividade económica. MAIS!
-
+Subclasse de Entidade que contém as faturas emitidas e os setores de atividade económica. É nesta classe que estão definidos os métodos que permitem a ordenação das faturas, assim como a inserção destas no sistema.
 
 
 \subsubsection{EmpresaInterior} %%%%%%%%%%%%%%%
 
-Subclasse de Empresa que favorece de um benefício fiscal. MAIS! 
+Subclasse de Empresa que implementa a interface BeneficioFiscal. É com esta classe que permitimos que os bónus fiscais sejam atribuidos às empresas do interior do país, isto é, cuja atividade está declarada como sendo efetuada num dos concelhos considerados pelo Sistema como sendo do Interior.
 
 
 \subsubsection{Entidade} %%%%%%%%%%%%%%%
 
-Classe que contém as informações básicas, como o nome e o email, assim como as credenciais necessárias para o log in (NIF e password)
+Classe que contém as informações básicas das entidades do sistema, tais como o nome, o email e a morada, assim como as credenciais necessárias para o login (NIF e password).
 
 
 \subsubsection{Fatura} %%%%%%%%%%%%%%%
 
-Classe onde são guardadas as informações de cada fatura. MAIS!
+Classe onde são guardadas as informações de cada fatura, isto é, o nome e o NIF da empresa, a data de emissão da fatura, o NIF do cliente e a descrição e valor da fatura. Além disso, é também guardado o setor de atividade económica atribuído e o registo de alteração deste. 
 
 
 \subsubsection{GestorSetor} %%%%%%%%%%%%%%%
 
-Classe auxiliar à classe Fatura para que seja possível ao Contribuinte associar o setor de atividade económica que deseja à fatura em causa. 
+Classe auxiliar à classe Fatura para que seja possível ao Contribuinte associar o setor de atividade económica que deseja à fatura em causa. Além disso, permite também saber qual a taxa de dedução fiscal associado a cada Setor, além de permitir também que sejam adicionados novos setores de atividade ao sistema.
 
 
 \subsubsection{LogSetor} %%%%%%%%%%%%%%%
 
-Classe auxiliar à classe GestorSetor que guarda o histórico de todas as alterações do setor de atividade económica que um contribuinte realizou.
+Classe auxiliar à classe GestorSetor que guarda o histórico de todas as alterações do setor de atividade económica que um contribuinte realizou. Contém ainda informações relativas ao setor ativo.
 
  
 \subsubsection{Menu} %%%%%%%%%%%%%%%
 
-Classe que faz o display das operações que o utilizador pode realizar.
+Classe que faz o display das operações que o utilizador pode realizar, isto é, mostra-nos as operações possíveis nos diferentes Menus: inicial, contribuinte, empresa ou administrador.
 
 
 \subsubsection{Morada} %%%%%%%%%%%%%%%
 
-NAO SEI XD
+Classe que permite agregarmos todas as informações relativas à morada de uma entidade, facilitando assim o seu manuseamento. É aqui que representamos a rua, o código postal, o concelho e o distrito de uma entidade.
 
 
 \subsubsection{Setor} %%%%%%%%%%%%%%%
 
-Classe que contém as informações sobre a dedução relacionada com o setor de atividade económica.
+Classe que contém as informações sobre a dedução relacionada com o setor de atividade económica, ou seja, as taxas de dedução, se as despesas relacionadas com esse setor são dedutíveis e, se assim forem, qual o máximo valor dedutível.
 
 
 \subsubsection{Sistema} %%%%%%%%%%%%%%%
 
-Classe que guarda todas as informações da aplicação (dados de todas as entidades).
+Classe que guarda todas as informações da aplicação (dados de todas as entidades). Assim sendo, definimos aqui um HashMap com todas as entidades do sistema, um GestorSetor e as informações relativas às credenciais de admnistrados, que são as seguintes:
+
+\textbf{NIF}: \texttt{20172018}
+
+\textbf{Password}: \texttt{miei}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Classes de Exceção}
-\label{Casdads}
+\label{exceptions}
 
   \begin{itemize}
   	\item{AdminModeNaoAtivadoException - } 
@@ -216,8 +225,10 @@ Ao registar, quer um contribuinte, quer uma empresa, serão pedidas informaçõe
 \section{Conclusões}
 \label{sec:conclusao}
 
-Em suma, os requisitos propostos foram cumpridos e conjugados com êxito, sendo que o resultado final se revela um quanto fruitivo. 
+Este projeto foi extremamente enriquecedor para o grupo, uma vez que nos permitiu pôr em prática os conhecimentos adquiridos nas aulas de POO e desenvolver uma aplicação em JAVA, tendo em conta as orientações dadas pelos docentes no que diz respeito a Programação Orientada aos Objetos. 
 
-Foi, no geral, um trabalho extremamente enriquecedor e altamente pedagógico uma vez que conjugou o trabalho cooperativo.
+Em suma, na nossa opinião, os requisitos propostos foram cumpridos e conjugados com êxito, sendo que o resultado final se revela bastante apelativo e funcional.
+
+Foi, no geral, um trabalho  altamente pedagógico, que nos permitiu desenvolver não só competências essenciais ao curso de Mestrado Integrado em Engenharia Informática, como também competências sociais, tais como o trabalho em grupo.
 
 \end{document}\grid
