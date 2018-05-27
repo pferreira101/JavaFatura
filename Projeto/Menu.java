@@ -31,9 +31,9 @@ public class Menu implements Serializable{
                                       "0 - Sair"},
                                     // Menu admin
                                     { "1 - Top 10 Contribuintes: total do valor das faturas",
-                                      "2 - Top X Empresas: relação entre o nº de faturas emitidas e o montante de deduções fiscais que as despesas registadas representam",
+                                      "2 - Top X Empresas: relação entre o nº de faturas emitidas \ne o montante de deduções fiscais que as despesas registadas representam",
                                       "3 - Adicionar novo setor de despesa",
-                                      "0 -  Sair"}
+                                      "0 - Sair"}
                                     };
                             
     /**
