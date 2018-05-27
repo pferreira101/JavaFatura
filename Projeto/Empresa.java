@@ -160,6 +160,10 @@ public class Empresa extends Entidade implements Serializable {
 
     }
 
+    public double totalFaturado(){
+        return this.faturas_emitidas.stream().mapToDouble(f -> f.getValor()).sum();
+    }
+
 
     // Equals & Clone & toString
     
