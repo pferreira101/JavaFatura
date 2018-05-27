@@ -476,7 +476,7 @@ public class Sistema implements Serializable{
     * @param setor Setor
     * @param valor_acumuludado Valor acumulado
     * @param emp Empresa
-    * @param c Contribuinte
+    * @param c
     * 
     * @return Valor a deduzir
     */
