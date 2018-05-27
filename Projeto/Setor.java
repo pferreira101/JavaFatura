@@ -2,19 +2,12 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 
-/*
- * Adicionar TreeMap ordenado por data ao setor para manter
- * registo dos valores deduzidos e podermos retirar corretamente o valor deduzido por uma fatura
- * ex: fatura registada quando tinha 4 filhos descontou 10, se adicionar um filho e alterar o setor da fatura
- * sera retirado 12.5 ao setor antigo 
- */
 public class Setor implements Serializable {
 
     private final String nome;
     private final double taxa;
     private final boolean dedutivel;
     private final double max_dedutivel;
-    private Map<Fatura,Double> valores_deduzidos;
 
     public String getNome(){
         return this.nome;
@@ -32,29 +25,7 @@ public class Setor implements Serializable {
         return this.max_dedutivel;
     }
     
-   
-    public void addFaturaSetor(Fatura f){
-        this.valores_deduzidos.put(f, aDeduzir(f));
-    }
-    
-
-   
-    public void removeFaturaSetor(Fatura f){
-        this.valores_deduzidos.remove(f);
-    }
-  
-    // adicionar taxa de empresa e assim **************************
-    public double aDeduzir(Fatura f){
-        return f.getValor() * (this.taxa);
-    }
-    
-    public double valorDeduzido(){
-        double total_deduzido = 0;
-        for( double valor_deduzido : valores_deduzidos.values())
-            total_deduzido += valor_deduzido;
-        
-        return total_deduzido > this.max_dedutivel? this.max_dedutivel : total_deduzido;    
-    }
+     
     // Equals & Clone & toString
 
     public boolean equals(Object o) {

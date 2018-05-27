@@ -1,6 +1,5 @@
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import javafx.util.Pair;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.AbstractMap.SimpleEntry;
 
 public class LogSetor implements Serializable {
 
-    private Map<LocalDateTime, Pair<String, String>> registo_alteracoes;
+    private Map<LocalDateTime, SimpleEntry<String, String>> registo_alteracoes;
     private String setor_ativo;
 
     // Metodo para obter setor ativo
@@ -20,10 +19,10 @@ public class LogSetor implements Serializable {
     
     // Metodo para obter listagem das alteracoes
     
-    public List< SimpleEntry<LocalDateTime, Pair<String, String>>> getAlteracoesSetor(){
-        List< SimpleEntry<LocalDateTime, Pair<String, String>>> alteracoes = new ArrayList<>();
+    public List< SimpleEntry<LocalDateTime, SimpleEntry<String, String>>> getAlteracoesSetor(){
+        List< SimpleEntry<LocalDateTime, SimpleEntry<String, String>>> alteracoes = new ArrayList<>();
         
-        for(Map.Entry<LocalDateTime, Pair<String, String>> alteracao : this.registo_alteracoes.entrySet())
+        for(Map.Entry<LocalDateTime, SimpleEntry<String, String>> alteracao : this.registo_alteracoes.entrySet())
             alteracoes.add(new SimpleEntry<>(alteracao.getKey(), alteracao.getValue()));
         
         return alteracoes;
@@ -32,8 +31,8 @@ public class LogSetor implements Serializable {
     // Metodo para adicionar uma alteracao
     
     public void addAlteracao(String antes, String depois){
-        Pair<String, String> alteracao_setor = new Pair(antes, depois);
-        SimpleEntry<LocalDateTime, Pair<String, String>> alteracao = new SimpleEntry<>(LocalDateTime.now(), alteracao_setor);
+        SimpleEntry<String, String> alteracao_setor = new SimpleEntry(antes, depois);
+        SimpleEntry<LocalDateTime, SimpleEntry<String, String>> alteracao = new SimpleEntry<>(LocalDateTime.now(), alteracao_setor);
         
         this.registo_alteracoes.put( alteracao.getKey(), alteracao.getValue());
         this.setor_ativo = depois;
@@ -44,6 +43,7 @@ public class LogSetor implements Serializable {
     public boolean hasSetorAtivo(){
         return !this.setor_ativo.equals("Nenhum");
     }
+    
     // Equals & Clone & toString
     
     public boolean equals(Object o) {
@@ -51,16 +51,16 @@ public class LogSetor implements Serializable {
         if (o == null || this.getClass() != o.getClass()) return false;
 
         LogSetor log = (LogSetor) o;
-
+        
         return  this.setor_ativo.equals(log.getSetorAtivo()) &&
-                registo_alteracoes.equals(log.getAlteracoesSetor());
+                this.getAlteracoesSetor().equals(log.getAlteracoesSetor());
     }
 
     public LogSetor clone(){
         return new LogSetor(this);
     }
 
-    private String toStringAlteracao(Map.Entry<LocalDateTime, Pair<String, String>> alteracao){
+    private String toStringAlteracao(Map.Entry<LocalDateTime, SimpleEntry<String, String>> alteracao){
         StringBuilder s = new StringBuilder();
         s.append(alteracao.getKey().toString());
         s.append(" : ");
@@ -74,7 +74,7 @@ public class LogSetor implements Serializable {
     public String toString(){
         StringBuilder s = new StringBuilder();
         
-        for(Map.Entry<LocalDateTime, Pair<String, String>> alteracao : this.registo_alteracoes.entrySet())
+        for(Map.Entry<LocalDateTime, SimpleEntry<String, String>> alteracao : this.registo_alteracoes.entrySet())
                 s.append(toStringAlteracao(alteracao));
                 
         return s.toString();
@@ -88,12 +88,16 @@ public class LogSetor implements Serializable {
       this.setor_ativo = "Nenhum";
     }
 
+    public LogSetor(String setor){
+      this.registo_alteracoes = new TreeMap<>();  
+      this.setor_ativo = setor;
+    }    
 
     public LogSetor(LogSetor outro){
       this.registo_alteracoes = new TreeMap<>();
       this.setor_ativo = outro.getSetorAtivo();
       
-      for(SimpleEntry<LocalDateTime, Pair<String, String>> alteracao : outro.getAlteracoesSetor())
+      for(SimpleEntry<LocalDateTime, SimpleEntry<String, String>> alteracao : outro.getAlteracoesSetor())
             this.registo_alteracoes.put(alteracao.getKey(), alteracao.getValue());
     }
 

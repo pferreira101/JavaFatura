@@ -11,13 +11,9 @@ public class Contribuinte extends Entidade implements Serializable {
     
     private List<Integer> nif_familia;
     private int num_dependentes;
-    private GestorSetor gestor_deducoes;
-    private ArrayList<Fatura> faturas;
-    private ArrayList<Fatura> faturas_pendentes;
+    private List<Fatura> faturas;
+    private List<Fatura> faturas_pendentes;
 
-
-
-    // FIXME: 20/05/2018 Contabilizar valor dedutivel ao adicionar fatura
     
     public void addFatura(Fatura f){
         
@@ -62,41 +58,8 @@ public class Contribuinte extends Entidade implements Serializable {
             this.faturas.add(a_alterar);
             this.faturas_pendentes.remove(pos);
         }
-        else
-            this.gestor_deducoes.descontabilizaFatura(a_alterar, setor_antigo); // tem de ser retirado o valor atribuido ao antigo setor da fatura
-        
-        this.gestor_deducoes.contabilizaFatura(a_alterar);
     }
     
-    double totalDeduzido(){ 
-        return this.getSetores().stream().mapToDouble(s -> s.valorDeduzido()).sum();
-                                 
-    }
-    
-    // Metodo para saber quanto é um contribuinte deduziu por setor
-    public List< SimpleEntry<String, Double>> valoresDeduzidos(){
-        List< SimpleEntry<String, Double>> deducoes = new ArrayList<>();
-        for(Setor setor : this.gestor_deducoes.getSetores())
-            deducoes.add(new SimpleEntry<>(setor.getNome(), setor.valorDeduzido()));
-        
-        return deducoes;    
-    }
-    
-    TreeSet<Fatura> sortBy(){
-        TreeSet<Fatura> r = new TreeSet<Fatura>();
-
-        this.faturas.forEach(f -> r.add(f.clone()));
-
-        return r;
-    }
-
-    TreeSet<Fatura> sortBy(Comparator<Fatura> c){
-        TreeSet<Fatura> r = new TreeSet<Fatura>(c);
-
-        this.faturas.forEach(f -> r.add(f.clone()));
-
-        return r;
-    }
 
     
     // Getters & Setters
@@ -117,7 +80,7 @@ public class Contribuinte extends Entidade implements Serializable {
         nif_familia.stream().forEach(nif -> this.nif_familia.add(nif));
     }
 
-    public ArrayList<Fatura> getFaturas(){
+    public List<Fatura> getFaturas(){
         return this.faturas .stream().map(Fatura::clone).
                                       collect(Collectors.toCollection(ArrayList::new));
 
@@ -141,14 +104,6 @@ public class Contribuinte extends Entidade implements Serializable {
 
     }
     
-    public List<Setor> getSetores(){
-        return this.gestor_deducoes.getSetores().stream().map(Setor::clone).
-                                          collect(Collectors.toCollection(ArrayList::new));        
-    }
-    
-    public GestorSetor getGestorSetor(){
-        return this.gestor_deducoes.clone();
-    }
     
     // Equals & Clone & toString
 
@@ -185,15 +140,14 @@ public class Contribuinte extends Entidade implements Serializable {
         this.faturas_pendentes = new ArrayList<>();
     }
     
-    public Contribuinte(int nif, String email, String nome, Morada morada, String password, int num_dependentes, List<Integer> nif_familia, GestorSetor ges_deducoes, List<Fatura> faturas, List<Fatura> faturas_pendentes){
+    public Contribuinte(int nif, String email, String nome, Morada morada, String password, int num_dependentes, List<Integer> nif_familia, List<Fatura> faturas, List<Fatura> faturas_pendentes){
         super(nif, email, nome, morada, password);
         this.num_dependentes = num_dependentes;
         this.nif_familia = nif_familia.stream().collect(Collectors.toCollection(ArrayList::new));
         this.faturas = faturas.stream().map(Fatura::clone).
                                         collect(Collectors.toCollection(ArrayList::new));
         this.faturas_pendentes = faturas.stream().map(Fatura::clone).
-                                                  collect(Collectors.toCollection(ArrayList::new));
-        this.gestor_deducoes = ges_deducoes.clone();                                          
+                                                  collect(Collectors.toCollection(ArrayList::new));                                       
     }
     
     public Contribuinte(Contribuinte outro){
@@ -202,6 +156,5 @@ public class Contribuinte extends Entidade implements Serializable {
         this.nif_familia = outro.getNIFFamilia();
         this.faturas = outro.getFaturas();
         this.faturas_pendentes = outro.getFaturasPendentes();
-        this.gestor_deducoes = outro.getGestorSetor();
     }
 }

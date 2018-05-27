@@ -52,8 +52,8 @@ public class ContribuinteFamiliaNumerosa extends Contribuinte implements Benific
         this.taxa_bonus = taxa_bonus;
     }
 
-    public ContribuinteFamiliaNumerosa(int nif, String email, String nome, Morada morada, String password, int num_dependentes, List<Integer> nif_familia, GestorSetor ges_deducoes, List<Fatura> faturas, List<Fatura> faturas_pendentes) {
-        super(nif, email, nome, morada, password, num_dependentes, nif_familia, ges_deducoes, faturas, faturas_pendentes);
+    public ContribuinteFamiliaNumerosa(int nif, String email, String nome, Morada morada, String password, int num_dependentes, List<Integer> nif_familia,  List<Fatura> faturas, List<Fatura> faturas_pendentes) {
+        super(nif, email, nome, morada, password, num_dependentes, nif_familia, faturas, faturas_pendentes);
         this.taxa_bonus = num_dependentes * bonus;
     }
 

@@ -7,22 +7,25 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.AbstractMap.SimpleEntry;
+import java.time.LocalDateTime;
 import java.time.LocalDate;
 
 public class Sistema implements Serializable{
 
-    private HashMap<Integer, Entidade> entidades = new HashMap<>(); 
+    private HashMap<Integer, Entidade> entidades = new HashMap<>();
+    private GestorSetor gestor_setores = new GestorSetor();
     private int admin_nif; 
     private String admin_password; 
     private boolean admin_mode;
     private int nif_ativo;
+    
 
     // Registo de Entidades
 
     // Método para registar um Contribuinte no sistema
     public void registaEntidade (Integer nif, String nome, String email, String password, String rua, String cod_postal, String concelho, Distritos distrito, int n_filhos, List<Integer> nif_familia) throws NIFJaRegistadoException{
         Morada morada = new Morada(rua, cod_postal, concelho, distrito);        
-        Entidade nova = new Contribuinte(nif, email, nome,  morada, password, n_filhos,  nif_familia, new GestorSetor(), new ArrayList<Fatura>(), new ArrayList<Fatura>());
+        Entidade nova = new Contribuinte(nif, email, nome,  morada, password, n_filhos,  nif_familia, new ArrayList<Fatura>(), new ArrayList<Fatura>());
         if(this.entidades.putIfAbsent(nova.getNif(),nova) != null)
             throw new NIFJaRegistadoException(nif.toString());
  
@@ -53,9 +56,11 @@ public class Sistema implements Serializable{
     // retorna 1 se foi empresa
     // retorna 2 se foi o admin
     public int logIn (int nif, String password){
-        if(nif == this.admin_nif && this.admin_password.equals(password))
+        if(nif == this.admin_nif && this.admin_password.equals(password)){
+            this.admin_mode = true;
             return 2;
-            
+        }    
+        
         Entidade entidade = this.entidades.get(nif);
         if (entidade == null) return -1;
 
@@ -156,21 +161,25 @@ public class Sistema implements Serializable{
         
         return ((Empresa)e).totalFaturado(inicio, fim);    
     }
+
+
     
-    // Obter deducoes do nif ativo
-    public List<SimpleEntry<String,Double>> getDeducoesNIFAtivo() throws NIFNaoEDeUmContribuinteException{     
+    
+
+    // Metodo para calcular os valores deduzidos pela entidade ativa
+    public Map<String, Double> getDeducoesNifAtivo() throws NIFNaoEDeUmContribuinteException{
         Entidade e = this.entidades.get(nif_ativo);
+        
         if(!(e instanceof Contribuinte))
              throw new NIFNaoEDeUmContribuinteException(String.valueOf(nif_ativo));
         
-        Contribuinte c = (Contribuinte) e;
-        
-        return c.valoresDeduzidos();     
+        return calculaDeducoes((Contribuinte) e);     
     }
     
+    
     // Metodo para consultar o valor deduzido pelos familiares
-    public List< SimpleEntry<Integer, List<SimpleEntry<String, Double>>>>  getDeducoesFamilia() throws NIFNaoEDeUmContribuinteException{
-        List< SimpleEntry<Integer, List<SimpleEntry<String, Double>>>> deducoes_fam = new ArrayList<>();
+    public List< SimpleEntry<Integer, Map<String, Double>>>  getDeducoesFamilia() throws NIFNaoEDeUmContribuinteException{
+        List< SimpleEntry<Integer, Map<String, Double>>> deducoes_fam = new ArrayList<>();
         Entidade e = this.entidades.get(nif_ativo);
         Contribuinte familiar;
         
@@ -182,7 +191,7 @@ public class Sistema implements Serializable{
         for(int nif : c.getNIFFamilia()){
             familiar = (Contribuinte) this.entidades.get(nif);
             if(familiar != null)
-                deducoes_fam.add(new SimpleEntry<Integer, List<SimpleEntry<String, Double>>>(nif, familiar.valoresDeduzidos()));
+                deducoes_fam.add(new SimpleEntry<Integer, Map<String, Double>>(nif, calculaDeducoes(familiar)));
         }
        
         return deducoes_fam;
@@ -192,7 +201,7 @@ public class Sistema implements Serializable{
     public void addFaturaSistema(Integer nif_cliente, double valor, String descricao) throws NIFNaoRegistadoException, NIFDaFaturaEEmpresaException, EntidadeAtivaNaoEEmpresaException {
         Entidade cliente =  getEntidade(nif_cliente);
         Entidade empresa_emitente =  getEntidade(this.nif_ativo);
-        double bonus=0;
+        Fatura f;     
         
         if(cliente instanceof Empresa)
             throw new NIFDaFaturaEEmpresaException(nif_cliente.toString());
@@ -201,14 +210,14 @@ public class Sistema implements Serializable{
             throw new EntidadeAtivaNaoEEmpresaException(String.valueOf(nif_ativo));
         
         Empresa emp = (Empresa) empresa_emitente;
-        Contribuinte cont = (Contribuinte) cliente;
+        Contribuinte cont = (Contribuinte) cliente;   
         
-        if (empresa_emitente instanceof EmpresaInterior)
-            bonus += ((EmpresaInterior)empresa_emitente).reducaoImposto();
-        if (cliente instanceof ContribuinteFamiliaNumerosa)
-            bonus += ((ContribuinteFamiliaNumerosa)cliente).reducaoImposto();
+        List<String> setores_emp = emp.getSetores();  
         
-        Fatura f = new Fatura(emp.getNome(), emp.getNif(),  LocalDate.now(), nif_cliente, descricao, new LogSetor(), valor, 0, bonus);    
+        if( setores_emp.size() > 1)     
+            f = new Fatura(emp.getNome(), emp.getNif(),  LocalDateTime.now(), nif_cliente, descricao, new LogSetor(), valor);    
+        else 
+            f = new Fatura(emp.getNome(), emp.getNif(),  LocalDateTime.now(), nif_cliente, descricao, new LogSetor(setores_emp.get(0)), valor);    
         
         emp.addFatura(f);
         cont.addFatura(f);
@@ -236,6 +245,11 @@ public class Sistema implements Serializable{
         c.alteraSetorFatura(f, novo_setor);
     }
 
+    public List<String> getSetores(){
+        return this.gestor_setores.getSetores();
+    }
+    
+    
     // Metodo para um contribuinte consultar montantes deduzidos por dependentes
     // Eliminar talvez?
     /*
@@ -251,7 +265,7 @@ public class Sistema implements Serializable{
     }
     */
     // ADMIN ONLY
-
+/*
     public Set<Contribuinte> top10Contribuintes(){
         TreeSet<Contribuinte> r = new TreeSet<>((c1,c2) -> Double.compare(c1.totalDeduzido(), c2.totalDeduzido()));
 
@@ -261,9 +275,9 @@ public class Sistema implements Serializable{
                                                   }).
                                          forEach(c -> r.add(c));
 
-
         return r; // FIXME: 12/05/2018 restringir os 10 e a ser so admin
     }
+*/    
 /*
     public Set<Empresa> topXEmpresas(int x){
         TreeSet<Empresa> r = new TreeSet<>((e1,e2) -> Double.compare(e1.totalFaturado(), e2.totalFaturado())); 
@@ -302,33 +316,50 @@ public class Sistema implements Serializable{
     }
 
 
-
-
-    // Getters & Setters
-
-    public void setAdminMode(boolean mode) {
-        this.admin_mode = mode;
+    // Métodos private para usar nas restantes funcoes
+    
+    // Obter deducoes de um contribuinte
+    private Map<String,Double> calculaDeducoes(Contribuinte c){
+        double valor_acumulado;
+        String setor;
+        Empresa emp;
+        
+        Map<String, Double> deducoes = new HashMap<>();
+        
+        for(String nome_setor : this.gestor_setores.getSetores())
+            deducoes.put(nome_setor, 0.0);
+        
+        List<Fatura> faturas = c.getFaturas();        
+        for(Fatura f : faturas){
+            setor = f.getSetor();
+            valor_acumulado = deducoes.get(setor);
+            emp = (Empresa) this.entidades.get(f.getNifEmitente());
+            deducoes.put(setor, valor_acumulado + calculaValorDeduzir(f.getValor(), setor, valor_acumulado, emp, c));
+        }
+        
+        return deducoes;            
     }
-
-    public boolean getAdminMode() {
-        return this.admin_mode;
+    
+    
+    // Metodo auxiliar para calcular o valor a deduzir de uma fatura
+    private double calculaValorDeduzir(double valor, String setor, double valor_acumulado, Empresa emp, Contribuinte c){
+        double taxa=0.0, a_deduzir;
+        double max_setor = this.gestor_setores.getMax(setor);
+        
+        if(valor_acumulado == max_setor) return 0;
+        
+        taxa += this.gestor_setores.getTaxa(setor);
+        
+        if(c instanceof ContribuinteFamiliaNumerosa)
+            taxa +=  ((ContribuinteFamiliaNumerosa) c).reducaoImposto();
+        
+        if(emp instanceof EmpresaInterior)
+            taxa += ((EmpresaInterior)emp).reducaoImposto();
+    
+        a_deduzir = valor*taxa;
+        
+        return valor_acumulado+a_deduzir > max_setor? max_setor-valor_acumulado : a_deduzir;    
     }
-
-
-    public void setAdminNIF(int nif){
-        this.admin_nif = nif;
-    }
-
-    public int getAdminNIF(){
-        return this.admin_nif;
-    }
-
-    public void setAdminPassword(String pw){
-        this.admin_password = pw;
-    }
-
-    public String getAdminPassword(){
-        return this.admin_password;
-    }
-
+    
+    
 }

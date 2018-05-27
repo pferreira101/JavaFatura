@@ -93,6 +93,7 @@ public class Controller{
         int nif=-1;
         
         if(tipo == 2){
+            System.out.println("NIF a consultar:");
             nif = sc.nextInt();
         }
         
@@ -128,16 +129,25 @@ public class Controller{
     
     // Metodo para obter valor faturado por uma empresa entre determinada data
     public void valorFaturadoEmpresa(){
+        Double valor_faturado;
+        int sair;
         Scanner sc = new Scanner(System.in);
+        
         System.out.println("Introduza a data de início do intervalo a consultar (AAAA-MM-DD): ");
         String inicio = sc.next();
         LocalDate data_inicio = LocalDate.parse(inicio);
+        
         System.out.println("Introduza a data de fim do intervalo a consultar (AAAA-MM-DD): ");
         String fim = sc.next();
         LocalDate data_fim = LocalDate.parse(fim);
-        sc.close();
+
         try{    
-            this.estado.valorFaturadoEmpresa(data_inicio, data_fim);
+            valor_faturado = this.estado.valorFaturadoEmpresa(data_inicio, data_fim);
+            System.out.println("Valor faturado : " + valor_faturado.toString());
+            System.out.println("\n0 - Regressar menu anterior");
+            do{
+               sair = sc.nextInt();
+            }while(sair != 0);
         }
         catch(EntidadeAtivaNaoEEmpresaException e){
             System.out.println(e.getMessage());
@@ -145,20 +155,28 @@ public class Controller{
     } 
     
     // Metodo para fazer imprimir os pares setor - valor deduzido
-    public void printParesSetorDeducao(List<SimpleEntry<String, Double>> valores_deduzidos){
+    public void printParesSetorDeducao(Map<String, Double> valores_deduzidos){
+       Scanner sc = new Scanner(System.in);
+       int sair;
        Double total_deduzido=0.0;
-       for(Map.Entry<String, Double> deducao : valores_deduzidos){
+       for(Map.Entry<String, Double> deducao : valores_deduzidos.entrySet()){
             System.out.println(deducao.getKey() + " - " + deducao.getValue().toString());
             total_deduzido += deducao.getValue();
-        }
-        System.out.println("Valor total - " + total_deduzido); 
+       }
+       System.out.println("Valor total - " + total_deduzido); 
+       System.out.println("\n0 - Voltar ao menu anterior");
+       do{
+           sair = sc.nextInt();
+       }while(sair!=0);
+
+       sc.close();
     }
     
     // Metodo para fazer display dos valores deduzidos pelo contribuinte até então
     public void printDeducoes(){      
         try{
-            List<SimpleEntry<String,Double>> valores_deduzidos = this.estado.getDeducoesNIFAtivo();
-            printParesSetorDeducao(valores_deduzidos);          
+            Map<String,Double> valores_deduzidos = this.estado.getDeducoesNifAtivo();
+            printParesSetorDeducao(valores_deduzidos);
         }
         catch (NIFNaoEDeUmContribuinteException e){
             System.out.println("NIF: " + e.getMessage() + "não é de um contribuinte.");
@@ -168,17 +186,17 @@ public class Controller{
     
     // Metodo para consultar o valor deduzido pelos familiares
     public void printDeducoesFamilia(){
-        List< SimpleEntry<Integer, List<SimpleEntry<String, Double>>>> deducoes_fam;
+        List< SimpleEntry<Integer, Map<String, Double>>> deducoes_fam;
         try{
             deducoes_fam = this.estado.getDeducoesFamilia();
             if(deducoes_fam.size() == 0)
             System.out.println("Não possui elementos no seu agregado familiar ou estes ainda não se encontram registados.");
             
             else    
-                for(SimpleEntry<Integer, List<SimpleEntry<String, Double>>> deducoes : deducoes_fam){
+                for(SimpleEntry<Integer, Map<String, Double>> deducoes : deducoes_fam){
                     System.out.println("Nif: " + deducoes.getKey());
                     printParesSetorDeducao(deducoes.getValue());
-                }
+                }   
         }
          catch (NIFNaoEDeUmContribuinteException e){
             System.out.println("NIF: " + e.getMessage() + "não é de um contribuinte.");
@@ -189,32 +207,46 @@ public class Controller{
     
     // Metodo para atribuir setor a uma fatura mode 0 atribuir setor, mode 1 mudar setor
     public void atribuiSetor(int mode){
-        List<Fatura> faturas;
+        Scanner sc = new Scanner(System.in);
+        List<Fatura> faturas=null;
         Fatura a_alterar;
         String setor;
+        int sair;
         
         try{
             if(mode == 0) faturas = this.estado.faturasPendentes();
-            else faturas = this.estado.faturasContribuinte();
             
-            if(faturas.size() == 0)
-                System.out.println("Não tem faturas nesta categoria");
+            do{
+                if(mode == 1) faturas = this.estado.faturasContribuinte(); //ao alterar setor nao deve desaparecer das opcoes
+                
+                if(faturas.size() == 0){
+                    System.out.println("Não tem faturas nesta categoria");
+                    System.out.println("\n0 - Regressar menu anterior");
+                    a_alterar = null;
+                    do{
+                        sair = sc.nextInt();
+                    }while(sair != 0);
+                }
             
-            else{   
-            
-                do{
+                else{
                     a_alterar = printOpcoesFatura(faturas, 0, 0);
-                    setor = escolheSetorFatura();
                             
-                    if(a_alterar != null)
-                        this.estado.alteraSetorFatura(a_alterar, setor);
-                        
-                }while(a_alterar != null);
-            }
+                    if(a_alterar != null){
+                        setor = escolheSetorFatura();
+                        if(setor!=null) {
+                            this.estado.alteraSetorFatura(a_alterar, setor);
+                            if(mode==0)faturas.remove(a_alterar);
+                        }
+                    }
+                }
+                if(a_alterar!=null) printSeparador();        
+            }while(a_alterar != null);
+      
         }
         catch (NIFNaoEDeUmContribuinteException e){
             System.out.println("NIF: " + e.getMessage() + "não é de um contribuinte.");
-        }        
+        }  
+        sc.close();
     }
     // Método para escolher uma fatura
     // user 0 - display faturas para contribuinte ver (data empresa valor)
@@ -225,20 +257,29 @@ public class Controller{
     public Fatura printOpcoesFatura(List<Fatura> faturas, int user, int mode){
         Scanner sc = new Scanner(System.in);
         Fatura f_escolhida = null;
-        int i = 1, opcao, recuar;
+        int i, opcao, recuar;
         
-    
+        if(faturas.size() == 0){
+            System.out.println("Não tem faturas nesta categoria");
+            System.out.println("\n0 - Regressar menu anterior");       
+            do{
+               recuar = sc.nextInt();
+            }while(recuar != 0);
+            
+            return null;
+        }
         
         do{
+            i = 1;
             System.out.println("Escolha uma Fatura:");
             
             for(Fatura f : faturas)
-            if(user == 0)
-                System.out.printf("%d - %s %s %f\n", i++, f.getData().toString(), f.getEmpresa(), f.getValor());
-            else
-                System.out.printf("%d - %d %s %f\n", i++, f.getData().toString(), f.getNifCliente(), f.getValor());
+                if(user == 0)
+                    System.out.printf("%d - Data: %s Empresa: %s Valor: %f\n", i++, f.getData().toString(), f.getEmpresa(), f.getValor());
+                else
+                    System.out.printf("%d - Data: %s Nif Cliente: %d Valor%f\n", i++, f.getData().toString(), f.getNifCliente(), f.getValor());
                 
-            System.out.printf("\n\n0 - Retroceder"); 
+            System.out.println("\n\n0 - Retroceder"); 
                
             opcao = sc.nextInt(); 
             
@@ -246,32 +287,33 @@ public class Controller{
                 f_escolhida = faturas.get(opcao-1);
                 System.out.println(f_escolhida.toString());
                 if(mode == 1){
-                    System.out.printf("\n\n0 - Retroceder");
+                    System.out.println("\n\n0 - Retroceder");
                     do{
                         recuar = sc.nextInt();
                     }while(recuar != 0);
                 }               
             }
-        }
-        while(opcao != 0);
+            
+            if(opcao != 0 && mode != 0) printSeparador();
+        } 
+        while(opcao != 0 && mode != 0);
         
         sc.close();        
         return f_escolhida;
     }
 
     // Escolhe o setor a atribuir a uma fatura
-    public static String escolheSetorFatura(){
+    public String escolheSetorFatura(){
         Scanner sc = new Scanner(System.in);
-        GestorSetor aux = new GestorSetor();
-        List <Setor> setores = aux.getSetores();
+        List <String> setores = this.estado.getSetores();
         String setor_escolhido = null;
         int i = 1, opcao;
         
         System.out.println("Escolha um Setor de Atividade Económica:");
-        for(Setor setor : setores)
-            System.out.printf("%d - %s\n", i++, setor.getNome());
+        for(String nome_setor : setores)
+            System.out.printf("%d - %s\n", i++, nome_setor);
        
-        System.out.printf("\n\n0 - Retroceder");    
+        System.out.println("\n\n0 - Retroceder");    
         
         do{
             opcao = sc.nextInt();              
@@ -279,7 +321,7 @@ public class Controller{
         while(opcao < 0 || opcao > setores.size());
         
         if(opcao != 0)
-            setor_escolhido = setores.get(opcao-1).getNome();
+            setor_escolhido = setores.get(opcao-1);
         
         sc.close();
         return setor_escolhido;    
@@ -290,26 +332,25 @@ public class Controller{
         Scanner sc = new Scanner(System.in);
         List<String> setores_escolhidos = new ArrayList<>();
         GestorSetor aux = new GestorSetor();
-        List <Setor> setores = aux.getSetores();
+        List <String> setores = this.estado.getSetores();
         String setor_esc;
-        int n_setores, opcao, n_escolhidos=0;
+        int n_setores, opcao, n_escolhidos=0, i=1;
         
         System.out.println("Número de setores económicos em que a empresa participa:"); 
         do{
             n_setores = sc.nextInt();
         }while(n_setores < 1 || n_setores > setores.size()); 
-        
-        while(n_escolhidos != n_setores){
-            int i=1;       
-            System.out.println("Escolha um Setor de Atividade Económica:");
-            for(Setor setor : setores)
-                System.out.printf("%d - %s\n", i++, setor.getNome()); 
-        
+               
+        System.out.println("Escolha um Setor de Atividade Económica:");
+        for(String nome_setor : setores)
+             System.out.printf("%d - %s\n", i++, nome_setor); 
+             
+        while(n_escolhidos != n_setores){        
             do{
                 opcao = sc.nextInt();              
             }while(opcao < 1 || opcao > setores.size());
             
-            setor_esc = setores.get(opcao-1).getNome();
+            setor_esc = setores.get(opcao-1);
             if(!setores_escolhidos.contains(setor_esc)){
                 setores_escolhidos.add(setor_esc);
                 n_escolhidos++;
@@ -375,7 +416,7 @@ public class Controller{
         if(tipoEntidade == 0) execMenuContribuinte();
         if(tipoEntidade == 1) execMenuEmpresa();
         //if(tipoEntidade == 2)
-        
+
     }
     
     // Metodo para registar um contribuinte
@@ -424,13 +465,13 @@ public class Controller{
 
         
         try{
-            this.estado.registaEntidade(nif, nome, email, password, rua, cod_postal, concelho, distrito, n_filhos, nif_familia);
+            this.estado.registaEntidade(nif, nome, email, password, rua, cod_postal, concelho, distrito, n_filhos, nif_familia);           
+            System.out.println("Registo efetuado com sucesso!");
         }
         catch (NIFJaRegistadoException e){
-            System.out.println("NIF: " + e.getMessage() + "já se encontra registado");
+            System.out.println("NIF: " + e.getMessage() + " já se encontra registado");
         }
         
-        System.out.println("Registo efetuado com sucesso!");
         sc.close();
     } 
     
@@ -466,6 +507,7 @@ public class Controller{
    
         try{
             this.estado.registaEntidade(nif, nome, email, password, rua, cod_postal, concelho, distrito, setores);
+            System.out.println("Registo efetuado com sucesso!");
         }
         catch (ConcelhoNaoEInteriorException e){
             System.out.println("Empresas de " + e.getMessage() + " não tem direito a bónus fiscal");
@@ -473,9 +515,7 @@ public class Controller{
         catch (NIFJaRegistadoException e){
             System.out.println("NIF: " + e.getMessage() + "já se encontra registado");
         }
-        
-        System.out.println("Registo efetuado com sucesso!");
-
+                
     }
     // Metodo para  executar main menu
     public void start(){
@@ -483,8 +523,10 @@ public class Controller{
         String[] menu = Menu.getMainMenu();
      
         do{
+            printSeparador();    
             showOps(menu);
-            opcao = readOp();          
+            opcao = readOp();
+            printSeparador();
             switch(opcao){
                 case 0: break;
                 case 1: loginEntidade(); break;
@@ -500,9 +542,11 @@ public class Controller{
     public void execMenuContribuinte(){
         int opcao;  
         String[] menu = Menu.getMenuContribuinte();
-        do{   
+        do{ 
+            printSeparador();
             showOps(menu);
-            opcao = readOp();            
+            opcao = readOp();
+            printSeparador();
             switch(opcao){
                 case 0: break;
                 case 1: printFaturasContribuinte(); break;
@@ -524,9 +568,11 @@ public class Controller{
     public void execMenuEmpresa(){
         int opcao;  
         String[] menu = Menu.getMenuEmpresa();
-        do{   
+        do{ 
+            printSeparador();
             showOps(menu);
-            opcao = readOp();            
+            opcao = readOp(); 
+            printSeparador();
             switch(opcao){
                 case 0: break;
                 case 1: criaFatura(); break;
@@ -569,5 +615,9 @@ public class Controller{
         System.out.println("Obrigado!");
         
         
+    }
+    
+    private static void printSeparador(){
+           System.out.println("****************JavaFatura****************");
     }
 }

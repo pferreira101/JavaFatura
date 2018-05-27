@@ -11,39 +11,26 @@ public class GestorSetor implements Serializable {
     private Map<String, Setor> setores;    
     
     
-    public void contabilizaFatura(Fatura f){             
-        Setor setor = setores.get(f.getSetor());
-      
-        setor.addFaturaSetor(f);   
+    // Metodo para saber a taxa a deduzir de um dado setor
+    public double getTaxa(String setor){
+        return this.setores.get(setor).getTaxa();
     }
     
-    /*
-     * Corrigir este metodo quando tiver treemap no setor
-     */
-    public void descontabilizaFatura(Fatura f, String setor){        
-        Setor setor_antigo = setores.get(setor);
-        
-        setor_antigo.removeFaturaSetor(f);
+    // Metodo para saber o maximo a deduzir de um dado setor
+    public double getMax(String setor){
+        return this.setores.get(setor).getMaxDedutivel();
     }
     
-    // Getters & Setters
-       
-    public List<Setor> getSetores(){
-        return this.setores.values().stream().map(s -> s.clone()).
+    // Metodo para obter nomes dos setores disponiveis   
+    public List<String> getSetores(){
+        return this.setores.values().stream().map(s -> s.getNome()).
                                      collect(Collectors.toCollection(ArrayList::new));
     }
     
-    
-    public void setSetores(List<Setor> setores){
-        this.setores = new HashMap<>();
-        
-        for(Setor s : setores){
-            SimpleEntry<String, Setor> setor = new SimpleEntry<>(s.getNome(), s.clone());
-            this.setores.put(setor.getKey(), setor.getValue());
-        }                                         
+    // Metodo para adicionar um novo setor
+    public void addSetor(String nome, double taxa, boolean isDedutivel, double max_dedutivel){
+        this.setores.put(nome, new Setor(nome, taxa, isDedutivel, max_dedutivel));
     }
-    
-
  
     // Equals & Clone & toString
     
@@ -54,10 +41,6 @@ public class GestorSetor implements Serializable {
         GestorSetor gs = (GestorSetor) o;
         
         return this.setores.equals(gs.getSetores());
-    }
-    
-    public GestorSetor clone(){
-        return new GestorSetor(this);
     }
     
     public String toString(){
@@ -95,17 +78,6 @@ public class GestorSetor implements Serializable {
         setores.put("Veterenário", vet);
         setores.put("Lares", lar);
         setores.put("Imóveis", imo);      
-    }
+    }   
 
-    /*
-    public GestorSetor(ArrayList<Setor> setores, Setor setor_ativo, ArrayList<LogSetor> log) {
-        this.setores = setores.stream().map(Setor::clone).collect(Collectors.toCollection(ArrayList::new));
-        this.setor_ativo = setor_ativo.clone();
-        this.log = log.stream().map(LogSetor::clone).collect(Collectors.toCollection(ArrayList::new));
-    }
-    */
-   
-    public GestorSetor(GestorSetor outro){
-        this.setSetores(outro.getSetores());
-    }
 }
