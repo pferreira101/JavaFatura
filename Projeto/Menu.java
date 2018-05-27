@@ -25,6 +25,10 @@ public class Menu implements Serializable{
                                       "7 - Consultar Faturas de um cliente específico, entre determinada data",
                                       "8 - Total Faturado",
                                       "0 - Sair"},
+                                    // Menu admin
+                                    { "1 - Top 10 Contribuintes: total do valor das faturas",
+                                      "2 - Top X Empresas: relação entre o nº de faturas emitidas e o montante de deduções fiscais que as despesas registadas representam",
+                                      "0 -  Sair"}
                                     };
                             
                                     
@@ -38,6 +42,10 @@ public class Menu implements Serializable{
     
     public static String[] getMenuEmpresa(){
         return operacoes[2];
+    }
+
+    public static String[] getMenuAdmin(){
+        return operacoes[3];
     }
     
 

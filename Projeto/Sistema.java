@@ -1,10 +1,5 @@
 import java.io.*;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.AbstractMap.SimpleEntry;
 import java.time.LocalDateTime;
@@ -14,8 +9,8 @@ public class Sistema implements Serializable{
 
     private HashMap<Integer, Entidade> entidades = new HashMap<>();
     private GestorSetor gestor_setores = new GestorSetor();
-    private int admin_nif; 
-    private String admin_password; 
+    private int admin_nif=20172018;
+    private String admin_password="miei";
     private boolean admin_mode;
     private int nif_ativo;
     
@@ -265,9 +260,12 @@ public class Sistema implements Serializable{
     }
     */
     // ADMIN ONLY
-/*
-    public Set<Contribuinte> top10Contribuintes(){
-        TreeSet<Contribuinte> r = new TreeSet<>((c1,c2) -> Double.compare(c1.totalDeduzido(), c2.totalDeduzido()));
+
+    public ArrayList<Contribuinte> top10Contribuintes() throws AdminModeNaoAtivadoException {
+
+        if (!admin_mode) throw new AdminModeNaoAtivadoException("Admin Mode não está ativado.");
+
+        TreeSet<Contribuinte> r = new TreeSet<>((c1,c2) -> Double.compare(c2.valorTotalFaturas(), c1.valorTotalFaturas()));
 
         this.entidades.values().stream().filter(e -> e instanceof Contribuinte).
                                          map(e -> { Contribuinte c = (Contribuinte) (e.clone());
@@ -275,11 +273,19 @@ public class Sistema implements Serializable{
                                                   }).
                                          forEach(c -> r.add(c));
 
-        return r; // FIXME: 12/05/2018 restringir os 10 e a ser so admin
+        ArrayList<Contribuinte> list = new ArrayList<>();
+        Iterator<Contribuinte> it = r.iterator();
+        int i=0;
+        while (i<10 && it.hasNext()) {
+            Contribuinte c = it.next();
+            list.add(c);
+            i++;
+        }
+
+        return list;
     }
-*/    
-/*
-    public Set<Empresa> topXEmpresas(int x){
+
+    /*public Set<Empresa> topXEmpresas(int x){
         TreeSet<Empresa> r = new TreeSet<>((e1,e2) -> Double.compare(e1.totalFaturado(), e2.totalFaturado())); 
         
         this.entidades.values().stream().filter(e -> e instanceof Empresa).
@@ -289,8 +295,8 @@ public class Sistema implements Serializable{
                                          forEach(em -> r.add(em));
 
         return r; // FIXME: 12/05/2018 restringir a x e a ser so admin
-    }
-*/
+    }*/
+
 
     // I/O
 
@@ -360,6 +366,5 @@ public class Sistema implements Serializable{
         
         return valor_acumulado+a_deduzir > max_setor? max_setor-valor_acumulado : a_deduzir;    
     }
-    
-    
+
 }

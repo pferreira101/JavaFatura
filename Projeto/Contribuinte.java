@@ -59,6 +59,17 @@ public class Contribuinte extends Entidade implements Serializable {
             this.faturas_pendentes.remove(pos);
         }
     }
+
+    public double valorTotalFaturas() {
+        double res = 0;
+        for (Fatura f: faturas) {
+            res += f.getValor();
+        }
+        for (Fatura f: faturas_pendentes) {
+            res += f.getValor();
+        }
+        return res;
+    }
     
 
     
@@ -127,7 +138,13 @@ public class Contribuinte extends Entidade implements Serializable {
     
 
     public String toString(){
-        return ""; // FIXME: 01/05/2018
+        StringBuilder s = new StringBuilder();
+
+        s.append("NIF: "); s.append(getNif()); s.append('\n');
+        s.append("Nome: "); s.append(getNome()); s.append('\n');
+        s.append("Email: "); s.append(getEmail()); s.append('\n');
+        s.append("Morada:\n"); s.append(getMorada().toString()); s.append('\n');
+        return s.toString();
     }
     
     // Construtores

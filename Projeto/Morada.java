@@ -58,8 +58,16 @@ public class Morada implements Serializable {
         return new Morada(this);
     }
     
-    public String toString(){ // FIXME: 12/05/2018 
-        return "";
+    public String toString(){
+        StringBuilder s = new StringBuilder();
+        String setor_fatura = "";     
+        
+        s.append("Rua: "); s.append(rua); s.append('\n');
+        s.append("Código Postal: "); s.append(cod_postal); s.append('\n');
+        s.append("Concelho: "); s.append(concelho); s.append('\n');
+        s.append("Distrito: "); s.append(distrito.toString()); s.append('\n');
+
+        return s.toString();
     }
 
     //Contrutores

@@ -248,6 +248,32 @@ public class Controller{
         }  
         sc.close();
     }
+
+    public void printTopContribuintes() {
+        try {
+            ArrayList<Contribuinte> list = estado.top10Contribuintes();
+            int size = list.size();
+            if (size==0) {
+                System.out.println("Não existem contribuintes no sistema.");
+                return;
+            }
+            else if (list.size()<10) System.out.println("Existem apenas "+list.size()+" contribuintes.\n");
+            System.out.println("Valor total das faturas:\n");
+            for (int i=0;i<list.size();i++){
+                Contribuinte c = list.get(i);
+                System.out.println((i+1)+"º: "+c.valorTotalFaturas()+"€");
+                System.out.println(c.toString());
+            }
+        }
+        catch (AdminModeNaoAtivadoException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void printTopEmpresas() {
+        return;
+    }
+
     // Método para escolher uma fatura
     // user 0 - display faturas para contribuinte ver (data empresa valor)
     // user 1 - display faturas para empresa ver (data nif_cliente valor)
@@ -396,7 +422,7 @@ public class Controller{
 
         do{
             System.out.println("NIF: ");
-            nif = sc.nextInt(); 
+            nif = sc.nextInt();
 
             System.out.println("Password: ");
             pw = sc.next();
@@ -416,7 +442,7 @@ public class Controller{
         
         if(tipoEntidade == 0) execMenuContribuinte();
         if(tipoEntidade == 1) execMenuEmpresa();
-        //if(tipoEntidade == 2)
+        if(tipoEntidade == 2) execMenuAdmin();
 
     }
     
@@ -428,32 +454,54 @@ public class Controller{
         ArrayList<Integer> nif_familia = new ArrayList<>();
 
         System.out.println("NIF: ");
-        int nif = sc.nextInt();
+        int nif = -1;
+        do {
+            nif = sc.nextInt();
+        } while(nif==-1);
 
         System.out.println("Nome: ");
-        String nome = sc.next();
+        String nome;
+        do {
+           nome = sc.nextLine();
+        } while (nome.equals(""));
+
 
         System.out.println("E-mail: ");
-        String email = sc.next();
+        String email;
+        do {
+            email = sc.nextLine();
+        } while (email.equals(""));
 
         System.out.println("Password: ");
-        String password = sc.next();
+        String password;
+        do {
+            password = sc.nextLine();
+        } while (password.equals(""));
 
         System.out.println("Rua: ");
-        String rua = sc.next();
+        String rua;
+        do{
+            rua = sc.nextLine();
+        } while (rua.equals(""));
 
         System.out.println("Código Postal (XXXX-XXX): ");
-        String cod_postal = sc.next();
-        
-        System.out.println("Concelho:");
-        String concelho = sc.next();
+        String cod_postal;
+        do {
+            cod_postal = sc.nextLine();
+        } while (cod_postal.equals(""));
 
         Distritos distrito = escolheDistrito();
+
+        System.out.println("Concelho:");
+        String concelho;
+        do {
+            concelho = sc.nextLine();
+        } while (concelho.equals(""));
         
         System.out.println("Número de filhos:");
         int n_filhos = sc.nextInt();
         
-        System.out.println("Insira o(s) seu(s) NIF(s)");
+        if (n_filhos!=0) System.out.println("Insira o(s) seu(s) NIF(s)");
         while(n_nifs_inseridos != n_filhos){
             nif_filho = sc.nextInt();
             if(!nif_familia.contains(nif_filho)){
@@ -482,27 +530,49 @@ public class Controller{
         ConcelhosInterior concelhos_int = new ConcelhosInterior();
 
         System.out.println("NIF: ");
-        int nif = sc.nextInt();
+        int nif = -1;
+        do {
+            nif = sc.nextInt();
+        } while(nif==-1);
 
         System.out.println("Nome: ");
-        String nome = sc.next();
+        String nome;
+        do {
+            nome = sc.nextLine();
+        } while (nome.equals(""));
+
 
         System.out.println("E-mail: ");
-        String email = sc.next();
+        String email;
+        do {
+            email = sc.nextLine();
+        } while (email.equals(""));
 
         System.out.println("Password: ");
-        String password = sc.next();
+        String password;
+        do {
+            password = sc.nextLine();
+        } while (password.equals(""));
 
         System.out.println("Rua: ");
-        String rua = sc.next();
-        
+        String rua;
+        do{
+            rua = sc.nextLine();
+        } while (rua.equals(""));
+
         System.out.println("Código Postal (XXXX-XXX): ");
-        String cod_postal = sc.next();
-        
-        System.out.println("Concelho:");
-        String concelho = sc.next();
-        
+        String cod_postal;
+        do {
+            cod_postal = sc.nextLine();
+        } while (cod_postal.equals(""));
+
         Distritos distrito = escolheDistrito();
+
+        System.out.println("Concelho:");
+        String concelho;
+        do {
+            concelho = sc.nextLine();
+        } while (concelho.equals(""));
         
         List<String> setores = escolheSetores();
    
@@ -584,6 +654,23 @@ public class Controller{
                 case 6: printFaturasEmpresa(1,1); break;
                 case 7: printFaturasEmpresa(2,1); break;
                 case 8: valorFaturadoEmpresa(); break;
+                default: System.out.println("Insira uma opção correta");
+            }
+        }while(opcao != 0);
+    }
+
+    public void execMenuAdmin(){
+        int opcao;
+        String[] menu = Menu.getMenuAdmin();
+        do{
+            printSeparador();
+            showOps(menu);
+            opcao = readOp();
+            if(opcao!=0) printSeparador();
+            switch(opcao){
+                case 0: break;
+                case 1: printTopContribuintes(); break;
+                case 2: printTopEmpresas(); break;
                 default: System.out.println("Insira uma opção correta");
             }
         }while(opcao != 0);
