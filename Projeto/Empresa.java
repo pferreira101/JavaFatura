@@ -141,6 +141,10 @@ public class Empresa extends Entidade implements Serializable {
         return r;
     }
 
+    // Numero de faturas emitidas
+    public int getNFatEmitidas(){
+        return this.faturas_emitidas.size();
+    }
 
     // Getters & Setters
 

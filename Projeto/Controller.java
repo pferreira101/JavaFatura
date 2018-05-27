@@ -320,6 +320,8 @@ public class Controller{
     public void printTopEmpresas() {
         return;
     }
+    
+    
 
     /**
     * Método que permite escolher uma fatura

@@ -394,17 +394,20 @@ public class Sistema implements Serializable{
     * 
     * @return Lista com as N empresas
     */
-    /*public Set<Empresa> topXEmpresas(int x){
-        TreeSet<Empresa> r = new TreeSet<>((e1,e2) -> Double.compare(e1.totalFaturado(), e2.totalFaturado())); 
+    public TreeMap<Integer,Empresa> topXEmpresas(int x) throws AdminModeNaoAtivadoException {
+        if (!admin_mode) throw new AdminModeNaoAtivadoException("Admin Mode não está ativado.");
+
+        Map<Integer, Empresa> r = new TreeMap<>(Integer::compare);
         
         this.entidades.values().stream().filter(e -> e instanceof Empresa).
                                          map(e -> { Empresa em = (Empresa) (e.clone());
                                                     return em;
                                                   }).
-                                         forEach(em -> r.add(em));
+                                         forEach(em -> r.put(em.getNFatEmitidas(),));
 
-        return r; // FIXME: 12/05/2018 restringir a x e a ser so admin
-    }*/
+        Set
+        //return r; // FIXME: 12/05/2018 restringir a x e a ser so admin
+    }
 
 
     // I/O
