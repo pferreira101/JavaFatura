@@ -11,14 +11,20 @@ public class LogSetor implements Serializable {
     private Map<LocalDateTime, SimpleEntry<String, String>> registo_alteracoes;
     private String setor_ativo;
 
-    // Metodo para obter setor ativo
-    
+
+    /**
+     * Getter do setor ativo
+     * @return setor ativo
+     */
     public String getSetorAtivo(){
         return this.setor_ativo;
     }
-    
-    // Metodo para obter listagem das alteracoes
-    
+
+
+    /**
+     * Método para obter listagem das alterações do setor ativo
+     * @return alterações do setor ativo
+     */
     public List< SimpleEntry<LocalDateTime, SimpleEntry<String, String>>> getAlteracoesSetor(){
         List< SimpleEntry<LocalDateTime, SimpleEntry<String, String>>> alteracoes = new ArrayList<>();
         
@@ -28,8 +34,12 @@ public class LogSetor implements Serializable {
         return alteracoes;
     }
     
-    // Metodo para adicionar uma alteracao
-    
+
+    /**
+     * Método para adicionar uma alteração de setor ativo
+     * @param antes setor antigo
+     * @param depois setor novo
+     */
     public void addAlteracao(String antes, String depois){
         SimpleEntry<String, String> alteracao_setor = new SimpleEntry(antes, depois);
         SimpleEntry<LocalDateTime, SimpleEntry<String, String>> alteracao = new SimpleEntry<>(LocalDateTime.now(), alteracao_setor);
@@ -38,14 +48,24 @@ public class LogSetor implements Serializable {
         this.setor_ativo = depois;
     }
     
-    // Metodo para saber se tem um setor ativo ou nao
-    
+
+    /**
+     * Método para saber se tem um setor ativo ou nao
+     * @return
+     */
     public boolean hasSetorAtivo(){
         return !this.setor_ativo.equals("Nenhum");
     }
-    
+
+
+
     // Equals & Clone & toString
-    
+
+    /**
+     * Método que verifica se dois objetos LogSetor são iguais
+     * @param o objeto a comparar
+     * @return true se forem iguais
+     */
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
@@ -56,10 +76,20 @@ public class LogSetor implements Serializable {
                 this.getAlteracoesSetor().equals(log.getAlteracoesSetor());
     }
 
+    /**
+     * Clone da classe LogSetor
+     * @return LogSetor igual
+     */
     public LogSetor clone(){
         return new LogSetor(this);
     }
 
+
+    /**
+     * Método que transforma em String uma alteração do setor ativo
+     * @param alteracao
+     * @return
+     */
     private String toStringAlteracao(Map.Entry<LocalDateTime, SimpleEntry<String, String>> alteracao){
         StringBuilder s = new StringBuilder();
         s.append(alteracao.getKey().toString());
@@ -70,7 +100,11 @@ public class LogSetor implements Serializable {
         
         return s.toString();
     }
-    
+
+    /**
+     * Método que transforma um objeto LogSetor em String
+     * @return String relativa ao objeto
+     */
     public String toString(){
         StringBuilder s = new StringBuilder();
         
@@ -83,16 +117,27 @@ public class LogSetor implements Serializable {
 
     // Construtores
 
+    /**
+     * Construtor default da classe LogSetor
+     */
     public LogSetor(){
       this.registo_alteracoes = new TreeMap<>();
       this.setor_ativo = "Nenhum";
     }
 
+    /**
+     * Construtor paramétrico da classe LogSetor
+     * @param setor
+     */
     public LogSetor(String setor){
       this.registo_alteracoes = new TreeMap<>();  
       this.setor_ativo = setor;
-    }    
+    }
 
+    /**
+     * Construtor de cópia da classe LogSetor
+     * @param outro
+     */
     public LogSetor(LogSetor outro){
       this.registo_alteracoes = new TreeMap<>();
       this.setor_ativo = outro.getSetorAtivo();

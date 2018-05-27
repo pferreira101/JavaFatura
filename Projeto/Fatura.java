@@ -189,12 +189,11 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     
     /**
      * Método que transforma um objeto Fatura numa String
-     * @return 
+     * @return String relativa à fatura
      */
     public String toString() {
         StringBuilder s = new StringBuilder();
-        String setor_fatura = "";     
-        
+
         s.append("Empresa: "); s.append(empresa); s.append('\n');
         s.append("NIF emitente: "); s.append(nif_emitente); s.append('\n');
         s.append("Setor: "); s.append(reg_alteracoes.getSetorAtivo()); s.append('\n');
@@ -204,7 +203,12 @@ public class Fatura implements Comparable<Fatura> , Serializable {
         return s.toString(); 
     }
 
-    
+    /**
+     * Função compareTo da classe Fatura
+     * @param f fatura a comparar
+     * @return 
+     */
+    // FIXME: 27-05-2018 retorno doc
     public int compareTo(Fatura f){
         return this.empresa.compareTo(f.getEmpresa());
     }
@@ -227,7 +231,7 @@ public class Fatura implements Comparable<Fatura> , Serializable {
     }
 
     /**
-     * Construtor parametrizado da classe Fatura
+     * Construtor paramétrico da classe Fatura
      * @param empresa
      * @param nif_emitente
      * @param data
