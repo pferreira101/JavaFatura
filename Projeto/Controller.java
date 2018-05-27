@@ -48,7 +48,7 @@ public class Controller{
         for(String op : ops)
             System.out.println(op);
     }
-    
+
     /**
     * Método que permite adicionar uma fatura ao sistema
     */
@@ -513,6 +513,34 @@ public class Controller{
         if(tipoEntidade == 2) execMenuAdmin();
 
     }
+
+    /**
+     * Método que permite ler um inteiro positivo do terminal
+     *
+     * @return Inteiro lido
+     */
+    private int lerIntPos(){
+        int num = -1;
+        Scanner sc = new Scanner(System.in);
+        do {
+            num = sc.nextInt();
+        } while(num == -1);
+        return num;
+    }
+
+    /**
+     * Método que permite ler uma String do terminal
+     *
+     * @return String lida
+     */
+    private String lerString(){
+        String nova = "";
+        Scanner sc = new Scanner(System.in);
+        do {
+            nova = sc.nextLine();
+        } while(nova.equals(""));
+        return nova;
+    }
     
     /**
     * Método que permite registar um contribuinte no sistema
@@ -523,49 +551,27 @@ public class Controller{
         ArrayList<Integer> nif_familia = new ArrayList<>();
 
         System.out.println("NIF: ");
-        int nif = -1;
-        do {
-            nif = sc.nextInt();
-        } while(nif==-1);
+        int nif = lerIntPos();
 
         System.out.println("Nome: ");
-        String nome;
-        do {
-           nome = sc.nextLine();
-        } while (nome.equals(""));
-
+        String nome = lerString();
 
         System.out.println("E-mail: ");
-        String email;
-        do {
-            email = sc.nextLine();
-        } while (email.equals(""));
+        String email = lerString();
 
         System.out.println("Password: ");
-        String password;
-        do {
-            password = sc.nextLine();
-        } while (password.equals(""));
+        String password = lerString();
 
         System.out.println("Rua: ");
-        String rua;
-        do{
-            rua = sc.nextLine();
-        } while (rua.equals(""));
+        String rua = lerString();
 
         System.out.println("Código Postal (XXXX-XXX): ");
-        String cod_postal;
-        do {
-            cod_postal = sc.nextLine();
-        } while (cod_postal.equals(""));
+        String cod_postal = lerString();
 
         Distritos distrito = escolheDistrito();
 
         System.out.println("Concelho:");
-        String concelho;
-        do {
-            concelho = sc.nextLine();
-        } while (concelho.equals(""));
+        String concelho = lerString();
         
         System.out.println("Número de filhos:");
         int n_filhos = sc.nextInt();
@@ -601,49 +607,27 @@ public class Controller{
         ConcelhosInterior concelhos_int = new ConcelhosInterior();
 
         System.out.println("NIF: ");
-        int nif = -1;
-        do {
-            nif = sc.nextInt();
-        } while(nif==-1);
+        int nif = lerIntPos();
 
         System.out.println("Nome: ");
-        String nome;
-        do {
-            nome = sc.nextLine();
-        } while (nome.equals(""));
-
+        String nome = lerString();
 
         System.out.println("E-mail: ");
-        String email;
-        do {
-            email = sc.nextLine();
-        } while (email.equals(""));
+        String email = lerString();
 
         System.out.println("Password: ");
-        String password;
-        do {
-            password = sc.nextLine();
-        } while (password.equals(""));
+        String password = lerString();
 
         System.out.println("Rua: ");
-        String rua;
-        do{
-            rua = sc.nextLine();
-        } while (rua.equals(""));
+        String rua = lerString();
 
         System.out.println("Código Postal (XXXX-XXX): ");
-        String cod_postal;
-        do {
-            cod_postal = sc.nextLine();
-        } while (cod_postal.equals(""));
+        String cod_postal = lerString();
 
         Distritos distrito = escolheDistrito();
 
         System.out.println("Concelho:");
-        String concelho;
-        do {
-            concelho = sc.nextLine();
-        } while (concelho.equals(""));
+        String concelho = lerString();
         
         List<String> setores = escolheSetores();
    
@@ -746,6 +730,7 @@ public class Controller{
                 case 0: break;
                 case 1: printTopContribuintes(); break;
                 case 2: printTopEmpresas(); break;
+                case 3: break; //FIXME: colocar funcao de adicionar setor
                 default: System.out.println("Insira uma opção correta");
             }
         }while(opcao != 0);
