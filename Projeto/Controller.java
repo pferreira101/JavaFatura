@@ -8,16 +8,30 @@ import java.time.LocalDate;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+
+/**
+* Classe onde está definida a main e que permite a interação com o utilizar. Controla o Sistema da aplicação.
+*/
 public class Controller{
     
     private Sistema estado;
     
     // Contrutor
+    /**
+    * Construtor parametrizado
+    * 
+    * @param estado Estado do Sistema
+    * 
+    */
     public Controller(Sistema estado){
         this.estado = estado;
     }
     
-    // Método para ler uma opcao do terminal
+    /**
+    * Método para ler do terminal uma opção do menu
+    * 
+    * @return operação lida
+    */
     public int readOp(){
         int op;
         Scanner sc = new Scanner(System.in);
@@ -27,13 +41,17 @@ public class Controller{
         return op;
     }
     
-    // Método para imprimir opcoes
+    /**
+    * Método para imprimir as opções do menu
+    */
     public void showOps(String[] ops){
         for(String op : ops)
             System.out.println(op);
     }
     
-    // Método para adicionar uma fatura ao sistema
+    /**
+    * Método que permite adicionar uma fatura ao sistema
+    */
     public void criaFatura(){
         Scanner sc = new Scanner(System.in);
         Fatura f;
@@ -62,7 +80,9 @@ public class Controller{
         }
     }
     
-    // Método para imprimir faturas
+    /**
+    * Método que permite imprimir as faturas do contribuinte com sessão iniciada no sistema
+    */
     public void printFaturasContribuinte(){
         
         try{
@@ -73,18 +93,25 @@ public class Controller{
             System.out.println(e.getMessage());
         }
     }
-       
-    // Metodo converter set<Fatura> em List<Fatura>
+  
+    /**
+    * Método que converte um Set<Fatura> em List<Fatura>
+    * 
+    * @param faturas Set de Faturas
+    * 
+    * @return List de Faturas
+    */
     private static List<Fatura> setParaList(Set<Fatura> faturas){
         return new ArrayList(faturas);
     }
     
-    // Metodo para imprimir faturas empresa por data
-    // tipo 0 - ordenadas por data
-    // tipo 1 - ordenadas por valor
-    // tipo 2 - todas de um dado nif
-    // mode 0 - todas as faturas
-    // mode 1 - apenas entre um certo intervalo de tempo
+    /**
+    * Método que imprime ordenadamente faturas de uma empresa
+    * 
+    * @param tipo se 0, ordena por data; se 1, ordena por valor; se 2, imprime todas de um dado NIF
+    * @param modo se 0, imprime todas as faturas; se 1, imprime as faturas emitidas num certo intervalo de tempo 
+    * 
+    */
     public void printFaturasEmpresa(int tipo, int modo){
         Scanner sc = new Scanner(System.in);
         List<Fatura> faturas=null;
@@ -127,7 +154,9 @@ public class Controller{
         sc.close();
     }
     
-    // Metodo para obter valor faturado por uma empresa entre determinada data
+    /**
+    * Método que imprime o valor faturado por uma empresa entre determinada data
+    */
     public void valorFaturadoEmpresa(){
         Double valor_faturado;
         int sair;
@@ -154,7 +183,11 @@ public class Controller{
         }
     } 
     
-    // Metodo para fazer imprimir os pares setor - valor deduzido
+    /**
+    * Método que imprime os pares (Setor, Valor Deduzido)
+    * 
+    * @param valores_deduzidos Conjunto dos pares (Setor, Valor Deduzido)
+    */
     public void printParesSetorDeducao(Map<String, Double> valores_deduzidos){
        Scanner sc = new Scanner(System.in);
        int sair;
@@ -172,7 +205,9 @@ public class Controller{
        sc.close();
     }
     
-    // Metodo para fazer display dos valores deduzidos pelo contribuinte até então
+    /**
+    * Método para fazer display dos valores deduzidos pelo contribuinte até então
+    */
     public void printDeducoes(){      
         try{
             Map<String,Double> valores_deduzidos = this.estado.getDeducoesNifAtivo();
@@ -183,8 +218,9 @@ public class Controller{
         }        
     }
   
-    
-    // Metodo para consultar o valor deduzido pelos familiares
+    /**
+    * Método para consultar o valor deduzido pelos familiares
+    */
     public void printDeducoesFamilia(){
         List< SimpleEntry<Integer, Map<String, Double>>> deducoes_fam;
         try{
@@ -205,7 +241,11 @@ public class Controller{
        
     }
     
-    // Metodo para atribuir setor a uma fatura mode 0 atribuir setor, mode 1 mudar setor
+    /**
+    * Método que permite atribuir/mudar o setor a uma fatura
+    * 
+    * @param mode Se 0, atribuir setor; Se 1, mudar setor
+    */
     public void atribuiSetor(int mode){
         Scanner sc = new Scanner(System.in);
         List<Fatura> faturas=null;
@@ -248,7 +288,10 @@ public class Controller{
         }  
         sc.close();
     }
-
+    
+    /**
+    * Método que permite imprimir os 10 contribuintes com maior valor de despesa
+    */
     public void printTopContribuintes() {
         try {
             ArrayList<Contribuinte> list = estado.top10Contribuintes();
@@ -269,17 +312,28 @@ public class Controller{
             System.out.println(e.getMessage());
         }
     }
-
+    
+    /**
+    * Método que permite imprimir as N empresas que mais faturas lançaram em todo o sistema e tendo em conta o
+    * montante de deduções fiscais que as despesas registadas representam.
+    */
     public void printTopEmpresas() {
         return;
     }
+    
+    
 
-    // Método para escolher uma fatura
-    // user 0 - display faturas para contribuinte ver (data empresa valor)
-    // user 1 - display faturas para empresa ver (data nif_cliente valor)
-    // modo 0 - termina execucao mal acabe de imprimir a fatura retorna o valor 
-    // modo 1 - permite consultar varias faturas e aguarda que utilizador deseje escolher outra
-    // 
+    /**
+    * Método que permite escolher uma fatura
+    * 
+    * @param faturas Lista de Faturas
+    * @param user Se 0, faz o display das faturas para o contribuinte ver (data empresa valor); se 1, faz o
+    * display das faturas para a empresa ver (data nif_cliente valor)
+    * @param mode Se 0, termina a execucao mal acabe de imprimir a fatura (retorna o valor); se 1,
+    * permite consultar várias faturas e aguarda que o utilizador deseje escolher outra
+    * 
+    * @return Fatura
+    */
     public Fatura printOpcoesFatura(List<Fatura> faturas, int user, int mode){
         Scanner sc = new Scanner(System.in);
         Fatura f_escolhida = null;
@@ -329,7 +383,11 @@ public class Controller{
         return f_escolhida;
     }
 
-    // Escolhe o setor a atribuir a uma fatura
+    /**
+    * Método que permite escolher o setor a atribuir a uma fatura
+    * 
+    * @return Setor escolhido
+    */
     public String escolheSetorFatura(){
         Scanner sc = new Scanner(System.in);
         List <String> setores = this.estado.getSetores();
@@ -354,7 +412,11 @@ public class Controller{
         return setor_escolhido;    
     }
     
-    // Método para escolher os setores de atividade economica para uma empresa
+    /**
+    * Método que permite escolher os setores de atividade económica para uma empresa
+    * 
+    * @return Lista de setores escolhidos
+    */
     public List<String> escolheSetores(){
         Scanner sc = new Scanner(System.in);
         List<String> setores_escolhidos = new ArrayList<>();
@@ -390,7 +452,11 @@ public class Controller{
         return setores_escolhidos;    
     }
         
-    // Método para escolher um distrito
+    /**
+    * Método para escolher um distrito
+    * 
+    * @return Distrito
+    */
     public Distritos escolheDistrito(){
         Scanner sc = new Scanner(System.in);
         Distritos distrito;
@@ -412,7 +478,9 @@ public class Controller{
         return distrito;
     }
     
-    // Método para fazer log in
+    /**
+    * Método que permite fazer Login no sistema
+    */
     public void loginEntidade(){
         Scanner sc = new Scanner(System.in);
         int tipoEntidade = -1;
@@ -446,8 +514,9 @@ public class Controller{
 
     }
     
-    // Metodo para registar um contribuinte
-    
+    /**
+    * Método que permite registar um contribuinte no sistema
+    */
     public void registaContribuinte(){ 
         Scanner sc = new Scanner(System.in);
         int dep_familia = 0, n_distrito, nif_filho, n_nifs_inseridos=0;
@@ -524,7 +593,9 @@ public class Controller{
         sc.close();
     } 
     
-    // Metodo para registar uma empresa
+    /**
+    * Método que permite registar uma empresa no sistema
+    */
     public void registaEmpresa(){ // FIXME: 16/05/2018 verificar se todos os inputs sao validos porque senao crash
         Scanner sc = new Scanner(System.in);
         ConcelhosInterior concelhos_int = new ConcelhosInterior();
@@ -588,7 +659,10 @@ public class Controller{
         }
                 
     }
-    // Metodo para  executar main menu
+    
+    /**
+    * Método que permite executar o Menu Principal
+    */
     public void start(){
         int opcao;  
         String[] menu = Menu.getMainMenu();
@@ -608,8 +682,9 @@ public class Controller{
         }while(opcao != 0);
     }
     
-    // Metodo para executar menu dos contribuintes
-    
+    /**
+    * Método que permite executar o Menu dos contribuintes
+    */
     public void execMenuContribuinte(){
         int opcao;  
         String[] menu = Menu.getMenuContribuinte();
@@ -630,12 +705,9 @@ public class Controller{
         }while(opcao != 0);
     }
     
-    // Metodo para executar meno das empresas
-        // tipo 0 - ordenadas por data
-    // tipo 1 - ordenadas por valor
-    // tipo 2 - todas de um dado nif
-    // mode 0 - todas as faturas
-    // mode 1 - apenas entre um certo intervalo de tempo
+    /**
+    * Método que permite executar o Menu das empresas
+    */
     public void execMenuEmpresa(){
         int opcao;  
         String[] menu = Menu.getMenuEmpresa();
@@ -658,7 +730,10 @@ public class Controller{
             }
         }while(opcao != 0);
     }
-
+    
+    /**
+    * Método que permite executar o Menu do administrador do sistema
+    */
     public void execMenuAdmin(){
         int opcao;
         String[] menu = Menu.getMenuAdmin();
@@ -676,6 +751,9 @@ public class Controller{
         }while(opcao != 0);
     }
     
+    /**
+    * Método main
+    */
     public static void main(String args[]){
         Sistema sistema = new Sistema();
         Menu menu = new Menu();
@@ -705,6 +783,9 @@ public class Controller{
         
     }
     
+    /**
+    * Método que permite imprimir um separador no Menu para efeitos estéticos
+    */
     private static void printSeparador(){
            System.out.println("****************JavaFatura****************");
     }

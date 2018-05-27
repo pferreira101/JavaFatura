@@ -1,6 +1,10 @@
 import java.io.*;
 import java.util.Scanner;
 
+/**
+* Classe que permite obter os menus, consoante o estado do programa
+*/
+
 public class Menu implements Serializable{
     
     private static String[][] operacoes = { // Menu inicial
@@ -28,22 +32,34 @@ public class Menu implements Serializable{
                                     // Menu admin
                                     { "1 - Top 10 Contribuintes: total do valor das faturas",
                                       "2 - Top X Empresas: relação entre o nº de faturas emitidas e o montante de deduções fiscais que as despesas registadas representam",
+                                      "3 - Adicionar novo setor de despesa",
                                       "0 -  Sair"}
                                     };
                             
-                                    
+    /**
+     * Método que retorna o conjunto de operações possíveis no Menu Inicial
+     */                                
     public static String[] getMainMenu(){
         return operacoes[0];
     }
     
+    /**
+     * Método que retorna o conjunto de operações possíveis no Menu dos Contribuintes
+     */
     public static String[] getMenuContribuinte(){
         return operacoes[1];
     }
     
+    /**
+     * Método que retorna o conjunto de operações possíveis no Menu das Empresas
+     */
     public static String[] getMenuEmpresa(){
         return operacoes[2];
     }
-
+    
+    /**
+     * Método que retorna o conjunto de operações possíveis no Menu do Modo Administrador
+     */
     public static String[] getMenuAdmin(){
         return operacoes[3];
     }
