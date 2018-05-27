@@ -74,7 +74,7 @@ de determinar os contribuintes que mais gastam no sistema e as empresas que mais
 
 Antes de iniciarmos a descrição de cada uma das classes, começamos por mostrar o diagrama das classes implementadas (pelo \textit{BLUEJ}).
 
-	% IMAGEM 
+  \includegraphics[width=1.0\linewidth]{classes.png}
 	
 \subsubsection{BeneficioFiscal} %%%%%%%%%%%%%%%%%
 
@@ -159,7 +159,7 @@ Classe que contém as informações sobre a dedução relacionada com o setor de
 
 \subsubsection{Sistema} %%%%%%%%%%%%%%%
 
-Classe que guarda todas as informações da aplicação (dados de todas as entidades). Assim sendo, definimos aqui um HashMap com todas as entidades do sistema, um GestorSetor e as informações relativas às credenciais de admnistrados, que são as seguintes:
+Classe que guarda todas as informações da aplicação (dados de todas as entidades). Assim sendo, definimos aqui um HashMap com todas as entidades do sistema, um GestorSetor e as informações relativas às credenciais de admistrador, que são as seguintes:
 
 \textbf{NIF}: \texttt{20172018}
 
@@ -186,8 +186,13 @@ Classe que guarda todas as informações da aplicação (dados de todas as entid
 \subsection{Decisões Tomadas}
 \label{sec:decisoes}
 
-Modelo MVC
-GestorSetor
+O desenvolvimento da aplicação foi feito procurando facilitar a implementação de outras versões gráficas da mesma, ou até mesmo, uma versão cliente-servidor. Para isso a classe 
+Sistema, onde se encontra armazenada a informação sobre os utilzadores da aplicação, disponibiliza um conjunto de métodos tornados públicos através dos quais a parte gráfica
+deve estabelecer a conexão entre o utilizador da aplicação e o código que realiza operações, obtendo por parte do utilizador os dados com os quais deve alimentar o sistema.
+De modo a ser possível adicionar um novo setor de atividade económica sem que seja necessário proceder a alterações no código e recompilar o programa, optamos por mantar apenas
+um objeto da class GestorSetor em toda a aplicação, estando este contido no Sistema. Entrando na aplicação com privilégios de admin, é possivel adicionar um novo stor de
+atividade económico e este estará disponível para todos os restantes utilizadores da aplicação o usarem. As operações de I/O também passam a contemplar esta nova opção sem ser
+preciso reescrever código.
 
 
 
@@ -216,7 +221,7 @@ Ao registar, quer um contribuinte, quer uma empresa, serão pedidas informaçõe
 
 \subsubsection{Admistrador}
 
-	\includegraphics[width=.9\linewidth]{admin_menu.png}
+	\includegraphics[width=1.1\linewidth]{admin_menu.png}
 
 
 
