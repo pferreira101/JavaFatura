@@ -314,14 +314,69 @@ public class Controller{
     }
     
     /**
-    * Método que permite imprimir as N empresas que mais faturas lançaram em todo o sistema e tendo em conta o
-    * montante de deduções fiscais que as despesas registadas representam.
+    * Método que permite imprimir as N empresas que mais faturaram
     */
     public void printTopEmpresas() {
-        return;
+        try {
+            System.out.print("Introduza o número de empresas que pretende lista: ");
+            int num = lerIntPos();
+            List<SimpleEntry<Empresa, Double>> list = estado.topXEmpresas(num);
+            int size = list.size();
+            if (size==0) {
+                System.out.println("Não existem empresas no sistema.");
+                return;
+            }
+            else if (list.size()<10) System.out.println("Existem apenas "+list.size()+" empresas.\n");
+            System.out.println("Valor total faturado:\n");
+            for (int i=0;i<list.size();i++){
+                SimpleEntry<Empresa,Double> entry = list.get(i);
+                Empresa e = entry.getKey();
+                double valor = entry.getValue();
+                System.out.println((i+1)+"º: "+valor+"€");
+                System.out.println("Nome: "+e.getNome()+"\n NIF: "+e.getNif());
+            }
+        }
+        catch (AdminModeNaoAtivadoException e) {
+            System.out.println(e.getMessage());
+        }
     }
     
-    
+    /**
+    * Método que permite adicionar um novo setor de atividade económica ao sistema
+    */
+    public void addSetor(){
+        try {
+            System.out.println("Introduza o nome do setor que deseja introduzir: ");
+            String setor = lerString();
+            
+            System.out.println("É dedutível?");
+            System.out.println("1 - Sim\n2 - Não");
+            int opcao;
+            boolean dedutivel=false;
+            boolean flag = false;
+            do {
+                opcao = lerIntPos();
+                switch (opcao) {
+                    case 1: dedutivel = true; flag = true; break;
+                    case 2: flag = true; break;
+                    default: System.out.println("Introduza uma opção válida"); break;
+                }
+            } while (flag != true);
+            
+            System.out.println("Introduza a taxa de dedução fiscal associada ao setor: ");
+            double taxa = lerDoublePos();
+            
+            System.out.println("Introduza o valor máximo dedutível: ");
+            double max = lerDoublePos();
+            
+            estado.addSetorAtividadeEconomica(setor,taxa,dedutivel,max);
+           
+            System.out.println("Setor adicionado com sucesso!");
+        }   
+        catch (AdminModeNaoAtivadoException e){
+            System.out.println(e.getMessage());
+        }
+    }
 
     /**
     * Método que permite escolher uma fatura
@@ -524,6 +579,20 @@ public class Controller{
         Scanner sc = new Scanner(System.in);
         do {
             num = sc.nextInt();
+        } while(num == -1);
+        return num;
+    }
+    
+    /**
+     * Método que permite ler um double positivo
+     *
+     * @return Double lido
+     */
+    private double lerDoublePos(){
+        double num = -1;
+        Scanner sc = new Scanner(System.in);
+        do {
+            num = sc.nextDouble();
         } while(num == -1);
         return num;
     }
@@ -730,7 +799,7 @@ public class Controller{
                 case 0: break;
                 case 1: printTopContribuintes(); break;
                 case 2: printTopEmpresas(); break;
-                case 3: break; //FIXME: colocar funcao de adicionar setor
+                case 3: addSetor(); break;
                 default: System.out.println("Insira uma opção correta");
             }
         }while(opcao != 0);
