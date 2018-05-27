@@ -128,7 +128,14 @@ public class Entidade implements Serializable {
      * @return string do objeto
      */
     public String toString(){
-        return ""; // FIXME: 01/05/2018 
+        StringBuilder s = new StringBuilder();
+
+        s.append("NIF: "); s.append(nif); s.append('\n');
+        s.append("Email: "); s.append(email); s.append('\n');
+        s.append("Nome: "); s.append(nome); s.append('\n');
+        s.append("Morada: "); s.append(morada); s.append('\n');
+
+        return s.toString();
     }
 
 
@@ -147,7 +154,7 @@ public class Entidade implements Serializable {
     }
 
     /**
-     * Construtor paramético da classe Entidade
+     * Construtor paramétrico da classe Entidade
      * @param nif
      * @param email
      * @param nome

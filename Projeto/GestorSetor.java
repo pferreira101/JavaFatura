@@ -8,32 +8,56 @@ import java.util.AbstractMap.SimpleEntry;
 
 public class GestorSetor implements Serializable {
     
-    private Map<String, Setor> setores;    
-    
-    
-    // Metodo para saber a taxa a deduzir de um dado setor
+    private Map<String, Setor> setores;
+
+
+    /**
+     * Método que retorna a taxa associada a um setor
+     * @param setor
+     * @return taxa do setor
+     */
     public double getTaxa(String setor){
         return this.setores.get(setor).getTaxa();
     }
-    
-    // Metodo para saber o maximo a deduzir de um dado setor
+
+    /**
+     * Método que retorna o máximo dedutivel de um setor
+     * @param setor
+     * @return
+     */
     public double getMax(String setor){
         return this.setores.get(setor).getMaxDedutivel();
     }
-    
-    // Metodo para obter nomes dos setores disponiveis   
+
+    /**
+     * Getter dos setores
+     * @return setores
+     */
     public List<String> getSetores(){
         return this.setores.values().stream().map(s -> s.getNome()).
                                      collect(Collectors.toCollection(ArrayList::new));
     }
-    
-    // Metodo para adicionar um novo setor
+
+    /**
+     * Método que adiciona um novo setor de atividade económica
+     * @param nome
+     * @param taxa
+     * @param isDedutivel
+     * @param max_dedutivel
+     */
     public void addSetor(String nome, double taxa, boolean isDedutivel, double max_dedutivel){
         this.setores.put(nome, new Setor(nome, taxa, isDedutivel, max_dedutivel));
     }
- 
+
+
+
     // Equals & Clone & toString
-    
+
+    /**
+     * Método que verifica se dois objetos GestorSetor são iguais
+     * @param o objeto a comparar
+     * @return true se forem iguais
+     */
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
@@ -41,10 +65,6 @@ public class GestorSetor implements Serializable {
         GestorSetor gs = (GestorSetor) o;
         
         return this.setores.equals(gs.getSetores());
-    }
-    
-    public String toString(){
-        return ""; // FIXME: 03/05/2018 
     }
     
     
