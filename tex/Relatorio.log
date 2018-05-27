@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.9)  27 MAY 2018 21:18
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.5.9)  27 MAY 2018 23:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -558,58 +558,60 @@ ng> <./ferreira.png>] (./Relatorio.toc)
 \tf@toc=\write3
 \openout3 = `Relatorio.toc'.
 
- [2] [3]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 167.
+ [2] [3] [4]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 175.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 167.
- [4]
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 175.
 <main_menu.png, id=29, 354.32375pt x 116.435pt>
 File: main_menu.png Graphic file (type png)
 <use main_menu.png>
-Package pdftex.def Info: main_menu.png  used on input line 189.
+Package pdftex.def Info: main_menu.png  used on input line 200.
 (pdftex.def)             Requested size: 254.75433pt x 83.71764pt.
 <contribuinte_menu.png, id=30, 445.665pt x 147.55125pt>
 File: contribuinte_menu.png Graphic file (type png)
 <use contribuinte_menu.png>
-Package pdftex.def Info: contribuinte_menu.png  used on input line 198.
+Package pdftex.def Info: contribuinte_menu.png  used on input line 209.
 (pdftex.def)             Requested size: 297.20906pt x 98.40176pt.
-<empresa_menu.png, id=31, 573.14125pt x 200.75pt>
+ [5 <./main_menu.png>]
+<empresa_menu.png, id=37, 573.14125pt x 200.75pt>
 File: empresa_menu.png Graphic file (type png)
 <use empresa_menu.png>
-Package pdftex.def Info: empresa_menu.png  used on input line 203.
+Package pdftex.def Info: empresa_menu.png  used on input line 214.
 (pdftex.def)             Requested size: 382.12502pt x 133.84627pt.
-<admin_menu.png, id=32, 1054.94125pt x 88.33pt>
+<admin_menu.png, id=38, 1054.94125pt x 88.33pt>
 File: admin_menu.png Graphic file (type png)
 <use admin_menu.png>
-Package pdftex.def Info: admin_menu.png  used on input line 208.
+Package pdftex.def Info: admin_menu.png  used on input line 219.
 (pdftex.def)             Requested size: 382.12502pt x 31.9942pt.
- [5 <./main_menu.png> <./contribuinte_menu.png> <./empresa_menu.png> <./admin_m
-enu.png>]
+
+[6 <./contribuinte_menu.png> <./empresa_menu.png> <./admin_menu.png>]
 (./Relatorio.aux) ) 
 Here is how much of TeX's memory you used:
- 4819 strings out of 492982
- 70843 string characters out of 6134897
+ 4826 strings out of 492982
+ 70912 string characters out of 6134897
  140620 words of memory out of 5000000
- 8320 multiletter control sequences out of 15000+600000
- 8194 words of font info for 29 fonts, out of 8000000 for 9000
+ 8325 multiletter control sequences out of 15000+600000
+ 8708 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,7n,39p,276b,447s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,7n,39p,348b,447s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
 m/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx
 12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/te
 xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Relatorio.pdf (5 pages, 167769 bytes).
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on Relatorio.pdf (6 pages, 191192 bytes).
 PDF statistics:
- 63 PDF objects out of 1000 (max. 8388607)
- 34 compressed objects within 1 object stream
+ 74 PDF objects out of 1000 (max. 8388607)
+ 42 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
