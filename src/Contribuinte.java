@@ -198,10 +198,7 @@ public class Contribuinte extends Entidade implements Serializable {
         StringBuilder s = new StringBuilder();
 
         s.append(super.toString()); s.append('\n');
-        s.append("NIF: "); s.append(getNif()); s.append('\n');
-        s.append("Nome: "); s.append(getNome()); s.append('\n');
-        s.append("Email: "); s.append(getEmail()); s.append('\n');
-        s.append("Morada:\n"); s.append(getMorada().toString()); s.append('\n');
+        
         return s.toString();
     }
 

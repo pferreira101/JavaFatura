@@ -73,16 +73,16 @@ public class GestorSetor implements Serializable {
     public GestorSetor(){
         this.setores = new HashMap<>(); 
         
-        Setor cab = new Setor("Cabeleireiros", 0, false, 0);
+        Setor cab = new Setor("Cabeleireiros", 0, true, 0);
         Setor exi_fat = new Setor("Exigência Fatura", 0.15, true, 250);
         Setor geral = new Setor("Geral", 0.35, true, 250);
         Setor edu = new Setor("Educação", 0.3, true, 800);
-        Setor auto = new Setor("Automoveis", 0, false, 0);
-        Setor moto = new Setor("Motociclos", 0, false, 0);
-        Setor res_alo = new Setor("Restauração e Alojamento", 0, false, 0);
+        Setor auto = new Setor("Automoveis", 0, true, 0);
+        Setor moto = new Setor("Motociclos", 0, true, 0);
+        Setor res_alo = new Setor("Restauração e Alojamento", 0, true, 0);
         Setor sau = new Setor("Saúde", 0.15, true, 1000);
-        Setor pas = new Setor("Passes Mensais", 0, false, 0);
-        Setor vet = new Setor("Veterenário", 0, false, 0);
+        Setor pas = new Setor("Passes Mensais", 0, true, 0);
+        Setor vet = new Setor("Veterenário", 0, true, 0);
         Setor lar = new Setor("Lares", 0.15, true, 403.75);
         Setor imo = new Setor("Imóveis", 0.15, true, 502);
         

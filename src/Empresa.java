@@ -79,7 +79,7 @@ public class Empresa extends Entidade implements Serializable {
     public Set<Fatura> faturasEmitidasByData(){
         TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> {
                                                     if (!f1.getData().equals(f2.getData())){
-                                                        return f1.getData().compareTo(f2.getData());
+                                                        return f2.getData().compareTo(f1.getData());
                                                     } else {
                                                         return f2.getNifCliente() - f1.getNifCliente();
                                                     }
@@ -99,7 +99,7 @@ public class Empresa extends Entidade implements Serializable {
     public Set<Fatura> faturasEmitidasByData(LocalDate inicio, LocalDate fim){
         TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> {
                                                     if (!f1.getData().equals(f2.getData())){
-                                                        return f1.getData().compareTo(f2.getData());
+                                                        return f2.getData().compareTo(f1.getData());
                                                     } else {
                                                         return f2.getNifCliente() - f1.getNifCliente();
                                                     }
@@ -141,7 +141,7 @@ public class Empresa extends Entidade implements Serializable {
     public Set<Fatura> faturasEmitidasFromNIF(int nif, LocalDate inicio, LocalDate fim){
         TreeSet<Fatura> r = new TreeSet<>((f1,f2) -> {
                                                     if (!f1.getData().equals(f2.getData())){
-                                                        return f1.getData().compareTo(f2.getData());
+                                                        return f2.getData().compareTo(f1.getData());
                                                     } else {
                                                         return 1;
                                                     }

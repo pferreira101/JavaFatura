@@ -328,14 +328,15 @@ public class Controller{
                 System.out.println("Não existem empresas no sistema.");
                 return;
             }
-            else if (list.size()<10) System.out.println("Existem apenas "+list.size()+" empresas.\n");
-            System.out.println("Valor total faturado:\n");
+            else if (list.size()<num) System.out.println("Existem apenas "+list.size()+" empresas.\n");
+            System.out.println("Ordem pelo número de faturas emitidas:\n");
             for (int i=0;i<list.size();i++){
                 SimpleEntry<Empresa,Double> entry = list.get(i);
                 Empresa e = entry.getKey();
                 double valor = entry.getValue();
-                System.out.println((i+1)+"º: "+valor+"€");
-                System.out.println("Nome: "+e.getNome()+"\n NIF: "+e.getNif());
+                double faturado = e.totalFaturado();
+                System.out.println((i+1)+"º: Valor total deduzido: "+valor+"€ ; Valor total faturado: "+faturado);
+                System.out.println("Nome: "+e.getNome()+"\nNIF: "+e.getNif()+"\n");
             }
         }
         catch (AdminModeNaoAtivadoException e) {
